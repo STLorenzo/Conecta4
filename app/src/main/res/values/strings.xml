@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">Conecta4</string>
-    <string name="start">Start</string>
+    <string name="new_game">New Game</string>
+    <string name="load_game">Load Game</string>
     <string name="options">Options</string>
     <string name="rows">Rows</string>
     <string name="columns">Columns</string>
     <string name="game_parameters">Game Parameters</string>
+    <string name="player">Player</string>
+    <string name="insert_player_hint">Insert your name</string>
+    <string name="start">Start</string>
 </resources>

@@ -30,14 +30,21 @@
             android:padding="20sp">
 
         <Button
-                android:id="@+id/Btn_start_mainmenu"
+                android:id="@+id/btn_new_game_mainmenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/start"
+                android:text="@string/new_game"
                 style="@style/BtnStartMenu"/>
 
         <Button
-                android:id="@+id/Btn_options_mainmenu"
+                android:id="@+id/btn_load_game_mainmenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/load_game"
+                style="@style/BtnStartMenu"/>
+
+        <Button
+                android:id="@+id/btn_options_mainmenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/options"

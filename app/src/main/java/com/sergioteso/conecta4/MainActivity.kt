@@ -3,7 +3,7 @@ package com.sergioteso.conecta4
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -11,12 +11,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val btnStart = findViewById<Button>(R.id.Btn_start_mainmenu)
-        btnStart.setOnClickListener {
-            println("clickado")
+        btn_new_game_mainmenu.setOnClickListener {
             val intent = Intent(this,GameEditorActivity::class.java)
             startActivity(intent)
         }
-        val btnOptions = findViewById<Button>(R.id.Btn_options_mainmenu)
     }
 }
