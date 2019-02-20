@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity() {
 
         val btnStart = findViewById<Button>(R.id.Btn_start_mainmenu)
         btnStart.setOnClickListener {
+            println("clickado")
             val intent = Intent(this,GameEditorActivity::class.java)
             startActivity(intent)
         }

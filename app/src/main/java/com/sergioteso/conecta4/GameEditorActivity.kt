@@ -6,8 +6,8 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.SeekBar
 
 class GameEditorActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_editor)
 
         val sb_columns = findViewById<SeekBar>(R.id.seekBar_columns_GameEditor)
