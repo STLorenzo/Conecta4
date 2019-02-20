@@ -1,4 +1,4 @@
-<resources>
+<resources tools:ignore="ExtraTranslation" xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Conecta4</string>
     <string name="new_game">New Game</string>
     <string name="load_game">Load Game</string>
