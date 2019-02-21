@@ -1,3 +1,5 @@
+package com.sergioteso.conecta4.models
+
 import es.uam.eps.multij.Movimiento
 
 /**
@@ -5,7 +7,7 @@ import es.uam.eps.multij.Movimiento
  *
  * @property columna columna en la cual se desea colocar una ficha
  */
-class MovimientoC4(private val columna : Int ) : Movimiento() {
+class MovimientoC4(private val columna: Int) : Movimiento() {
 
     fun getColumna(): Int = columna
 
@@ -24,7 +26,7 @@ class MovimientoC4(private val columna : Int ) : Movimiento() {
      */
     override fun equals(other: Any?): Boolean =
         if (this === other) true
-        else if(other == null || other !is MovimientoC4) false
+        else if (other == null || other !is MovimientoC4) false
         else this.columna == other.columna
 
 
@@ -33,5 +35,5 @@ class MovimientoC4(private val columna : Int ) : Movimiento() {
      *
      * @return hashCode de la clase MovimientoC4
      */
-    override fun hashCode(): Int = columna.hashCode()*31
+    override fun hashCode(): Int = columna.hashCode() * 31
 }
