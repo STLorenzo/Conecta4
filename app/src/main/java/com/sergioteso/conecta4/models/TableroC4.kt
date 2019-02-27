@@ -1,5 +1,6 @@
 package com.sergioteso.conecta4.models
 
+import android.widget.ImageButton
 import es.uam.eps.multij.ExcepcionJuego
 import es.uam.eps.multij.Movimiento
 import es.uam.eps.multij.Tablero
@@ -250,5 +251,9 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
             for (j in 0..columnas - 1)
                 string += matriz[i][j]
         return string
+    }
+
+    fun enumerador(lambda : (Int) -> Boolean ) : Boolean {
+        return true
     }
 }
