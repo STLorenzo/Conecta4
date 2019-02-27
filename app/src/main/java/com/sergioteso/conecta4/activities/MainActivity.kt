@@ -16,5 +16,10 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, GameEditorActivity::class.java)
             startActivity(intent)
         }
+
+        btn_load_game_mainmenu.setOnClickListener {
+            val intent = Intent(this, LoadActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
