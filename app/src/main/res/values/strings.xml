@@ -10,4 +10,7 @@
     <string name="insert_player_hint">Insert your name</string>
     <string name="start">Start</string>
     <string name="delete">Delete</string>
+    <string name="player1">Player 1</string>
+    <string name="invalid_movement">Invalid Moevement</string>
+    <string name="round_already_finished">Round Already Finished</string>
 </resources>

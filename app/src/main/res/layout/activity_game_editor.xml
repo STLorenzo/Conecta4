@@ -19,6 +19,7 @@
     <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
               android:hint="@string/insert_player_hint"
               android:inputType="text"
+              android:text="@string/player1"
               android:id="@+id/et_insertplayer_GameEditor"/>
 
     <TextView
@@ -31,7 +32,7 @@
             android:layout_height="wrap_content">
 
         <SeekBar
-                android:layout_width="wrap_content"
+                android:layout_width="200sp"
                 android:layout_height="wrap_content"
                 android:id="@+id/seekBar_columns_GameEditor"
                 android:max="5"/>
@@ -51,7 +52,7 @@
             android:layout_height="wrap_content">
 
         <SeekBar
-                android:layout_width="wrap_content"
+                android:layout_width="200sp"
                 android:layout_height="wrap_content"
                 android:id="@+id/seekBar_rows_GameEditor"
                 android:max="5"/>

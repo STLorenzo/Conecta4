@@ -14,11 +14,12 @@ import kotlinx.android.synthetic.main.list_item_round.view.*
 class RoundViewHolder(itemview : View) : RecyclerView.ViewHolder(itemview), View.OnClickListener {
     lateinit var idTextView: TextView
     lateinit var dateTextView: TextView
-    lateinit var deleteButton: Button
+    lateinit var tableroTextView: TextView
 
     init{
         idTextView = itemview.findViewById(R.id.list_item_id) as TextView
         dateTextView = itemview.findViewById(R.id.list_item_date) as TextView
+        tableroTextView = itemview.findViewById(R.id.list_item_tablero) as TextView
         itemview.setOnClickListener(this)
     }
     override fun onClick(v: View?) {
@@ -30,6 +31,7 @@ class RoundViewHolder(itemview : View) : RecyclerView.ViewHolder(itemview), View
     fun bindRound(round: Round){
         idTextView.text = round.title
         dateTextView.text = round.date.toString().substring(0,19)
+        tableroTextView.text = round.tableroc4.tableroInString()
     }
 }
 

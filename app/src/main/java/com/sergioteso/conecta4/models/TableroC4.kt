@@ -24,7 +24,7 @@ import java.util.ArrayList
  * Propiedades propias
  *
  * @property filas Int con el numero de filas del tablero
- * @property columnas Int con el numero de columnas del Tablero
+ * @property columnas Int con el numero de columnasIds del Tablero
  * @property matriz Array bidimensional de Int donde se almacena la matriz de datos del tablero
  */
 class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
@@ -56,24 +56,31 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
             "TableroC4\n---------------------------------\nDimensiones: ${filas}x${columnas}\nJugadores: $numJugadores Jugadas: $numJugadas\n" +
                     "Turno: $turno Estado: "
         when (getEstado()) {
-            1 -> string += "EN CURSO"
-            2 -> string += "FINALIZADA"
-            3 -> string += "TABLAS"
+            Tablero.EN_CURSO -> string += "EN CURSO"
+            Tablero.FINALIZADA -> string += "FINALIZADA"
+            Tablero.TABLAS -> string += "TABLAS"
             else -> string += "NO EMPEZADA"
         }
         string += "\n---------------------------------\n"
-        for (i in 0..this.filas - 1) {
-            for (j in 0..columnas - 1) {
-                string += matriz[i][j]
-            }
-            string += "\n"
-        }
+        string += tableroInString()
+        string += "\n"
         for (i in 1..this.columnas) {
             string += "-"
         }
         string += "\n"
         for (i in 1..this.columnas) {
             string += "$i"
+        }
+        return string
+    }
+
+    fun tableroInString(): String {
+        var string = ""
+        for (i in 0..this.filas - 1) {
+            for (j in 0..columnas - 1) {
+                string += matriz[i][j]
+            }
+            if (i != this.filas-1) string += "\n"
         }
         return string
     }
@@ -127,6 +134,16 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
         else cambiaTurno()
     }
 
+    fun movimientoPrueba(m: Movimiento,player : Int){
+        if (!this.esValido(m) || m !is MovimientoC4) throw ExcepcionJuego("Movimiento nulo o no de tipo C4")
+        for (i in filas - 1 downTo 0) {
+            if (matriz[i][m.getColumna()] == 0) {
+                matriz[i][m.getColumna()] = player
+                break
+            }
+        }
+    }
+
     /**
      * Funcion que dado dos coordenadas del tablero nos dice si se ha ganado o no la partida
      * @param x Int Coordenada que representa la fila elegida
@@ -178,6 +195,68 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
         return false
     }
 
+    fun comprobarIJ(x: Int, y: Int): MutableList<List<Int>>? {
+        if (x < 0 || x >= filas || y < 0 || y >= columnas) throw ExcepcionJuego("Error comprobar")
+        var cont = 1
+        val id = matriz[x][y]
+        val mapa = mutableListOf<List<Int>>()
+        mapa.add(listOf(x,y))
+        if (id == 0) return null
+
+        // Arrays con la direcciones respectivas x,y para realizar la comprobacion
+        val arrayX = arrayListOf(1, -1, 0, 0, 1, -1, 1, -1)
+        val arrayY = arrayListOf(0, 0, 1, -1, 1, -1, -1, 1)
+        var ind = 0
+        var cx = x
+        var cy = y
+
+
+        while (ind < 8 && cont < 4) {
+            cx += arrayX[ind]
+            cy += arrayY[ind]
+            // Si nos salimos del margen cambiamos la direccion
+            if (cx < 0 || cx >= filas || cy < 0 || cy >= columnas) {
+                ind += 1
+                cx = x
+                cy = y
+                // si hemos mirado las dos direcciones escogemos otra orientacion reiniciando el cont
+                if (ind % 2 == 0) {
+                    cont = 1
+                    mapa.clear()
+                    mapa.add(listOf(x,y))
+                }
+            } else {
+                // Si tenemos una casilla deseada aumentamos contador
+                if (matriz[cx][cy] == id) {
+                    cont += 1
+                    mapa.add(listOf(cx,cy))
+                }
+                // Si no cambiamos dirección como hemos hecho previamente
+                else {
+                    ind += 1
+                    cx = x
+                    cy = y
+                    if (ind % 2 == 0) {
+                        cont = 1
+                        mapa.clear()
+                        mapa.add(listOf(x,y))
+                    }
+                }
+            }
+        }
+
+        if (cont == 4) return mapa
+        return null
+    }
+
+    fun comprobacionIJ(m: MovimientoC4): MutableList<List<Int>>?{
+        for (i in 0..filas - 1) {
+            if (matriz[i][m.getColumna()] != 0)
+                return comprobarIJ(i, m.getColumna())
+        }
+        return null
+    }
+
     /**
      * Funcion que dado un MovimientoC4 comprueba si se ha ganado o no la partida
      * @param m MovimientoC4 a comprobar
@@ -215,8 +294,8 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
         this.numJugadas = tokens[3].toIntOrNull() ?: throw ExcepcionJuego("numJugadas incorrecto en stringToTablero")
         this.filas = tokens[4].toIntOrNull() ?: throw ExcepcionJuego("filas incorrecto en stringToTablero")
         if (this.filas < MIN_FILAS || this.filas > MAX_FILAS) throw ExcepcionJuego("filas excede limite en stringToTablero")
-        this.columnas = tokens[5].toIntOrNull() ?: throw ExcepcionJuego("columnas incorrecto en stringToTablero")
-        if (this.columnas < MIN_COLUMNAS || this.columnas > MAX_COLUMNAS) throw ExcepcionJuego("columnas excede limite en stringToTablero")
+        this.columnas = tokens[5].toIntOrNull() ?: throw ExcepcionJuego("columnasIds incorrecto en stringToTablero")
+        if (this.columnas < MIN_COLUMNAS || this.columnas > MAX_COLUMNAS) throw ExcepcionJuego("columnasIds excede limite en stringToTablero")
         val m = tokens[6].toIntOrNull() ?: throw ExcepcionJuego("Ultimo movimiento incorrecto en stringToTablero")
         this.ultimoMovimiento = if (m == -1) null
         else MovimientoC4(m)
@@ -251,9 +330,5 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
             for (j in 0..columnas - 1)
                 string += matriz[i][j]
         return string
-    }
-
-    fun enumerador(lambda : (Int) -> Boolean ) : Boolean {
-        return true
     }
 }
