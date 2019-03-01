@@ -7,6 +7,9 @@ import android.widget.SeekBar
 import android.widget.Toast
 import com.sergioteso.conecta4.R
 import kotlinx.android.synthetic.main.activity_game_editor.*
+import android.util.DisplayMetrics
+
+
 
 class GameEditorActivity : AppCompatActivity() {
 
@@ -38,6 +41,8 @@ class GameEditorActivity : AppCompatActivity() {
         seekBar_columns_GameEditor.setOnSeekBarChangeListener(sb_listener)
         seekBar_rows_GameEditor.setOnSeekBarChangeListener(sb_listener)
 
+        seekBar_rows_GameEditor.max
+
         btn_start_GameEditor.setOnClickListener {
             val s = et_insertplayer_GameEditor.text.toString()
             if (s == "") {
@@ -55,17 +60,21 @@ class GameEditorActivity : AppCompatActivity() {
     fun cambioTextoSeekBar(id: Int?, progress: Int) {
         val n: Int
         when (id) {
-            R.id.seekBar_columns_GameEditor -> {
+            seekBar_columns_GameEditor.id -> {
                 n = progress + MIN_COLUMN
                 tv_sb_columns.text = n.toString()
             }
 
-            R.id.seekBar_rows_GameEditor -> {
+            seekBar_rows_GameEditor.id -> {
                 n = progress + MIN_ROW
                 tv_sb_rows.text = n.toString()
             }
 
         }
+    }
+
+    fun getDimensiones(){
+        //TODO: calcular las dimensiones para el maximo del seekbar
     }
 
 }

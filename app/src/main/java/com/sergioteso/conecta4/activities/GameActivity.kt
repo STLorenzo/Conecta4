@@ -7,6 +7,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.models.MovimientoC4
+import com.sergioteso.conecta4.models.Round
 import com.sergioteso.conecta4.models.TableroC4
 import es.uam.eps.multij.*
 import kotlinx.android.synthetic.main.activity_game.*
@@ -117,7 +118,10 @@ class GameActivity : AppCompatActivity(), PartidaListener {
                     val mapa = tablero.comprobacionIJ(tablero.ultimoMovimiento as MovimientoC4)
                     if ( mapa != null){
                         for (i in mapa)
-                            casillas[i[0]][i[1]].update(3)
+                            if (tablero.turno == 0)
+                                casillas[i[0]][i[1]].update(Round.CASILLA_WIN_J1)
+                            else
+                                casillas[i[0]][i[1]].update(Round.CASILLA_WIN_J2)
                     }
                     tv_name.text = "Ha Ganado ${game.getJugador(tablero.turno).nombre}"
                     Toast.makeText(this,"Gana - ${game.getJugador(tablero.turno).nombre}",Toast.LENGTH_SHORT).show()

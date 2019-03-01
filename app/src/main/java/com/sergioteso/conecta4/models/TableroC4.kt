@@ -134,6 +134,7 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
         else cambiaTurno()
     }
 
+    /*
     fun movimientoPrueba(m: Movimiento,player : Int){
         if (!this.esValido(m) || m !is MovimientoC4) throw ExcepcionJuego("Movimiento nulo o no de tipo C4")
         for (i in filas - 1 downTo 0) {
@@ -142,7 +143,7 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
                 break
             }
         }
-    }
+    }*/
 
     /**
      * Funcion que dado dos coordenadas del tablero nos dice si se ha ganado o no la partida

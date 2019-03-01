@@ -43,7 +43,6 @@ class RoundAdapter(var rounds: List<Round>) : RecyclerView.Adapter<RoundViewHold
         return RoundViewHolder(view)
     }
 
-
     override fun getItemCount(): Int = rounds.size
 
     override fun onBindViewHolder(p0: RoundViewHolder, p1: Int) {

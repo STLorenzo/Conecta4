@@ -29,7 +29,7 @@
             android:layout_height="match_parent"
             android:id="@+id/ll_board"
             android:orientation="horizontal"
-            android:layout_margin="50sp"
+            android:layout_margin="15sp"
             android:gravity="center">
 
     </LinearLayout>
