@@ -13,42 +13,66 @@ import es.uam.eps.multij.*
 import kotlinx.android.synthetic.main.activity_game.*
 import java.lang.Exception
 
+/**
+ * clase que implementa la actividad la actividad del juego principal.
+ * Además implementa la interfaz PartidaListener para el correcto desarrollo de la partida enfrentando
+ * a un jugador real contra un jugadorAleatorio segun los parametros de tablero pasados en el GameEditor
+ */
 class GameActivity : AppCompatActivity(), PartidaListener {
+    val BOARDSTRING = "com.sergioteso.conecta4.grid"
     private lateinit var game: Partida
     private lateinit var tablero: TableroC4
     private lateinit var localPlayerC4 : LocalPlayerC4
     private var casillas = mutableListOf<MutableList<ImageButton>>()
 
+    /**
+     * función que sobreescribe el onCreate básico de las Activities en Android
+     * Se encarga de obtener los datos del Intent enviado por el GameEditor y crear el tablero con esos datos
+     * asi como tambien crea al jugador local e inicializa la partida
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-
         val columns = intent.getIntExtra("columns", 4)
         val rows = intent.getIntExtra("rows", 4)
         val name = intent.getStringExtra("name_player")
-        tv_name.text = name
-        tv_column.text = columns.toString()
-        tv_row.text = rows.toString()
 
         tablero = TableroC4(rows, columns)
         localPlayerC4 = LocalPlayerC4(name)
         crearBoard()
         startRound()
-
-        Toast.makeText(this, "Cargado con exito",Toast.LENGTH_SHORT).show()
     }
 
-    override fun onStop() {
-        super.onStop()
-        casillas = mutableListOf()
+    /**
+     * Funcion que sobreescribe la funcionalidad basica de las Activities de guardar el InstanceState
+     * Guarda la versión string de tableroToString para recuperarla luego con el metodo onRestoreInstanceState
+     */
+    override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.putString(BOARDSTRING,tablero.tableroToString())
+        super.onSaveInstanceState(outState)
+    }
+
+    /**
+     * Funcion que sobreescribe la funcionalidad basica de las Activities de restaurar el InstanceState
+     * Restaura la versión string de tableroToString mediante la funcion stringToTablero
+     */
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        try{
+            if (savedInstanceState?.getString(BOARDSTRING) != null)
+                tablero.stringToTablero(savedInstanceState.getString(BOARDSTRING))
+                updateUI()
+        }catch (e: ExcepcionJuego){
+            e.printStackTrace()
+            Toast.makeText(this,R.string.excepcion_juego,Toast.LENGTH_SHORT ).show()
+        }
     }
 
     fun crearBoard(){
         ll_board.removeAllViews()
         for (i in 0..tablero.columnas-1){
             val col = crearColumna(tablero.filas,i)
-
             ll_board.addView(col)
         }
     }
@@ -58,7 +82,7 @@ class GameActivity : AppCompatActivity(), PartidaListener {
         var casilla: ImageButton
         ll.orientation = LinearLayout.VERTICAL
         for (i in 0..filas-1) {
-            casillas.add(mutableListOf())
+            if(casillas.size < filas) casillas.add(mutableListOf())
             casilla = crearCasilla(indiceColumna, i)
             ll.addView(casilla)
             casillas[i].add(casilla)
@@ -102,7 +126,11 @@ class GameActivity : AppCompatActivity(), PartidaListener {
     fun updateUI(){
         for (j in 0..tablero.columnas-1){
             for (i in 0..tablero.filas-1){
-                casillas[i][j].update(tablero.matriz[i][j])
+                try{
+                    casillas[i][j].update(tablero.getTablero(i,j))
+                }catch (e: ExcepcionJuego){
+                    e.printStackTrace()
+                }
             }
         }
     }
@@ -111,21 +139,13 @@ class GameActivity : AppCompatActivity(), PartidaListener {
         when(evento?.tipo){
             Evento.EVENTO_CAMBIO -> updateUI()
             Evento.EVENTO_FIN -> {
-                updateUI()
                 if( tablero.estado == Tablero.TABLAS){
                     Toast.makeText(this,"Tablas - Game Over",Toast.LENGTH_SHORT).show()
                 }else{
-                    val mapa = tablero.comprobacionIJ(tablero.ultimoMovimiento as MovimientoC4)
-                    if ( mapa != null){
-                        for (i in mapa)
-                            if (tablero.turno == 0)
-                                casillas[i[0]][i[1]].update(Round.CASILLA_WIN_J1)
-                            else
-                                casillas[i[0]][i[1]].update(Round.CASILLA_WIN_J2)
-                    }
-                    tv_name.text = "Ha Ganado ${game.getJugador(tablero.turno).nombre}"
+                    tablero.setComprobacionIJ(tablero.ultimoMovimiento as MovimientoC4)
                     Toast.makeText(this,"Gana - ${game.getJugador(tablero.turno).nombre}",Toast.LENGTH_SHORT).show()
                 }
+                updateUI()
             }
         }
     }

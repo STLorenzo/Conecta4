@@ -8,6 +8,7 @@ import com.sergioteso.conecta4.models.MovimientoC4
 import es.uam.eps.multij.*
 import java.lang.Exception
 
+
 class LocalPlayerC4(var name: String): Jugador {
     private lateinit var game: Partida
 

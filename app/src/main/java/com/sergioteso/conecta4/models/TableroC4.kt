@@ -38,14 +38,25 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
         else
             Array(filas, { IntArray(columnas) })
 
+    companion object {
+        val CASILLA_J1 = 1
+        val CASILLA_J2 = 2
+        val CASILLA_WIN_J1 = 3
+        val CASILLA_WIN_J2 = 4
+    }
+
     constructor(filas: Int) : this(filas, columnas = filas)
 
     init {
         estado = 1
     }
 
-    fun setEstado(n: Int) {
-        estado = n
+    /**
+     * funcion que devuelve el valor en la coordenada (i,j)
+     */
+    fun getTablero(i: Int, j: Int): Int{
+        if( i < 0 || i >= MAX_FILAS || j < 0 || j >= MAX_COLUMNAS) throw ExcepcionJuego("Error getTablero")
+        return matriz[i][j]
     }
 
     /**
@@ -149,53 +160,8 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
      * Funcion que dado dos coordenadas del tablero nos dice si se ha ganado o no la partida
      * @param x Int Coordenada que representa la fila elegida
      * @param y Int Coordenada que representa la columna elegida
-     * @return Boolean con true si se ha ganado o false si no
+     * @return lista que contiene las coordenadas de las casillas que dan la victoria o null si no se ha ganado
      */
-    fun comprobar(x: Int, y: Int): Boolean {
-        if (x < 0 || x >= filas || y < 0 || y >= columnas) throw ExcepcionJuego("Error comprobar")
-        var cont = 1
-        val id = matriz[x][y]
-        if (id == 0) return false
-
-        // Arrays con la direcciones respectivas x,y para realizar la comprobacion
-        val arrayX = arrayListOf(1, -1, 0, 0, 1, -1, 1, -1)
-        val arrayY = arrayListOf(0, 0, 1, -1, 1, -1, -1, 1)
-        var ind = 0
-        var cx = x
-        var cy = y
-
-
-        while (ind < 8 && cont < 4) {
-            cx += arrayX[ind]
-            cy += arrayY[ind]
-            // Si nos salimos del margen cambiamos la direccion
-            if (cx < 0 || cx >= filas || cy < 0 || cy >= columnas) {
-                ind += 1
-                cx = x
-                cy = y
-                // si hemos mirado las dos direcciones escogemos otra orientacion reiniciando el cont
-                if (ind % 2 == 0) {
-                    cont = 1
-                }
-            } else {
-                // Si tenemos una casilla deseada aumentamos contador
-                if (matriz[cx][cy] == id) cont += 1
-                // Si no cambiamos dirección como hemos hecho previamente
-                else {
-                    ind += 1
-                    cx = x
-                    cy = y
-                    if (ind % 2 == 0) {
-                        cont = 1
-                    }
-                }
-            }
-        }
-
-        if (cont == 4) return true
-        return false
-    }
-
     fun comprobarIJ(x: Int, y: Int): MutableList<List<Int>>? {
         if (x < 0 || x >= filas || y < 0 || y >= columnas) throw ExcepcionJuego("Error comprobar")
         var cont = 1
@@ -250,12 +216,24 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
         return null
     }
 
-    fun comprobacionIJ(m: MovimientoC4): MutableList<List<Int>>?{
+    /**
+     * Funcion que dado un MovimientoC4 comprueba si se ha ganado o no la partida y actualiza el tablero para reflejar
+     * las casillas que dan la victoria
+     * @param m MovimientoC4 a comprobar
+     */
+    fun setComprobacionIJ(m: MovimientoC4){
+        var map : MutableList<List<Int>>? = null
         for (i in 0..filas - 1) {
-            if (matriz[i][m.getColumna()] != 0)
-                return comprobarIJ(i, m.getColumna())
+            if (matriz[i][m.getColumna()] != 0){
+                map = comprobarIJ(i, m.getColumna())
+                break
+            }
         }
-        return null
+        if (map == null)
+            return
+        for ( i in map){
+            matriz[i[0]][i[1]] = matriz[i[0]][i[1]] + 2
+        }
     }
 
     /**
@@ -266,7 +244,7 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
     fun comprobacion(m: MovimientoC4): Boolean {
         for (i in 0..filas - 1) {
             if (matriz[i][m.getColumna()] != 0)
-                return comprobar(i, m.getColumna())
+                return comprobarIJ(i, m.getColumna()) != null
         }
         return false
     }

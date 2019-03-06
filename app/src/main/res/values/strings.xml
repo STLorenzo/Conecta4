@@ -13,4 +13,5 @@
     <string name="player1">Player 1</string>
     <string name="invalid_movement">Invalid Moevement</string>
     <string name="round_already_finished">Round Already Finished</string>
+    <string name="excepcion_juego">Game Exception</string>
 </resources>
