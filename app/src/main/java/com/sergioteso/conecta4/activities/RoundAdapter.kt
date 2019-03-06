@@ -12,9 +12,9 @@ import com.sergioteso.conecta4.models.Round
 import kotlinx.android.synthetic.main.list_item_round.view.*
 
 class RoundViewHolder(itemview : View) : RecyclerView.ViewHolder(itemview), View.OnClickListener {
-    lateinit var idTextView: TextView
-    lateinit var dateTextView: TextView
-    lateinit var tableroTextView: TextView
+    var idTextView: TextView
+    var dateTextView: TextView
+    var tableroTextView: TextView
 
     init{
         idTextView = itemview.findViewById(R.id.list_item_id) as TextView
@@ -24,7 +24,7 @@ class RoundViewHolder(itemview : View) : RecyclerView.ViewHolder(itemview), View
     }
     override fun onClick(v: View?) {
         Toast.makeText(itemView.context, "${idTextView.text}",Toast.LENGTH_SHORT).show()
-        //val intent : Intent = Intent(textView.context, LoadActivity::class.java)
+        //val intent : Intent = Intent(textView.context, RoundListActivity::class.java)
         //ContextCompat.startActivity(textView.context,intent,null)
     }
 

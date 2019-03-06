@@ -1,4 +1,4 @@
-package com.sergioteso.conecta4.activities
+package com.sergioteso.conecta4.models
 
 import android.view.View
 import android.widget.LinearLayout

@@ -6,8 +6,8 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
 import com.sergioteso.conecta4.R
+import com.sergioteso.conecta4.models.LocalPlayerC4
 import com.sergioteso.conecta4.models.MovimientoC4
-import com.sergioteso.conecta4.models.Round
 import com.sergioteso.conecta4.models.TableroC4
 import es.uam.eps.multij.*
 import kotlinx.android.synthetic.main.activity_game.*

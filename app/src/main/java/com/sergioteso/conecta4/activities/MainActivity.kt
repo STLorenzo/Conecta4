@@ -3,8 +3,6 @@ package com.sergioteso.conecta4.activities
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.Toast
 import com.sergioteso.conecta4.R
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -20,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         btn_load_game_mainmenu.setOnClickListener {
-            val intent = Intent(this, LoadActivity::class.java)
+            val intent = Intent(this, RoundListActivity::class.java)
             startActivity(intent)
         }
     }

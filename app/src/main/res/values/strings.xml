@@ -1,4 +1,4 @@
-<resources tools:ignore="ExtraTranslation" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
     <string name="app_name">Conecta4</string>
     <string name="new_game">New Game</string>
     <string name="load_game">Load Game</string>
@@ -14,4 +14,7 @@
     <string name="invalid_movement">Invalid Moevement</string>
     <string name="round_already_finished">Round Already Finished</string>
     <string name="excepcion_juego">Game Exception</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
