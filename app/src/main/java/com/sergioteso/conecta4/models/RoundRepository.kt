@@ -9,4 +9,8 @@ object RoundRepository {
         for (i in 1..100)
             rounds.add(Round(TableroC4(Random.nextInt(4,7))))
     }
+
+    fun getRound(round_id: String?):Round =
+        rounds.filter { round -> round.id == round_id }.single()
+
 }

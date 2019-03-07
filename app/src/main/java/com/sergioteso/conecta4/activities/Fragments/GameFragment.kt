@@ -7,34 +7,35 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.Toast
 
 import com.sergioteso.conecta4.R
+import com.sergioteso.conecta4.activities.update
+import com.sergioteso.conecta4.models.*
+import es.uam.eps.multij.*
+import kotlinx.android.synthetic.main.activity_game.*
+import java.lang.Exception
+
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val ROUND_ID = "round_id"
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [GameFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [GameFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
-class GameFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    private var listener: OnFragmentInteractionListener? = null
+class GameFragment : Fragment(), PartidaListener{
+    private lateinit var round: Round
+    private lateinit var game: Partida
+    private lateinit var tablero: TableroC4
+    private lateinit var localPlayerC4 : LocalPlayerC4
+    private var casillas = mutableListOf<MutableList<ImageButton>>()
+    var listener: OnRoundFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            round = RoundRepository.getRound(it.getString(ROUND_ID))
         }
     }
 
@@ -46,17 +47,24 @@ class GameFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_game, container, false)
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        tv_title.text = round.title
+        localPlayerC4 = LocalPlayerC4("Anon")
+        tablero = round.tableroc4
     }
 
-    override fun onAttach(context: Context) {
+    interface OnRoundFragmentInteractionListener {
+        fun onRoundUpdated()
+    }
+
+    override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
+        if(context is OnRoundFragmentInteractionListener)
             listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+        else{
+            throw RuntimeException(context.toString() +
+                " must implement OnRoundFragmentInteractionListener")
         }
     }
 
@@ -65,39 +73,109 @@ class GameFragment : Fragment() {
         listener = null
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
-    }
-
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment GameFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(id: String) =
             GameFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putString(ROUND_ID, id)
                 }
             }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        crearBoard()
+        startRound()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateUI()
+    }
+
+    override fun onCambioEnPartida(evento: Evento?) {
+        listener?.onRoundUpdated()
+        when(evento?.tipo){
+            Evento.EVENTO_CAMBIO ->{
+                updateUI()
+            }
+            Evento.EVENTO_FIN -> {
+                if( tablero.estado == Tablero.TABLAS){
+                    updateUI()
+                    Toast.makeText(context,"Tablas - Game Over",Toast.LENGTH_SHORT).show()
+                }else{
+                    tablero.setComprobacionIJ(tablero.ultimoMovimiento as MovimientoC4)
+                    Toast.makeText(context,"Gana - ${game.getJugador(tablero.turno).nombre}",Toast.LENGTH_SHORT).show()
+                }
+                updateUI()
+            }
+        }
+    }
+
+    fun updateUI(){
+        for (j in 0..tablero.columnas-1){
+            for (i in 0..tablero.filas-1){
+                try{
+                    casillas[i][j].update(tablero.getTablero(i,j))
+                }catch (e: ExcepcionJuego){
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+    private fun startRound() {
+        val players = ArrayList<Jugador>()
+        val randomPlayer = JugadorAleatorio("Random Player")
+        players.add(localPlayerC4)
+        players.add(randomPlayer)
+        game = Partida(tablero, players)
+        game.addObservador(this)
+        localPlayerC4.setPartida(game)
+        if(game.tablero.estado == Tablero.EN_CURSO)
+            game.comenzar()
+    }
+
+    fun crearBoard(){
+        ll_board.removeAllViews()
+        for (i in 0..tablero.columnas-1){
+            val col = crearColumna(tablero.filas,i)
+            ll_board.addView(col)
+        }
+    }
+
+    fun crearColumna(filas : Int,indiceColumna : Int ) : LinearLayout {
+        val ll = LinearLayout(context)
+        var casilla: ImageButton
+        ll.orientation = LinearLayout.VERTICAL
+        for (i in 0..filas-1) {
+            if(casillas.size < filas) casillas.add(mutableListOf())
+            casilla = crearCasilla(indiceColumna, i)
+            ll.addView(casilla)
+            casillas[i].add(casilla)
+        }
+        ll.isClickable = true
+        ll.setOnClickListener{
+            try {
+                if(game.tablero.estado != Tablero.EN_CURSO){
+                    Toast.makeText(context, R.string.round_already_finished, Toast.LENGTH_SHORT).show()
+                }else{
+                    val m = MovimientoC4(indiceColumna)
+                    val a = AccionMover(localPlayerC4,m)
+                    game.realizaAccion(a)
+                }
+            }catch (e: Exception){
+                Toast.makeText(context, R.string.invalid_movement, Toast.LENGTH_SHORT).show()
+            }
+        }
+        return ll
+    }
+
+    fun crearCasilla(indiceColumna: Int, indiceFila : Int): ImageButton {
+        val ib = ImageButton(context)
+        ib.isClickable = false
+        ib.update(tablero.matriz[indiceFila][indiceColumna])
+        return ib
     }
 }

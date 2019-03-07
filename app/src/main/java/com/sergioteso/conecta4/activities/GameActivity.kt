@@ -1,5 +1,7 @@
 package com.sergioteso.conecta4.activities
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.ImageButton
@@ -8,6 +10,7 @@ import android.widget.Toast
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.models.LocalPlayerC4
 import com.sergioteso.conecta4.models.MovimientoC4
+import com.sergioteso.conecta4.models.RoundRepository
 import com.sergioteso.conecta4.models.TableroC4
 import es.uam.eps.multij.*
 import kotlinx.android.synthetic.main.activity_game.*
@@ -19,6 +22,7 @@ import java.lang.Exception
  * a un jugador real contra un jugadorAleatorio segun los parametros de tablero pasados en el GameEditor
  */
 class GameActivity : AppCompatActivity(), PartidaListener {
+    //TODO: Cambiar para que esto llame a GameFragment teniendo cambiando los intents por newInstance :D
     val BOARDSTRING = "com.sergioteso.conecta4.grid"
     private lateinit var game: Partida
     private lateinit var tablero: TableroC4
@@ -34,14 +38,30 @@ class GameActivity : AppCompatActivity(), PartidaListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        val columns = intent.getIntExtra("columns", 4)
-        val rows = intent.getIntExtra("rows", 4)
-        val name = intent.getStringExtra("name_player")
+        val columns :Int
+        val rows : Int
+        val name : String
 
-        tablero = TableroC4(rows, columns)
-        localPlayerC4 = LocalPlayerC4(name)
+        if(intent.getStringExtra(EXTRA_TYPE) == "editor"){
+            columns = intent.getIntExtra(EXTRA_COLUMNS, 4)
+            rows = intent.getIntExtra(EXTRA_ROWS, 4)
+            name = intent.getStringExtra(EXTRA_NAME)
+            tablero = TableroC4(rows, columns)
+            localPlayerC4 = LocalPlayerC4(name)
+        }else if(intent.getStringExtra(EXTRA_TYPE) == "roundlist"){
+            tablero = getTableroByID(intent.getStringExtra(EXTRA_ROUND_ID))
+            localPlayerC4 = LocalPlayerC4("Anon")
+        }else
+            throw ExcepcionJuego("Error al inicializar GameActivity")
+
+
         crearBoard()
         startRound()
+    }
+
+    private fun getTableroByID(id: String?): TableroC4 {
+        val round = RoundRepository.rounds.filter { round -> round.id == id  }.single()
+        return round.tableroc4
     }
 
     /**
@@ -65,7 +85,7 @@ class GameActivity : AppCompatActivity(), PartidaListener {
                 updateUI()
         }catch (e: ExcepcionJuego){
             e.printStackTrace()
-            Toast.makeText(this,R.string.excepcion_juego,Toast.LENGTH_SHORT ).show()
+            Toast.makeText(this,R.string.game_exception,Toast.LENGTH_SHORT ).show()
         }
     }
 
@@ -147,6 +167,30 @@ class GameActivity : AppCompatActivity(), PartidaListener {
                 }
                 updateUI()
             }
+        }
+    }
+
+    companion object{
+        val EXTRA_ROUND_ID = "com.sergioteso.conecta4.round_id"
+        val EXTRA_TYPE = "com.sergioteso.conecta4.game_type"
+        val EXTRA_COLUMNS = "com.sergioteso.conecta4.columns"
+        val EXTRA_ROWS = "com.sergioteso.conecta4.rows"
+        val EXTRA_NAME = "com.sergioteso.conecta4.name"
+
+        fun newIntentRound(context: Context,id: String): Intent {
+            val intent = Intent(context, GameActivity::class.java)
+            intent.putExtra(EXTRA_ROUND_ID,id)
+            intent.putExtra(EXTRA_TYPE,"roundlist")
+            return intent
+        }
+
+        fun newIntentEditor(context: Context,columns: Int,rows: Int,name: String): Intent{
+            val intent = Intent(context, GameActivity::class.java)
+            intent.putExtra(EXTRA_COLUMNS,columns)
+            intent.putExtra(EXTRA_ROWS, rows)
+            intent.putExtra(EXTRA_NAME,name)
+            intent.putExtra(EXTRA_TYPE,"editor")
+            return intent
         }
     }
 }

@@ -48,11 +48,10 @@ class GameEditorActivity : AppCompatActivity() {
             if (s == "") {
                 Toast.makeText(this, getString(R.string.insert_player_hint), Toast.LENGTH_SHORT).show()
             } else {
-                val intent = Intent(this, GameActivity::class.java)
-                intent.putExtra("columns", seekBar_columns_GameEditor.progress + MIN_COLUMN)
-                intent.putExtra("rows", seekBar_rows_GameEditor.progress + MIN_ROW)
-                intent.putExtra("name_player", et_insertplayer_GameEditor.text.toString())
-                startActivity(intent)
+                startActivity(GameActivity.newIntentEditor(this,
+                    seekBar_columns_GameEditor.progress + MIN_COLUMN,
+                    seekBar_rows_GameEditor.progress + MIN_COLUMN,
+                    et_insertplayer_GameEditor.text.toString()))
             }
         }
     }

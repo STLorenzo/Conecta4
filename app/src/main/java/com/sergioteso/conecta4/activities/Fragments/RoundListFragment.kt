@@ -11,7 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.sergioteso.conecta4.R
+import com.sergioteso.conecta4.activities.GameActivity
 import com.sergioteso.conecta4.activities.RoundAdapter
+import com.sergioteso.conecta4.activities.update
+import com.sergioteso.conecta4.models.Round
 import com.sergioteso.conecta4.models.RoundRepository
 import kotlinx.android.synthetic.main.fragment_round_list.*
 
@@ -27,20 +30,16 @@ import kotlinx.android.synthetic.main.fragment_round_list.*
 class RoundListFragment : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
 
+    interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        fun onRoundSelected(round: Round)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_round_list, container, false)
-    }
-
-    private fun update() {
-        round_recycler_view.apply {
-            if(adapter == null)
-                adapter = RoundAdapter(RoundRepository.rounds)
-            adapter?.notifyDataSetChanged()
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,8 +47,8 @@ class RoundListFragment : Fragment() {
         round_recycler_view.apply {
             layoutManager = LinearLayoutManager(view.context)
             itemAnimator = DefaultItemAnimator()
+            update {round -> listener?.onRoundSelected(round)}
         }
-        update()
     }
 
     override fun onAttach(context: Context) {
@@ -65,22 +64,4 @@ class RoundListFragment : Fragment() {
         super.onDetach()
         listener = null
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
-    }
-
-
 }
