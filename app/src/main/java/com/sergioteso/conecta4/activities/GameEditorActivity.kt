@@ -1,14 +1,11 @@
 package com.sergioteso.conecta4.activities
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.SeekBar
 import android.widget.Toast
 import com.sergioteso.conecta4.R
 import kotlinx.android.synthetic.main.activity_game_editor.*
-import android.util.DisplayMetrics
-
 
 
 class GameEditorActivity : AppCompatActivity() {
@@ -48,7 +45,7 @@ class GameEditorActivity : AppCompatActivity() {
             if (s == "") {
                 Toast.makeText(this, getString(R.string.insert_player_hint), Toast.LENGTH_SHORT).show()
             } else {
-                startActivity(GameActivity.newIntentEditor(this,
+                startActivity(RoundActivity.newIntentEditor(this,
                     seekBar_columns_GameEditor.progress + MIN_COLUMN,
                     seekBar_rows_GameEditor.progress + MIN_COLUMN,
                     et_insertplayer_GameEditor.text.toString()))

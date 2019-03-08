@@ -6,7 +6,7 @@ import com.sergioteso.conecta4.models.Round
 class RoundListFragment : Fragment() {
 
     fun onRoundSelected(round: Round){
-        val intent = GameActivity.newIntentRound(context!!, round.id)
+        val intent = RoundActivity.newIntentRound(context!!, round.id)
         startActivity(intent)
     }
 }

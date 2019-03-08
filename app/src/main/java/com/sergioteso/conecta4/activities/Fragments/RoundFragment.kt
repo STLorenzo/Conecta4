@@ -1,7 +1,6 @@
 package com.sergioteso.conecta4.activities.Fragments
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -10,18 +9,14 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
-
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.update
 import com.sergioteso.conecta4.models.*
 import es.uam.eps.multij.*
-import kotlinx.android.synthetic.main.activity_game.*
+import kotlinx.android.synthetic.main.fragment_round.*
 import java.lang.Exception
 
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ROUND_ID = "round_id"
 
 class GameFragment : Fragment(), PartidaListener{
@@ -44,7 +39,7 @@ class GameFragment : Fragment(), PartidaListener{
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_game, container, false)
+        return inflater.inflate(R.layout.fragment_round, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,10 +70,10 @@ class GameFragment : Fragment(), PartidaListener{
 
     companion object {
         @JvmStatic
-        fun newInstance(id: String) =
+        fun newInstance(round_id: String) =
             GameFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ROUND_ID, id)
+                    putString(ROUND_ID, round_id)
                 }
             }
     }

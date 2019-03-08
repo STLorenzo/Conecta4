@@ -12,10 +12,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        btn_new_game_mainmenu.setOnClickListener {
-            val intent = Intent(this, GameEditorActivity::class.java)
-            startActivity(intent)
-        }
+//        btn_new_game_mainmenu.setOnClickListener {
+//            val intent = Intent(this, GameEditorActivity::class.java)
+//            startActivity(intent)
+//        }
 
         btn_load_game_mainmenu.setOnClickListener {
             val intent = Intent(this, RoundListActivity::class.java)

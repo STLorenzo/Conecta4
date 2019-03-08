@@ -1,5 +1,7 @@
 package com.sergioteso.conecta4.activities
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.sergioteso.conecta4.R
@@ -22,7 +24,7 @@ class RoundListActivity : AppCompatActivity(),
             val gameFragment = GameFragment.newInstance(round.id)
             fm.beginTransaction().add(R.id.fragment_game_container, gameFragment).commit()
         } else {
-            intent = GameActivity.newIntentRound(this, round.id)
+            intent = RoundActivity.newIntentRound(this, round.id)
             startActivity(intent)
         }
     }
@@ -32,5 +34,12 @@ class RoundListActivity : AppCompatActivity(),
         setContentView(R.layout.activity_round_list)
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_round_list_container, RoundListFragment()).commit()
+    }
+
+    companion object {
+        fun newIntent(context: Context): Intent {
+            val intent = Intent(context, RoundListActivity::class.java)
+            return intent
+        }
     }
 }
