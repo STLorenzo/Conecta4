@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.update
@@ -29,6 +27,13 @@ class RoundListFragment : Fragment() {
     interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         fun onRoundSelected(round: Round)
+
+        fun onRoundAdded()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -43,7 +48,7 @@ class RoundListFragment : Fragment() {
         round_recycler_view.apply {
             layoutManager = LinearLayoutManager(view.context)
             itemAnimator = DefaultItemAnimator()
-            update {round -> listener?.onRoundSelected(round)}
+            update { round -> listener?.onRoundSelected(round) }
         }
     }
 
@@ -59,5 +64,23 @@ class RoundListFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         listener = null
+    }
+
+//    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+//        super.onCreateOptionsMenu(menu, inflater)
+//        inflater?.inflate(R.menu.menu, menu)
+//    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.menu_item_new_round -> {
+                listener?.onRoundAdded()
+                round_recycler_view.update { round ->
+                    listener?.onRoundSelected(round)
+                }
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 }

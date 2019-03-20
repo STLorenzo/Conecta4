@@ -18,8 +18,7 @@ class MainActivity : AppCompatActivity() {
 //        }
 
         btn_load_game_mainmenu.setOnClickListener {
-            val intent = Intent(this, RoundListActivity::class.java)
-            startActivity(intent)
+            startActivity(RoundListActivity.newIntent(this))
         }
     }
 }
