@@ -15,7 +15,10 @@
     <string name="round_already_finished">Round Already Finished</string>
     <string name="game_exception">Game Exception</string>
     <string name="new_round">New Round</string>
+    <string name="game_over">Game Over</string>
+    <string name="game_over_message">The match ended</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="round_restarted">Round Restarted</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -12,20 +12,10 @@ import com.sergioteso.conecta4.activities.update
 import com.sergioteso.conecta4.models.Round
 import kotlinx.android.synthetic.main.fragment_round_list.*
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [RoundListFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [RoundListFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class RoundListFragment : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
 
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onRoundSelected(round: Round)
 
         fun onRoundAdded()

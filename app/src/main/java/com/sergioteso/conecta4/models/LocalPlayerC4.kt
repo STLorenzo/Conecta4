@@ -9,10 +9,10 @@ import es.uam.eps.multij.*
 import java.lang.Exception
 
 
-class LocalPlayerC4(var name: String): Jugador {
+class LocalPlayerC4(var name: String) : Jugador {
     private lateinit var game: Partida
 
-    fun setPartida(game: Partida){
+    fun setPartida(game: Partida) {
         this.game = game
     }
 

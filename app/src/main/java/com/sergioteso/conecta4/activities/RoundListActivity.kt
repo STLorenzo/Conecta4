@@ -40,6 +40,11 @@ class RoundListActivity : AppCompatActivity(),
         setSupportActionBar(roundList_toolbar)
     }
 
+    override fun onResume() {
+        super.onResume()
+        onRoundUpdated()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         return true

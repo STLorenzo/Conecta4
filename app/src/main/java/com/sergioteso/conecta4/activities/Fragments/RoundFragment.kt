@@ -2,6 +2,7 @@ package com.sergioteso.conecta4.activities.Fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,11 +20,11 @@ import java.lang.Exception
 
 private const val ROUND_ID = "round_id"
 
-class GameFragment : Fragment(), PartidaListener{
+class GameFragment : Fragment(), PartidaListener {
     private lateinit var round: Round
     private lateinit var game: Partida
     private lateinit var tablero: TableroC4
-    private lateinit var localPlayerC4 : LocalPlayerC4
+    private lateinit var localPlayerC4: LocalPlayerC4
     private var casillas = mutableListOf<MutableList<ImageButton>>()
     var listener: OnRoundFragmentInteractionListener? = null
 
@@ -47,6 +48,23 @@ class GameFragment : Fragment(), PartidaListener{
         tv_title.text = round.title
         localPlayerC4 = LocalPlayerC4("Anon")
         tablero = round.tableroc4
+        reset_round_fab.setOnClickListener {
+            if (tablero.getEstado() != Tablero.EN_CURSO) {
+                Snackbar.make(
+                    view,
+                    R.string.round_already_finished, Snackbar.LENGTH_SHORT
+                ).show()
+            } else {
+                tablero.reset()
+                startRound()
+                listener?.onRoundUpdated()
+                updateUI()
+                Snackbar.make(
+                    view, R.string.round_restarted,
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     interface OnRoundFragmentInteractionListener {
@@ -55,11 +73,13 @@ class GameFragment : Fragment(), PartidaListener{
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if(context is OnRoundFragmentInteractionListener)
+        if (context is OnRoundFragmentInteractionListener)
             listener = context
-        else{
-            throw RuntimeException(context.toString() +
-                " must implement OnRoundFragmentInteractionListener")
+        else {
+            throw RuntimeException(
+                context.toString() +
+                        " must implement OnRoundFragmentInteractionListener"
+            )
         }
     }
 
@@ -90,30 +110,34 @@ class GameFragment : Fragment(), PartidaListener{
     }
 
     override fun onCambioEnPartida(evento: Evento?) {
-        listener?.onRoundUpdated()
-        when(evento?.tipo){
-            Evento.EVENTO_CAMBIO ->{
+        when (evento?.tipo) {
+            Evento.EVENTO_CAMBIO -> {
                 updateUI()
+                listener?.onRoundUpdated()
             }
             Evento.EVENTO_FIN -> {
-                if( tablero.estado == Tablero.TABLAS){
-                    updateUI()
-                    Toast.makeText(context,"Tablas - Game Over",Toast.LENGTH_SHORT).show()
-                }else{
-                    tablero.setComprobacionIJ(tablero.ultimoMovimiento as MovimientoC4)
-                    Toast.makeText(context,"Gana - ${game.getJugador(tablero.turno).nombre}",Toast.LENGTH_SHORT).show()
-                }
                 updateUI()
+                listener?.onRoundUpdated()
+                if (tablero.estado == Tablero.TABLAS) {
+                    Toast.makeText(context, "Tablas - Game Over", Toast.LENGTH_SHORT).show()
+                } else {
+                    tablero.setComprobacionIJ(tablero.ultimoMovimiento as MovimientoC4)
+                    Toast.makeText(context, "Gana - ${game.getJugador(tablero.turno).nombre}", Toast.LENGTH_SHORT)
+                        .show()
+                }
+                AlertDialogFragment().show(
+                    activity?.supportFragmentManager, "ALERT_DIALOG"
+                )
             }
         }
     }
 
-    fun updateUI(){
-        for (j in 0..tablero.columnas-1){
-            for (i in 0..tablero.filas-1){
-                try{
-                    casillas[i][j].update(tablero.getTablero(i,j))
-                }catch (e: ExcepcionJuego){
+    fun updateUI() {
+        for (j in 0..tablero.columnas - 1) {
+            for (i in 0..tablero.filas - 1) {
+                try {
+                    casillas[i][j].update(tablero.getTablero(i, j))
+                } catch (e: ExcepcionJuego) {
                     e.printStackTrace()
                 }
             }
@@ -128,46 +152,46 @@ class GameFragment : Fragment(), PartidaListener{
         game = Partida(tablero, players)
         game.addObservador(this)
         localPlayerC4.setPartida(game)
-        if(game.tablero.estado == Tablero.EN_CURSO)
+        if (game.tablero.estado == Tablero.EN_CURSO)
             game.comenzar()
     }
 
-    fun crearBoard(){
+    fun crearBoard() {
         ll_board.removeAllViews()
-        for (i in 0..tablero.columnas-1){
-            val col = crearColumna(tablero.filas,i)
+        for (i in 0..tablero.columnas - 1) {
+            val col = crearColumna(tablero.filas, i)
             ll_board.addView(col)
         }
     }
 
-    fun crearColumna(filas : Int,indiceColumna : Int ) : LinearLayout {
+    fun crearColumna(filas: Int, indiceColumna: Int): LinearLayout {
         val ll = LinearLayout(context)
         var casilla: ImageButton
         ll.orientation = LinearLayout.VERTICAL
-        for (i in 0..filas-1) {
-            if(casillas.size < filas) casillas.add(mutableListOf())
+        for (i in 0..filas - 1) {
+            if (casillas.size < filas) casillas.add(mutableListOf())
             casilla = crearCasilla(indiceColumna, i)
             ll.addView(casilla)
             casillas[i].add(casilla)
         }
         ll.isClickable = true
-        ll.setOnClickListener{
+        ll.setOnClickListener {
             try {
-                if(game.tablero.estado != Tablero.EN_CURSO){
+                if (game.tablero.estado != Tablero.EN_CURSO) {
                     Toast.makeText(context, R.string.round_already_finished, Toast.LENGTH_SHORT).show()
-                }else{
+                } else {
                     val m = MovimientoC4(indiceColumna)
-                    val a = AccionMover(localPlayerC4,m)
+                    val a = AccionMover(localPlayerC4, m)
                     game.realizaAccion(a)
                 }
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 Toast.makeText(context, R.string.invalid_movement, Toast.LENGTH_SHORT).show()
             }
         }
         return ll
     }
 
-    fun crearCasilla(indiceColumna: Int, indiceFila : Int): ImageButton {
+    fun crearCasilla(indiceColumna: Int, indiceFila: Int): ImageButton {
         val ib = ImageButton(context)
         ib.isClickable = false
         ib.update(tablero.matriz[indiceFila][indiceColumna])

@@ -7,14 +7,14 @@ object RoundRepository {
 
     init {
         for (i in 1..2)
-            rounds.add(Round(TableroC4(Random.nextInt(4,7))))
+            rounds.add(Round(TableroC4(Random.nextInt(4, 7))))
     }
 
     fun addRound() {
-        rounds.add(Round(TableroC4(Random.nextInt(4,7))))
+        rounds.add(Round(TableroC4(Random.nextInt(4, 7))))
     }
 
-    fun getRound(round_id: String?):Round =
+    fun getRound(round_id: String?): Round =
         rounds.filter { round -> round.id == round_id }.single()
 
 }

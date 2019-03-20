@@ -14,8 +14,8 @@ import kotlinx.android.synthetic.main.fragment_round_list.view.*
  * Funcion que extiende la funcionalidad de un ImageButton permitiendo establecer
  * su background segun el valor de un player del tablero.
  */
-fun ImageButton.update(player : Int){
-    when(player){
+fun ImageButton.update(player: Int) {
+    when (player) {
         TableroC4.CASILLA_J1 -> this.setBackgroundResource(R.drawable.casilla_verde)
         TableroC4.CASILLA_J2 -> this.setBackgroundResource(R.drawable.casilla_roja)
         TableroC4.CASILLA_WIN_J1 -> this.setBackgroundResource(R.drawable.casilla_win_verde)
@@ -24,8 +24,8 @@ fun ImageButton.update(player : Int){
     }
 }
 
-fun RecyclerView.update(onClickListener: (Round) -> Unit){
-        if(adapter == null)
-            adapter = RoundAdapter(RoundRepository.rounds, onClickListener)
-        adapter?.notifyDataSetChanged()
+fun RecyclerView.update(onClickListener: (Round) -> Unit) {
+    if (adapter == null)
+        adapter = RoundAdapter(RoundRepository.rounds, onClickListener)
+    adapter?.notifyDataSetChanged()
 }

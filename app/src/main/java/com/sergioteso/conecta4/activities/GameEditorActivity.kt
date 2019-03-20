@@ -45,10 +45,14 @@ class GameEditorActivity : AppCompatActivity() {
             if (s == "") {
                 Toast.makeText(this, getString(R.string.insert_player_hint), Toast.LENGTH_SHORT).show()
             } else {
-                startActivity(RoundActivity.newIntentEditor(this,
-                    seekBar_columns_GameEditor.progress + MIN_COLUMN,
-                    seekBar_rows_GameEditor.progress + MIN_COLUMN,
-                    et_insertplayer_GameEditor.text.toString()))
+                startActivity(
+                    RoundActivity.newIntentEditor(
+                        this,
+                        seekBar_columns_GameEditor.progress + MIN_COLUMN,
+                        seekBar_rows_GameEditor.progress + MIN_COLUMN,
+                        et_insertplayer_GameEditor.text.toString()
+                    )
+                )
             }
         }
     }
@@ -69,7 +73,7 @@ class GameEditorActivity : AppCompatActivity() {
         }
     }
 
-    fun getDimensiones(){
+    fun getDimensiones() {
         //TODO: calcular las dimensiones para el maximo del seekbar
     }
 

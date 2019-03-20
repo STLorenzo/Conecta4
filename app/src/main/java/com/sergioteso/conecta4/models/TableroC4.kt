@@ -54,8 +54,8 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
     /**
      * funcion que devuelve el valor en la coordenada (i,j)
      */
-    fun getTablero(i: Int, j: Int): Int{
-        if( i < 0 || i >= MAX_FILAS || j < 0 || j >= MAX_COLUMNAS) throw ExcepcionJuego("Error getTablero")
+    fun getTablero(i: Int, j: Int): Int {
+        if (i < 0 || i >= MAX_FILAS || j < 0 || j >= MAX_COLUMNAS) throw ExcepcionJuego("Error getTablero")
         return matriz[i][j]
     }
 
@@ -91,7 +91,7 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
             for (j in 0..columnas - 1) {
                 string += matriz[i][j]
             }
-            if (i != this.filas-1) string += "\n"
+            if (i != this.filas - 1) string += "\n"
         }
         return string
     }
@@ -167,7 +167,7 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
         var cont = 1
         val id = matriz[x][y]
         val mapa = mutableListOf<List<Int>>()
-        mapa.add(listOf(x,y))
+        mapa.add(listOf(x, y))
         if (id == 0) return null
 
         // Arrays con la direcciones respectivas x,y para realizar la comprobacion
@@ -190,13 +190,13 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
                 if (ind % 2 == 0) {
                     cont = 1
                     mapa.clear()
-                    mapa.add(listOf(x,y))
+                    mapa.add(listOf(x, y))
                 }
             } else {
                 // Si tenemos una casilla deseada aumentamos contador
                 if (matriz[cx][cy] == id) {
                     cont += 1
-                    mapa.add(listOf(cx,cy))
+                    mapa.add(listOf(cx, cy))
                 }
                 // Si no cambiamos dirección como hemos hecho previamente
                 else {
@@ -206,7 +206,7 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
                     if (ind % 2 == 0) {
                         cont = 1
                         mapa.clear()
-                        mapa.add(listOf(x,y))
+                        mapa.add(listOf(x, y))
                     }
                 }
             }
@@ -221,17 +221,17 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
      * las casillas que dan la victoria
      * @param m MovimientoC4 a comprobar
      */
-    fun setComprobacionIJ(m: MovimientoC4){
-        var map : MutableList<List<Int>>? = null
+    fun setComprobacionIJ(m: MovimientoC4) {
+        var map: MutableList<List<Int>>? = null
         for (i in 0..filas - 1) {
-            if (matriz[i][m.getColumna()] != 0){
+            if (matriz[i][m.getColumna()] != 0) {
                 map = comprobarIJ(i, m.getColumna())
                 break
             }
         }
         if (map == null)
             return
-        for ( i in map){
+        for (i in map) {
             matriz[i[0]][i[1]] = matriz[i[0]][i[1]] + 2
         }
     }
@@ -309,5 +309,12 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
             for (j in 0..columnas - 1)
                 string += matriz[i][j]
         return string
+    }
+
+    override fun reset(): Boolean {
+        for (i in 0..filas - 1)
+            for (j in 0..columnas - 1)
+                matriz[i][j] = 0
+        return super.reset()
     }
 }
