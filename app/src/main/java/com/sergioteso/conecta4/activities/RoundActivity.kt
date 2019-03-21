@@ -1,11 +1,14 @@
 package com.sergioteso.conecta4.activities
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.Fragments.GameFragment
+import com.sergioteso.conecta4.activities.Logger.log
 import kotlinx.android.synthetic.main.activity_round_list.*
 
 /**
@@ -15,6 +18,8 @@ import kotlinx.android.synthetic.main.activity_round_list.*
  */
 class RoundActivity : AppCompatActivity(),
     GameFragment.OnRoundFragmentInteractionListener {
+
+
     override fun onRoundUpdated() {
 
     }
@@ -28,11 +33,17 @@ class RoundActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_round_list)
         val fm = supportFragmentManager
-        if (fm.findFragmentById(R.id.fragment_game_container) == null) {
-            val fragment = GameFragment.newInstance(intent.getStringExtra(EXTRA_ROUND_ID))
+        val round_id = intent.getStringExtra(EXTRA_ROUND_ID)
+        if (fragment_game_container == null) {
+            log("Aqui no")
+            val fragment = GameFragment.newInstance(round_id)
             fm.beginTransaction().add(R.id.fragment_round_list_container, fragment).commit()
         } else {
-            startActivity(RoundListActivity.newIntent(this))
+            log("Aqui si ")
+            val returnIntent = Intent()
+            returnIntent.putExtra(RoundListActivity.EXTRA_ROUND_ID, round_id)
+            setResult(Activity.RESULT_OK, returnIntent)
+            finish()
         }
         // my_toolbar is defined in the layout file
         setSupportActionBar(roundList_toolbar)
@@ -40,6 +51,8 @@ class RoundActivity : AppCompatActivity(),
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
     }
+
+
 
     companion object {
         val EXTRA_ROUND_ID = "com.sergioteso.conecta4.round_id"

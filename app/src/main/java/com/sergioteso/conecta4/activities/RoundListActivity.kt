@@ -1,5 +1,6 @@
 package com.sergioteso.conecta4.activities
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +13,8 @@ import com.sergioteso.conecta4.models.Round
 import com.sergioteso.conecta4.models.RoundRepository
 import kotlinx.android.synthetic.main.activity_round_list.*
 import kotlinx.android.synthetic.main.fragment_round_list.*
+
+
 
 class RoundListActivity : AppCompatActivity(),
     RoundListFragment.OnFragmentInteractionListener,
@@ -27,8 +30,18 @@ class RoundListActivity : AppCompatActivity(),
             val gameFragment = GameFragment.newInstance(round.id)
             fm.beginTransaction().add(R.id.fragment_game_container, gameFragment).commit()
         } else {
-            intent = RoundActivity.newIntentRound(this, round.id)
-            startActivity(intent)
+            val intento = RoundActivity.newIntentRound(this, round.id)
+            startActivityForResult(intento, GAME_REQUEST_ID)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when(requestCode){
+            GAME_REQUEST_ID -> {
+                if (resultCode == Activity.RESULT_OK)
+                    onRoundSelected(RoundRepository.getRound(
+                        data?.getStringExtra(EXTRA_ROUND_ID)))
+            }
         }
     }
 
@@ -38,6 +51,10 @@ class RoundListActivity : AppCompatActivity(),
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_round_list_container, RoundListFragment()).commit()
         setSupportActionBar(roundList_toolbar)
+        val round_id = intent.getStringExtra(EXTRA_ROUND_ID)
+        if (round_id != null){
+            onRoundSelected(RoundRepository.getRound(round_id))
+        }
     }
 
     override fun onResume() {
@@ -56,8 +73,11 @@ class RoundListActivity : AppCompatActivity(),
     }
 
     companion object {
-        fun newIntent(context: Context): Intent {
+        val GAME_REQUEST_ID = 1
+        val EXTRA_ROUND_ID = "com.sergioteso.conecta4.round_id"
+        fun newIntent(context: Context, round_id: String?): Intent {
             val intent = Intent(context, RoundListActivity::class.java)
+            intent.putExtra(EXTRA_ROUND_ID, round_id)
             return intent
         }
     }

@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
 //        }
 
         btn_load_game_mainmenu.setOnClickListener {
-            startActivity(RoundListActivity.newIntent(this))
+            startActivity(RoundListActivity.newIntent(this, null))
         }
     }
 }

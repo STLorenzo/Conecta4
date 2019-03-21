@@ -98,12 +98,6 @@ class GameFragment : Fragment(), PartidaListener {
             }
     }
 
-    override fun onStart() {
-        super.onStart()
-        crearBoard()
-        startRound()
-    }
-
     override fun onResume() {
         super.onResume()
         updateUI()
@@ -116,7 +110,6 @@ class GameFragment : Fragment(), PartidaListener {
                 listener?.onRoundUpdated()
             }
             Evento.EVENTO_FIN -> {
-                updateUI()
                 listener?.onRoundUpdated()
                 if (tablero.estado == Tablero.TABLAS) {
                     Toast.makeText(context, "Tablas - Game Over", Toast.LENGTH_SHORT).show()
@@ -125,9 +118,12 @@ class GameFragment : Fragment(), PartidaListener {
                     Toast.makeText(context, "Gana - ${game.getJugador(tablero.turno).nombre}", Toast.LENGTH_SHORT)
                         .show()
                 }
+
+                updateUI()
                 AlertDialogFragment().show(
                     activity?.supportFragmentManager, "ALERT_DIALOG"
                 )
+
             }
         }
     }
@@ -142,6 +138,12 @@ class GameFragment : Fragment(), PartidaListener {
                 }
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        crearBoard()
+        startRound()
     }
 
     private fun startRound() {

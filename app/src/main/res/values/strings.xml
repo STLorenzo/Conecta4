@@ -16,7 +16,7 @@
     <string name="game_exception">Game Exception</string>
     <string name="new_round">New Round</string>
     <string name="game_over">Game Over</string>
-    <string name="game_over_message">The match ended</string>
+    <string name="game_over_message">The match ended. Would you like to start a new one?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="round_restarted">Round Restarted</string>

@@ -1,6 +1,7 @@
 package com.sergioteso.conecta4.activities
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import com.sergioteso.conecta4.R
@@ -28,4 +29,13 @@ fun RecyclerView.update(onClickListener: (Round) -> Unit) {
     if (adapter == null)
         adapter = RoundAdapter(RoundRepository.rounds, onClickListener)
     adapter?.notifyDataSetChanged()
+}
+
+object Logger{
+    private var numero: Int = 0
+    fun log(text: String) {
+        Log.d("LifeCycleTest", Integer.toString(numero) + " : "
+                + text)
+        numero++
+    }
 }
