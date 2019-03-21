@@ -17,7 +17,6 @@ class RoundListFragment : Fragment() {
 
     interface OnFragmentInteractionListener {
         fun onRoundSelected(round: Round)
-
         fun onRoundAdded()
     }
 
