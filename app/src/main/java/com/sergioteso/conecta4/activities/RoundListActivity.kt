@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import com.sergioteso.conecta4.R
@@ -60,6 +61,11 @@ class RoundListActivity : AppCompatActivity(),
     override fun onResume() {
         super.onResume()
         onRoundUpdated()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+        super.onSaveInstanceState(outState, outPersistentState)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
