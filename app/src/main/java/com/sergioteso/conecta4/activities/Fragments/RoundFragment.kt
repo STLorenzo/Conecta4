@@ -7,12 +7,12 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.update
 import com.sergioteso.conecta4.models.*
+import com.sergioteso.conecta4.views.ButtonC4
 import es.uam.eps.multij.*
 import kotlinx.android.synthetic.main.fragment_round.*
 import java.lang.Exception
@@ -25,7 +25,7 @@ class GameFragment : Fragment(), PartidaListener {
     private lateinit var game: Partida
     private lateinit var tablero: TableroC4
     private lateinit var localPlayerC4: LocalPlayerC4
-    private var casillas = mutableListOf<MutableList<ImageButton>>()
+    private var casillas = mutableListOf<MutableList<ButtonC4>>()
     var listener: OnRoundFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -132,7 +132,7 @@ class GameFragment : Fragment(), PartidaListener {
         for (j in 0..tablero.columnas - 1) {
             for (i in 0..tablero.filas - 1) {
                 try {
-                    casillas[i][j].update(tablero.getTablero(i, j))
+                    casillas[i][j].setBackgroundCasilla(tablero.getTablero(i, j))
                 } catch (e: ExcepcionJuego) {
                     e.printStackTrace()
                 }
@@ -168,7 +168,7 @@ class GameFragment : Fragment(), PartidaListener {
 
     fun crearColumna(filas: Int, indiceColumna: Int): LinearLayout {
         val ll = LinearLayout(context)
-        var casilla: ImageButton
+        var casilla: ButtonC4
         ll.orientation = LinearLayout.VERTICAL
         for (i in 0..filas - 1) {
             if (casillas.size < filas) casillas.add(mutableListOf())
@@ -193,10 +193,15 @@ class GameFragment : Fragment(), PartidaListener {
         return ll
     }
 
-    fun crearCasilla(indiceColumna: Int, indiceFila: Int): ImageButton {
-        val ib = ImageButton(context)
-        ib.isClickable = false
-        ib.update(tablero.matriz[indiceFila][indiceColumna])
-        return ib
+    fun crearCasilla(indiceColumna: Int, indiceFila: Int): ButtonC4 {
+        if (context == null){
+            throw ExcepcionJuego("Fallo al crear casilla")
+        }else{
+            val ib = ButtonC4(context!!)
+            ib.isClickable = false
+            ib.setBackgroundCasilla(tablero.matriz[indiceFila][indiceColumna])
+            return ib
+        }
+
     }
 }

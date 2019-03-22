@@ -10,6 +10,7 @@ import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.Fragments.GameFragment
 import com.sergioteso.conecta4.activities.Logger.log
 import kotlinx.android.synthetic.main.activity_round_list.*
+import kotlinx.android.synthetic.main.fragment_round_list.*
 
 /**
  * clase que implementa la actividad la actividad del juego principal.
@@ -21,7 +22,6 @@ class RoundActivity : AppCompatActivity(),
 
 
     override fun onRoundUpdated() {
-
     }
 
     /**
@@ -35,11 +35,9 @@ class RoundActivity : AppCompatActivity(),
         val fm = supportFragmentManager
         val round_id = intent.getStringExtra(EXTRA_ROUND_ID)
         if (fragment_game_container == null) {
-            log("Aqui no")
             val fragment = GameFragment.newInstance(round_id)
             fm.beginTransaction().add(R.id.fragment_round_list_container, fragment).commit()
         } else {
-            log("Aqui si ")
             val returnIntent = Intent()
             returnIntent.putExtra(RoundListActivity.EXTRA_ROUND_ID, round_id)
             setResult(Activity.RESULT_OK, returnIntent)
