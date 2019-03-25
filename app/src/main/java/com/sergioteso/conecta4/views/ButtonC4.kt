@@ -11,6 +11,9 @@ import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.update
 import com.sergioteso.conecta4.models.TableroC4
 
+/**
+ * Clase que extiende la view de Boton para modelar una casilla en el tablero.
+ */
 class ButtonC4(context: Context) : Button(context){
     private var radious: Float = 0.toFloat()
     private var currentColor = Color.GRAY
@@ -19,6 +22,10 @@ class ButtonC4(context: Context) : Button(context){
         paint = Paint(Paint.ANTI_ALIAS_FLAG)
     }
 
+    /**
+     * sobreescribe el metodo onDraw para crear circulas que representan las casillas del tablero.
+     * Su color depende de su valor real en el tablero.
+     */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val x = 0.5f * width
@@ -30,6 +37,9 @@ class ButtonC4(context: Context) : Button(context){
     }
 
 
+    /**
+     * Funcion que establece el color de la casilla segun su valor real en el tablero.
+     */
     fun setBackgroundCasilla(player: Int){
         when (player) {
             TableroC4.CASILLA_J1 -> currentColor = ContextCompat.getColor(context, R.color.darkGreen)
