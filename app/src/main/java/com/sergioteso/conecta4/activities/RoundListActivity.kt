@@ -16,15 +16,29 @@ import kotlinx.android.synthetic.main.activity_round_list.*
 import kotlinx.android.synthetic.main.fragment_round_list.*
 
 
-
+/**
+ * Actividad que modela la visualizacion de la lista de rondas disponibles en la aplicacion.
+ * Implementa las interfaces para interaccionar tanto con el fragmento de la lista de rondas como el
+ * fragmento de ronda.
+ * Esta actividad segun las densidades de la pantalla instanciara ambos fragmentos o lanzara una actividad de
+ * tipo RoundActivity.
+ */
 class RoundListActivity : AppCompatActivity(),
     RoundListFragment.OnFragmentInteractionListener,
     GameFragment.OnRoundFragmentInteractionListener {
 
+    /**
+     * Metodo que actualiza la UI del RecyclerView de la lista de partidas notificandole que
+     * los datos de esta han cambiado
+     */
     override fun onRoundUpdated() {
         round_recycler_view.adapter?.notifyDataSetChanged()
     }
 
+    /**
+     * Funcion que se ejecuta al seleccionar una ronda en la lista. Segun la densidad instancia el fragmento
+     * RoundFragment o lanza la actividad RoundActivity
+     */
     override fun onRoundSelected(round: Round) {
         val fm = supportFragmentManager
         if (fragment_game_container != null) {
@@ -36,6 +50,10 @@ class RoundListActivity : AppCompatActivity(),
         }
     }
 
+    /**
+     * Funcion que se ejecuta cuando termina la partida previamente lanzada. Recoge que la ronda
+     * ha terminado correctamente y el id de esta.
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when(requestCode){
             GAME_REQUEST_ID -> {
@@ -46,6 +64,9 @@ class RoundListActivity : AppCompatActivity(),
         }
     }
 
+    /**
+     * Funcion que instancia el fragmento de la lista de rondas al crear la actividad.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_round_list)
@@ -58,21 +79,33 @@ class RoundListActivity : AppCompatActivity(),
         }
     }
 
+    /**
+     * Al resumir la actividad ejecuta el metodo onRoundUpdated por si hay que actualizar la UI
+     */
     override fun onResume() {
         super.onResume()
         onRoundUpdated()
     }
 
+    /**
+     * Funcion que crea el menu de opciones
+     */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         return true
     }
 
+    /**
+     * Metodo que añade una ronda y actualiza la interfaz
+     */
     override fun onRoundAdded() {
         RoundRepository.addRound()
         onRoundUpdated()
     }
 
+    /**
+     * objeto usado a modo de estatico para crar un intent de esta actividad pasandole un id de ronda a mostrar.
+     */
     companion object {
         val GAME_REQUEST_ID = 1
         val EXTRA_ROUND_ID = "com.sergioteso.conecta4.round_id"

@@ -14,8 +14,8 @@ import kotlinx.android.synthetic.main.fragment_round_list.*
 
 /**
  * clase que implementa la actividad la actividad del juego principal.
- * Además implementa la interfaz PartidaListener para el correcto desarrollo de la partida enfrentando
- * a un jugador real contra un jugadorAleatorio segun los parametros de tablero pasados en el GameEditor
+ * Para ello simplemente infla el fragmento de RoundFragment que se encarga de toda la logica entre
+ * la UI y la logica de negocio.
  */
 class RoundActivity : AppCompatActivity(),
     GameFragment.OnRoundFragmentInteractionListener {
@@ -26,8 +26,7 @@ class RoundActivity : AppCompatActivity(),
 
     /**
      * función que sobreescribe el onCreate básico de las Activities en Android
-     * Se encarga de obtener los datos del Intent enviado por el GameEditor y crear el tablero con esos datos
-     * asi como tambien crea al jugador local e inicializa la partida
+     * Se encarga de isntanciar el fragmento RoundFragment de acorde a la ronda seleccionada
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
