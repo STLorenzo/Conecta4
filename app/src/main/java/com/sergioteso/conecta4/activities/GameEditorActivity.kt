@@ -7,7 +7,9 @@ import android.widget.Toast
 import com.sergioteso.conecta4.R
 import kotlinx.android.synthetic.main.activity_game_editor.*
 
-
+/**
+ * Actividad que permite introducir por pantalla los parametros deseados para una ronda.
+ */
 class GameEditorActivity : AppCompatActivity() {
 
     private var MIN_COLUMN = 4

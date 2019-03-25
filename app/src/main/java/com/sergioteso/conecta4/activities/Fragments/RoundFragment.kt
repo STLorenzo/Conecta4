@@ -20,6 +20,11 @@ import java.lang.Exception
 
 private const val ROUND_ID = "round_id"
 
+/**
+ * Fragmento que modela una partida con su tablero y sus listeners oportunos.
+ * Inicializa al jugador local y el tablero y muestra este ultimo por pantalla para
+ * poder jugar.
+ */
 class GameFragment : Fragment(), PartidaListener {
     private lateinit var round: Round
     private lateinit var game: Partida
@@ -28,6 +33,18 @@ class GameFragment : Fragment(), PartidaListener {
     private var casillas = mutableListOf<MutableList<ButtonC4>>()
     var listener: OnRoundFragmentInteractionListener? = null
 
+    /**
+     * interfaz que deben a implementar las clases que quieran ejecutar codigo cuando
+     * ocurre una interaccion en la ronda de este fragmento. Principalmente actualizaciones de UI.
+     */
+    interface OnRoundFragmentInteractionListener {
+        fun onRoundUpdated()
+    }
+
+    /**
+     * Metodo que ejecutado al crear la vista que se encarga de obtener la ronda de
+     * RoundRepository en la cual se va a jugar.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -35,6 +52,9 @@ class GameFragment : Fragment(), PartidaListener {
         }
     }
 
+    /**
+     * Metodo llamado al crear la vista en el cual se le indica el layout a inflar.
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,6 +63,10 @@ class GameFragment : Fragment(), PartidaListener {
         return inflater.inflate(R.layout.fragment_round, container, false)
     }
 
+    /**
+     * Metodo llamado una vez la vista es creada. Es el encargado en asignar al jugador local y el tablero y
+     * establecer el listener del boton de reset
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         tv_title.text = round.title
@@ -67,10 +91,9 @@ class GameFragment : Fragment(), PartidaListener {
         }
     }
 
-    interface OnRoundFragmentInteractionListener {
-        fun onRoundUpdated()
-    }
-
+    /**
+     *
+     */
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context is OnRoundFragmentInteractionListener)
@@ -83,11 +106,17 @@ class GameFragment : Fragment(), PartidaListener {
         }
     }
 
+    /**
+     *
+     */
     override fun onDetach() {
         super.onDetach()
         listener = null
     }
 
+    /**
+     * objeto estatico que permite a clases externas pasar el argumento del id de la ronda al instanciarse.
+     */
     companion object {
         @JvmStatic
         fun newInstance(round_id: String) =
@@ -98,11 +127,18 @@ class GameFragment : Fragment(), PartidaListener {
             }
     }
 
+    /**
+     * Al resumir la actividad actualiza la interfaz
+     */
     override fun onResume() {
         super.onResume()
         updateUI()
     }
 
+    /**
+     * Funcion que se ejecuta siempre que hay un cambio en la partida mediante la interfaz PartidaListener.
+     * Principalmente actualiza la UI de la aplicacion
+     */
     override fun onCambioEnPartida(evento: Evento?) {
         when (evento?.tipo) {
             Evento.EVENTO_CAMBIO -> {
@@ -128,6 +164,9 @@ class GameFragment : Fragment(), PartidaListener {
         }
     }
 
+    /**
+     * Metodo que actualiza la interfaz de Usuario del tablero
+     */
     fun updateUI() {
         for (j in 0..tablero.columnas - 1) {
             for (i in 0..tablero.filas - 1) {
@@ -140,12 +179,19 @@ class GameFragment : Fragment(), PartidaListener {
         }
     }
 
+    /**
+     * Metodo que se ejecuta al empezar la aplicacion. Crea el tablero e inicia la ronda.
+     */
     override fun onStart() {
         super.onStart()
         crearBoard()
         startRound()
     }
 
+    /**
+     * Metodo que inicia una ronda. Para ello añade a la partida un jugador local y un jugador aleatorio y
+     * la inicializa.
+     */
     private fun startRound() {
         val players = ArrayList<Jugador>()
         val randomPlayer = JugadorAleatorio("Random Player")
@@ -158,6 +204,9 @@ class GameFragment : Fragment(), PartidaListener {
             game.comenzar()
     }
 
+    /**
+     * Crea el tablero en la UI llamando a crearColumna para cada columna que tenga el tablero
+     */
     fun crearBoard() {
         ll_board.removeAllViews()
         for (i in 0..tablero.columnas - 1) {
@@ -166,6 +215,11 @@ class GameFragment : Fragment(), PartidaListener {
         }
     }
 
+    /**
+     * Crea cada columna en la UI llamando al metodo de crearCasilla para cada casilla en la columna.
+     * A cada columna creada como le añade su correspondiente listener para realizar los movimientos
+     * en el Tablero.
+     */
     fun crearColumna(filas: Int, indiceColumna: Int): LinearLayout {
         val ll = LinearLayout(context)
         var casilla: ButtonC4
@@ -193,10 +247,14 @@ class GameFragment : Fragment(), PartidaListener {
         return ll
     }
 
+    /**
+     * Crea cada casilla en la UI creandola de la clase personalizada ButtonC4 mostrando cada casilla del color
+     * correspondiente a su posicion en el Tablero.
+     */
     fun crearCasilla(indiceColumna: Int, indiceFila: Int): ButtonC4 {
-        if (context == null){
+        if (context == null) {
             throw ExcepcionJuego("Fallo al crear casilla")
-        }else{
+        } else {
             val ib = ButtonC4(context!!)
             ib.isClickable = false
             ib.setBackgroundCasilla(tablero.matriz[indiceFila][indiceColumna])

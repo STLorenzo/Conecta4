@@ -12,19 +12,31 @@ import com.sergioteso.conecta4.activities.update
 import com.sergioteso.conecta4.models.Round
 import kotlinx.android.synthetic.main.fragment_round_list.*
 
+/**
+ * Clase que modela el fragmento de la lista de rondas.
+ */
 class RoundListFragment : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
 
+    /**
+     * Interfaz que modela la interaccion con este fragmento para clases exteriores.
+     */
     interface OnFragmentInteractionListener {
         fun onRoundSelected(round: Round)
         fun onRoundAdded()
     }
 
+    /**
+     * Metodo que al crear la actividad establece que tiene un menu de opciones
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
+    /**
+     * Metodo que al crear la vista la infla con su layout correspondiente
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,6 +44,10 @@ class RoundListFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_round_list, container, false)
     }
 
+    /**
+     * Al crear la vista establecemos los parametros necesarios para el correcto funcionamiento del
+     * RecyclerView usado para lista de rondas.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         round_recycler_view.apply {
@@ -41,6 +57,9 @@ class RoundListFragment : Fragment() {
         }
     }
 
+    /**
+     *
+     */
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnFragmentInteractionListener) {
@@ -50,6 +69,9 @@ class RoundListFragment : Fragment() {
         }
     }
 
+    /**
+     *
+     */
     override fun onDetach() {
         super.onDetach()
         listener = null
@@ -60,6 +82,11 @@ class RoundListFragment : Fragment() {
 //        inflater?.inflate(R.menu.menu, menu)
 //    }
 
+    /**
+     * Metodo que sobreescribe el comportamiento al pulsar en el menu de opciones.
+     * En este caso el boton de de añadir ronda a la lista. Añadiendola al repositorio y
+     * actualizando la UI de la lista
+     */
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.menu_item_new_round -> {

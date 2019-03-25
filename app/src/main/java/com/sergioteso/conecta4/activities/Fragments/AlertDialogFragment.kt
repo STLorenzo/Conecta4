@@ -18,8 +18,16 @@ import com.sergioteso.conecta4.activities.RoundActivity
 import com.sergioteso.conecta4.activities.RoundListActivity
 import com.sergioteso.conecta4.models.RoundRepository
 
-
+/**
+ * Clase que modela una simple ventana de dialogo que permite crear una nueva partida.
+ * Esta se muestra cuando ocurre un GameOver
+ */
 class AlertDialogFragment : DialogFragment() {
+
+    /**
+     * Metodo sobrescrito que modela la creacción de esta ventana de dialogo.
+     * Muestra un mensaje de GameOver y dos botones que permiten crear o no una nueva partida.
+     */
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val activity = activity as AppCompatActivity?
         val alertDialogBuilder = AlertDialog.Builder(getActivity())

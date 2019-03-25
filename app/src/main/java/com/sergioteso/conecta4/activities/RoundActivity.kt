@@ -51,7 +51,9 @@ class RoundActivity : AppCompatActivity(),
     }
 
 
-
+    /**
+     * objeto que permite crear intents para iniciar esta actividad de acorde a los parametros que le pasemos
+     */
     companion object {
         val EXTRA_ROUND_ID = "com.sergioteso.conecta4.round_id"
         val EXTRA_TYPE = "com.sergioteso.conecta4.game_type"
