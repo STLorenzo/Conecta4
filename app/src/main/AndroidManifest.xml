@@ -24,6 +24,7 @@
                 android:value=".activities.RoundListActivity"/>
         </activity>
         <activity android:name=".activities.RoundListActivity"/>
+        <activity android:name=".activities.OptionsActivity"/>
     </application>
 
 </manifest>

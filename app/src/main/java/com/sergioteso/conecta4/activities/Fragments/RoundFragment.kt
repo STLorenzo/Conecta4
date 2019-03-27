@@ -10,11 +10,10 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import com.sergioteso.conecta4.R
-import com.sergioteso.conecta4.activities.update
 import com.sergioteso.conecta4.models.*
 import com.sergioteso.conecta4.views.ButtonC4
 import es.uam.eps.multij.*
-import kotlinx.android.synthetic.main.fragment_round.*
+import kotlinx.android.synthetic.main.fragment_round2.*
 import java.lang.Exception
 
 
@@ -60,7 +59,7 @@ class GameFragment : Fragment(), PartidaListener {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_round, container, false)
+        return inflater.inflate(R.layout.fragment_round2, container, false)
     }
 
     /**
@@ -82,7 +81,8 @@ class GameFragment : Fragment(), PartidaListener {
                 tablero.reset()
                 startRound()
                 listener?.onRoundUpdated()
-                updateUI()
+                //updateUI()
+                board_viewc4.invalidate()
                 Snackbar.make(
                     view, R.string.round_restarted,
                     Snackbar.LENGTH_SHORT
@@ -132,7 +132,8 @@ class GameFragment : Fragment(), PartidaListener {
      */
     override fun onResume() {
         super.onResume()
-        updateUI()
+        //updateUI()
+        board_viewc4.invalidate()
     }
 
     /**
@@ -142,7 +143,8 @@ class GameFragment : Fragment(), PartidaListener {
     override fun onCambioEnPartida(evento: Evento?) {
         when (evento?.tipo) {
             Evento.EVENTO_CAMBIO -> {
-                updateUI()
+                //updateUI()
+                board_viewc4.invalidate()
                 listener?.onRoundUpdated()
             }
             Evento.EVENTO_FIN -> {
@@ -155,7 +157,8 @@ class GameFragment : Fragment(), PartidaListener {
                         .show()
                 }
 
-                updateUI()
+                //updateUI()
+                board_viewc4.invalidate()
                 AlertDialogFragment().show(
                     activity?.supportFragmentManager, "ALERT_DIALOG"
                 )
@@ -184,7 +187,7 @@ class GameFragment : Fragment(), PartidaListener {
      */
     override fun onStart() {
         super.onStart()
-        crearBoard()
+        //crearBoard()
         startRound()
     }
 
@@ -200,20 +203,26 @@ class GameFragment : Fragment(), PartidaListener {
         game = Partida(tablero, players)
         game.addObservador(this)
         localPlayerC4.setPartida(game)
+
+        board_viewc4.setBoard(round.tableroc4)
+        board_viewc4.setOnPlayListener(localPlayerC4)
+
+
         if (game.tablero.estado == Tablero.EN_CURSO)
             game.comenzar()
     }
 
+
     /**
      * Crea el tablero en la UI llamando a crearColumna para cada columna que tenga el tablero
-     */
+
     fun crearBoard() {
         ll_board.removeAllViews()
         for (i in 0..tablero.columnas - 1) {
             val col = crearColumna(tablero.filas, i)
             ll_board.addView(col)
         }
-    }
+    }*/
 
     /**
      * Crea cada columna en la UI llamando al metodo de crearCasilla para cada casilla en la columna.

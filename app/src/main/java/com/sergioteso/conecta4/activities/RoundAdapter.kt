@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.models.Round
@@ -18,11 +19,13 @@ class RoundViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
     var idTextView: TextView
     var dateTextView: TextView
     var tableroTextView: TextView
+    var item_rl : RelativeLayout
 
     /**
      * Al inicializar la clase obtiene del layout las views a usar
      */
     init {
+        item_rl = itemview.findViewById(R.id.list_item_rl)
         cardView = itemview.findViewById(R.id.list_cardview)
         idTextView = itemview.findViewById(R.id.list_item_id) as TextView
         dateTextView = itemview.findViewById(R.id.list_item_date) as TextView
@@ -44,6 +47,7 @@ class RoundViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
         } else {
             itemView.setBackgroundResource(R.color.darkGreen)
         }
+        item_rl.setOnClickListener { listener(round)}
         cardView.setOnClickListener { listener(round) }
         idTextView.setOnClickListener { listener(round) }
         tableroTextView.setOnClickListener { listener(round) }

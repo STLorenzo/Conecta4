@@ -5,9 +5,13 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
+import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.setColor
 import com.sergioteso.conecta4.models.TableroC4
+import es.uam.eps.multij.Tablero
 
 class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
     private val DEBUG = "ViewC4"
@@ -17,8 +21,13 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
     private var heightOfTile: Float = 0.toFloat()
     private var widthOfTile: Float = 0.toFloat()
     private var radio: Float = 0.toFloat()
-    private var size: Int = 0
+    private var columns: Int = 4
+    private var rows: Int = 6
     private var board: TableroC4? = null
+    private var onPlayListener: OnPlayListener? = null
+    interface OnPlayListener{
+        fun onPlay(column: Int)
+    }
 
     init {
         backgroundPaint.color = Color.BLACK
@@ -45,6 +54,8 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
             height = widthSize
             width = height
         }
+
+        setMeasuredDimension(width,height)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -56,8 +67,8 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        widthOfTile = (w / size).toFloat()
-        heightOfTile = (h / size).toFloat()
+        widthOfTile = (w / columns).toFloat()
+        heightOfTile = (h / rows).toFloat()
         if (widthOfTile < heightOfTile)
             radio = widthOfTile * 0.3f
         else
@@ -66,17 +77,50 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
     }
 
     private fun drawCircles(canvas: Canvas, paint: Paint) {
-        var centerRaw: Float
+        var centerRow: Float
         var centerColumn: Float
-        for (i in 0 until size) {
-            val pos = size - i - 1
-            centerRaw = heightOfTile * (1 + 2 * pos) / 2f
-            for (j in 0 until size) {
+        for (i in 0 until rows) {
+            val pos = rows - i - 1
+            centerRow = heightOfTile * (1 + 2 * pos) / 2f
+            for (j in 0 until columns) {
                 centerColumn = widthOfTile * (1 + 2 * j) / 2f
-                paint.setColor(board!!, i, j,context)
-                canvas.drawCircle(centerColumn, centerRaw, radio, paint)
+                paint.setColor(board!!,rows-1-i,j,context)
+                //paint.color = Color.RED
+                canvas.drawCircle(centerColumn, centerRow, radio, paint)
             }
         }
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (onPlayListener == null)
+            return super.onTouchEvent(event)
+        if (board!!.getEstado() != Tablero.EN_CURSO) {
+            Toast.makeText(context,
+                R.string.round_already_finished, Toast.LENGTH_SHORT).show()
+            return super.onTouchEvent(event)
+        }
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            try {
+                onPlayListener?.onPlay(fromEventToJ(event))
+            } catch (e: Exception) {
+                Toast.makeText(context, "Jugada inválida", Toast.LENGTH_SHORT).show()
+            }
+        }
+        return true
+    }
+
+    private fun fromEventToJ(event: MotionEvent): Int {
+        return (event.x / widthOfTile).toInt()
+    }
+
+    fun setOnPlayListener(listener: OnPlayListener){
+        this.onPlayListener = listener
+    }
+
+    fun setBoard(board: TableroC4){
+        this.board = board
+        this.rows = board.filas
+        this.columns = board.columnas
     }
 
 }

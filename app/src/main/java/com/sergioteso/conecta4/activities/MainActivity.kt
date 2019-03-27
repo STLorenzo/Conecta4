@@ -1,6 +1,5 @@
 package com.sergioteso.conecta4.activities
 
-import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.sergioteso.conecta4.R
@@ -17,6 +16,10 @@ class MainActivity : AppCompatActivity() {
 
         btn_new_game_mainmenu.setOnClickListener {
             startActivity(RoundListActivity.newIntent(this, null))
+        }
+
+        btn_options_mainmenu.setOnClickListener {
+            startActivity(OptionsActivity.newIntent(this))
         }
     }
 }
