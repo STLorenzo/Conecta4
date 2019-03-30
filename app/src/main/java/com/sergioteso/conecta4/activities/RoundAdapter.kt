@@ -20,7 +20,7 @@ class RoundViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
     var idTextView: TextView
     var dateTextView: TextView
     var tableroViewC4: TextView
-    var item_rl : RelativeLayout
+    var item_rl: RelativeLayout
 
     /**
      * Al inicializar la clase obtiene del layout las views a usar
@@ -50,7 +50,7 @@ class RoundViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
             itemView.setBackgroundResource(R.color.darkGreen)
         }
 
-        item_rl.setOnClickListener { listener(round)}
+        item_rl.setOnClickListener { listener(round) }
         cardView.setOnClickListener { listener(round) }
         idTextView.setOnClickListener { listener(round) }
         tableroViewC4.setOnClickListener { listener(round) }

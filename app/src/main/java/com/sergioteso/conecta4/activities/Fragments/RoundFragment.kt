@@ -72,7 +72,7 @@ class GameFragment : Fragment(), PartidaListener {
         localPlayerC4 = LocalPlayerC4("Anon")
         tablero = round.tableroc4
         reset_round_fab.setOnClickListener {
-            if (tablero.getEstado() != Tablero.EN_CURSO) {
+            if (tablero.estado != Tablero.EN_CURSO) {
                 Snackbar.make(
                     view,
                     R.string.round_already_finished, Snackbar.LENGTH_SHORT
@@ -217,11 +217,11 @@ class GameFragment : Fragment(), PartidaListener {
      * Crea el tablero en la UI llamando a crearColumna para cada columna que tenga el tablero
 
     fun crearBoard() {
-        ll_board.removeAllViews()
-        for (i in 0..tablero.columnas - 1) {
-            val col = crearColumna(tablero.filas, i)
-            ll_board.addView(col)
-        }
+    ll_board.removeAllViews()
+    for (i in 0..tablero.columnas - 1) {
+    val col = crearColumna(tablero.filas, i)
+    ll_board.addView(col)
+    }
     }*/
 
     /**

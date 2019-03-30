@@ -36,11 +36,11 @@ fun ImageButton.update(player: Int) {
 fun Paint.setColor(board: TableroC4, i: Int, j: Int, context: Context) {
     val player = board.getTablero(i, j)
     when (player) {
-        TableroC4.CASILLA_J1 -> setColor(ContextCompat.getColor(context, R.color.darkGreen))
-        TableroC4.CASILLA_J2 -> setColor(ContextCompat.getColor(context, R.color.darkRed))
-        TableroC4.CASILLA_WIN_J1 -> setColor(ContextCompat.getColor(context, R.color.lightGreen))
-        TableroC4.CASILLA_WIN_J2 -> setColor(ContextCompat.getColor(context, R.color.lightRed))
-        else -> setColor(Color.GRAY)
+        TableroC4.CASILLA_J1 -> color = ContextCompat.getColor(context, R.color.darkGreen)
+        TableroC4.CASILLA_J2 -> color = ContextCompat.getColor(context, R.color.darkRed)
+        TableroC4.CASILLA_WIN_J1 -> color = ContextCompat.getColor(context, R.color.lightGreen)
+        TableroC4.CASILLA_WIN_J2 -> color = ContextCompat.getColor(context, R.color.lightRed)
+        else -> color = Color.GRAY
     }
 }
 

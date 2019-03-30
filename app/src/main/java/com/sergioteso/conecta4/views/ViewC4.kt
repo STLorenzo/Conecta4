@@ -116,7 +116,7 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
 //        return true
         if (onPlayListener == null)
             return super.onTouchEvent(event)
-        if (board!!.getEstado() != Tablero.EN_CURSO) {
+        if (board!!.estado != Tablero.EN_CURSO) {
             Toast.makeText(
                 context,
                 R.string.round_already_finished, Toast.LENGTH_SHORT

@@ -32,7 +32,7 @@ class ButtonC4(context: Context) : Button(context){
         val y = 0.5f * height
         width = if (width < height) width else height
         radious = 0.15f * width
-        paint.setColor(currentColor)
+        paint.color = currentColor
         canvas.drawCircle(x, y, radious, paint)
     }
 
