@@ -9,6 +9,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.models.Round
+import com.sergioteso.conecta4.views.ViewC4
 import es.uam.eps.multij.Tablero
 
 /**
@@ -18,7 +19,7 @@ class RoundViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
     var cardView: CardView
     var idTextView: TextView
     var dateTextView: TextView
-    var tableroTextView: TextView
+    var tableroViewC4: TextView
     var item_rl : RelativeLayout
 
     /**
@@ -29,7 +30,7 @@ class RoundViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
         cardView = itemview.findViewById(R.id.list_cardview)
         idTextView = itemview.findViewById(R.id.list_item_id) as TextView
         dateTextView = itemview.findViewById(R.id.list_item_date) as TextView
-        tableroTextView = itemview.findViewById(R.id.list_item_tablero) as TextView
+        tableroViewC4 = itemview.findViewById(R.id.list_item_tablero) as TextView
     }
 
     /**
@@ -39,7 +40,8 @@ class RoundViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
     fun bindRound(round: Round, listener: (Round) -> Unit) {
         idTextView.text = round.title
         dateTextView.text = round.date.substring(0, 19)
-        tableroTextView.text = round.tableroc4.tableroInString()
+        tableroViewC4.text = round.tableroc4.tableroInString()
+
         if (round.tableroc4.estado == Tablero.FINALIZADA) {
             itemView.setBackgroundResource(R.color.darkRed)
         } else if (round.tableroc4.estado == Tablero.TABLAS) {
@@ -47,10 +49,11 @@ class RoundViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
         } else {
             itemView.setBackgroundResource(R.color.darkGreen)
         }
+
         item_rl.setOnClickListener { listener(round)}
         cardView.setOnClickListener { listener(round) }
         idTextView.setOnClickListener { listener(round) }
-        tableroTextView.setOnClickListener { listener(round) }
+        tableroViewC4.setOnClickListener { listener(round) }
         dateTextView.setOnClickListener { listener(round) }
 
     }

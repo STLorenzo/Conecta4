@@ -5,9 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
-import android.view.GestureDetector
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import android.widget.Toast
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.setColor
@@ -15,8 +13,6 @@ import com.sergioteso.conecta4.models.TableroC4
 import es.uam.eps.multij.Tablero
 
 class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
-    private val DEBUG = "ViewC4"
-    private var numero: Int = 0
     private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var heightOfTile: Float = 0.toFloat()
@@ -28,7 +24,7 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
     private var onPlayListener: OnPlayListener? = null
     private var myGestureDetector: GestureDetector
 
-    interface OnPlayListener{
+    interface OnPlayListener {
         fun onPlay(column: Int)
     }
 
@@ -40,29 +36,31 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
 
     internal inner class MyGestureListener : GestureDetector.SimpleOnGestureListener() {
         override fun onDown(e: MotionEvent?): Boolean {
-            Toast.makeText(context,"onDown: " + e.toString(),Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "onDown: " + e.toString(), Toast.LENGTH_SHORT).show()
             return true
         }
 
         override fun onDoubleTap(e: MotionEvent?): Boolean {
-            Toast.makeText(context,"onDoubleTap: " + e.toString(),Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "onDoubleTap: " + e.toString(), Toast.LENGTH_SHORT).show()
             return true
         }
 
         override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
-            Toast.makeText(context,"onFling: " + e1.toString() + e2.toString(),
-                Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context, "onFling: " + e1.toString() + e2.toString(),
+                Toast.LENGTH_SHORT
+            ).show()
             return true
         }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val desiredWidth = 500
-        val wMode: String
-        val hMode: String
-        val widthMode = View.MeasureSpec.getMode(widthMeasureSpec)
+//        val desiredWidth = 500
+//        val wMode: String
+//        val hMode: String
+//        val widthMode = View.MeasureSpec.getMode(widthMeasureSpec)
         var widthSize = View.MeasureSpec.getSize(widthMeasureSpec)
-        val heightMode = View.MeasureSpec.getMode(heightMeasureSpec)
+//        val heightMode = View.MeasureSpec.getMode(heightMeasureSpec)
         var heightSize = View.MeasureSpec.getSize(heightMeasureSpec)
         val width: Int
         val height: Int
@@ -77,7 +75,7 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
             width = height
         }
 
-        setMeasuredDimension(width,height)
+        setMeasuredDimension(width, height)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -106,7 +104,7 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
             centerRow = heightOfTile * (1 + 2 * pos) / 2f
             for (j in 0 until columns) {
                 centerColumn = widthOfTile * (1 + 2 * j) / 2f
-                paint.setColor(board!!,rows-1-i,j,context)
+                paint.setColor(board!!, rows - 1 - i, j, context)
                 //paint.color = Color.RED
                 canvas.drawCircle(centerColumn, centerRow, radio, paint)
             }
@@ -119,8 +117,10 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
         if (onPlayListener == null)
             return super.onTouchEvent(event)
         if (board!!.getEstado() != Tablero.EN_CURSO) {
-            Toast.makeText(context,
-                R.string.round_already_finished, Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                R.string.round_already_finished, Toast.LENGTH_SHORT
+            ).show()
             return super.onTouchEvent(event)
         }
         if (event.action == MotionEvent.ACTION_DOWN) {
@@ -137,11 +137,11 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
         return (event.x / widthOfTile).toInt()
     }
 
-    fun setOnPlayListener(listener: OnPlayListener){
+    fun setOnPlayListener(listener: OnPlayListener) {
         this.onPlayListener = listener
     }
 
-    fun setBoard(board: TableroC4){
+    fun setBoard(board: TableroC4) {
         this.board = board
         this.rows = board.filas
         this.columns = board.columnas

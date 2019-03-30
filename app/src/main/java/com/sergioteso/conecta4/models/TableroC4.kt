@@ -85,6 +85,9 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
         return string
     }
 
+    /**
+     * Funcion que devuelve la matriz del tablero unicamente como string
+     */
     fun tableroInString(): String {
         var string = ""
         for (i in 0..this.filas - 1) {
