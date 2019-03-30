@@ -18,8 +18,8 @@ class MainActivity : AppCompatActivity() {
             startActivity(RoundListActivity.newIntent(this, null))
         }
 
-        btn_options_mainmenu.setOnClickListener {
-            startActivity(OptionsActivity.newIntent(this))
-        }
+//        btn_options_mainmenu.setOnClickListener {
+//            startActivity(OptionsActivity.newIntent(this))
+//        }
     }
 }

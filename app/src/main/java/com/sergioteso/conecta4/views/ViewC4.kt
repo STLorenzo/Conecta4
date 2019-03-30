@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
@@ -25,6 +26,8 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
     private var rows: Int = 6
     private var board: TableroC4? = null
     private var onPlayListener: OnPlayListener? = null
+    private var myGestureDetector: GestureDetector
+
     interface OnPlayListener{
         fun onPlay(column: Int)
     }
@@ -32,6 +35,25 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
     init {
         backgroundPaint.color = Color.BLACK
         linePaint.strokeWidth = 2f
+        myGestureDetector = GestureDetector(context, MyGestureListener())
+    }
+
+    internal inner class MyGestureListener : GestureDetector.SimpleOnGestureListener() {
+        override fun onDown(e: MotionEvent?): Boolean {
+            Toast.makeText(context,"onDown: " + e.toString(),Toast.LENGTH_SHORT).show()
+            return true
+        }
+
+        override fun onDoubleTap(e: MotionEvent?): Boolean {
+            Toast.makeText(context,"onDoubleTap: " + e.toString(),Toast.LENGTH_SHORT).show()
+            return true
+        }
+
+        override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+            Toast.makeText(context,"onFling: " + e1.toString() + e2.toString(),
+                Toast.LENGTH_SHORT).show()
+            return true
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -92,6 +114,8 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+//        myGestureDetector.onTouchEvent(event)
+//        return true
         if (onPlayListener == null)
             return super.onTouchEvent(event)
         if (board!!.getEstado() != Tablero.EN_CURSO) {
