@@ -30,8 +30,9 @@ class RoundActivity : AppCompatActivity(),
         setContentView(R.layout.activity_round_list)
         val fm = supportFragmentManager
         val round_id = intent.getStringExtra(EXTRA_ROUND_ID)
+        val name = intent.getStringExtra(EXTRA_NAME)
         if (fragment_game_container == null) {
-            val fragment = RoundFragment.newInstance(round_id)
+            val fragment = RoundFragment.newInstance(round_id,name)
             fm.beginTransaction().add(R.id.fragment_round_list_container, fragment).commit()
         } else {
             val returnIntent = Intent()

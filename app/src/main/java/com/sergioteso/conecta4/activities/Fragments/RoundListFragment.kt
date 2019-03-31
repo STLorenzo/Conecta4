@@ -1,6 +1,7 @@
 package com.sergioteso.conecta4.activities.Fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
@@ -11,6 +12,7 @@ import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.Logger.log
 import com.sergioteso.conecta4.activities.update
 import com.sergioteso.conecta4.models.Round
+import com.sergioteso.conecta4.models.TableroC4
 import kotlinx.android.synthetic.main.fragment_round_list.*
 
 /**
@@ -52,6 +54,10 @@ class RoundListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         log("onViewCreated")
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onResume() {

@@ -1,5 +1,8 @@
 package com.sergioteso.conecta4.activities
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.SeekBar
@@ -51,10 +54,17 @@ class GameEditorActivity : AppCompatActivity() {
                     RoundActivity.newIntentEditor(
                         this,
                         seekBar_columns_GameEditor.progress + MIN_COLUMN,
-                        seekBar_rows_GameEditor.progress + MIN_COLUMN,
+                        seekBar_rows_GameEditor.progress + MIN_ROW,
                         et_insertplayer_GameEditor.text.toString()
                     )
                 )
+
+                val returnIntent = Intent()
+                returnIntent.putExtra(RoundListActivity.EXTRA_ROUND_ROWS, seekBar_rows_GameEditor.progress + MIN_ROW)
+                returnIntent.putExtra(RoundListActivity.EXTRA_ROUND_COLUMNS, seekBar_columns_GameEditor.progress + MIN_ROW)
+                returnIntent.putExtra(RoundListActivity.EXTRA_ROUND_NAME, et_insertplayer_GameEditor.text.toString())
+                setResult(Activity.RESULT_OK, returnIntent)
+                finish()
             }
         }
     }
@@ -72,6 +82,13 @@ class GameEditorActivity : AppCompatActivity() {
                 tv_sb_rows.text = n.toString()
             }
 
+        }
+    }
+
+    companion object {
+        fun newIntent(context: Context): Intent {
+            val intent = Intent(context, GameEditorActivity::class.java)
+            return intent
         }
     }
 

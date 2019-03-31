@@ -7,14 +7,14 @@
 
     <TextView
             android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="PRUEBA"
+            android:text="@string/about"
+            android:textAlignment="center"
             android:textSize="40sp"
             android:background="@color/darkRed"/>
 
-    <com.sergioteso.conecta4.views.ViewC4
-            android:id="@+id/board_viewc4-2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="30dp"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:textSize="20sp"
+        android:text="@string/about_text"/>
 
 </LinearLayout>

@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.support.design.widget.Snackbar
 import android.util.AttributeSet
 import android.view.*
 import android.widget.Toast
@@ -118,9 +119,9 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
         if (onPlayListener == null)
             return super.onTouchEvent(event)
         if (board!!.estado != Tablero.EN_CURSO) {
-            Toast.makeText(
-                context,
-                R.string.round_already_finished, Toast.LENGTH_SHORT
+            Snackbar.make(
+                this,
+                R.string.round_already_finished, Snackbar.LENGTH_SHORT
             ).show()
             return super.onTouchEvent(event)
         }

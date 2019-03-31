@@ -23,6 +23,10 @@ object RoundRepository {
         rounds.add(Round(TableroC4(Random.nextInt(4, 7))))
     }
 
+    fun addRound(rows: Int, columns: Int) {
+        rounds.add(Round(TableroC4(rows, columns)))
+    }
+
     /**
      * Obtiene la ronda con id round_id del repositorio
      */

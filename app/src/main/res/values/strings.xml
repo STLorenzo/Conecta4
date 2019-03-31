@@ -2,7 +2,7 @@
     <string name="app_name">Conecta4</string>
     <string name="new_game">New Game</string>
     <string name="load_game">Load Game</string>
-    <string name="options">Options</string>
+    <string name="about">About</string>
     <string name="rows">Rows</string>
     <string name="columns">Columns</string>
     <string name="game_parameters">Game Parameters</string>
@@ -20,5 +20,5 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="round_restarted">Round Restarted</string>
-
+    <string name="about_text">Second Assignment of the Conecta4 project of DADM.\n\nMade by: Sergio Teso Lorenzo</string>
 </resources>

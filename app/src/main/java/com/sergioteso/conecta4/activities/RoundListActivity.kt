@@ -11,6 +11,7 @@ import com.sergioteso.conecta4.activities.Fragments.RoundFragment
 import com.sergioteso.conecta4.activities.Fragments.RoundListFragment
 import com.sergioteso.conecta4.models.Round
 import com.sergioteso.conecta4.models.RoundRepository
+import com.sergioteso.conecta4.models.TableroC4
 import kotlinx.android.synthetic.main.activity_round_list.*
 import kotlinx.android.synthetic.main.fragment_round_list.*
 
@@ -41,7 +42,7 @@ class RoundListActivity : AppCompatActivity(),
     override fun onRoundSelected(round: Round) {
         val fm = supportFragmentManager
         if (fragment_game_container != null) {
-            val gameFragment = RoundFragment.newInstance(round.id)
+            val gameFragment = RoundFragment.newInstance(round.id,name!!)
             fm.beginTransaction().add(R.id.fragment_game_container, gameFragment).commit()
         } else {
             val intento = RoundActivity.newIntentRound(this, round.id)
@@ -59,6 +60,15 @@ class RoundListActivity : AppCompatActivity(),
                 if (resultCode == Activity.RESULT_OK)
                     onRoundSelected(RoundRepository.getRound(
                         data?.getStringExtra(EXTRA_ROUND_ID)))
+            }
+
+            GAME_EDITOR_ID -> {
+                if (resultCode == Activity.RESULT_OK){
+                    val rows = data?.getIntExtra(EXTRA_ROUND_ROWS,4)
+                    val columns = data?.getIntExtra(EXTRA_ROUND_COLUMNS, 4)
+                    name = data?.getStringExtra(EXTRA_ROUND_NAME)
+                    RoundRepository.addRound(rows!!,columns!!)
+                }
             }
         }
     }
@@ -98,19 +108,32 @@ class RoundListActivity : AppCompatActivity(),
      * Metodo que añade una ronda y actualiza la interfaz
      */
     override fun onRoundAdded() {
-        RoundRepository.addRound()
+        startActivityForResult(GameEditorActivity.newIntent(this), GAME_EDITOR_ID)
         onRoundUpdated()
     }
+
+//    override fun onRoundAdded(rows: Int, columns: Int) {
+//        startActivityForResult(GameEditorActivity.newIntent(this), GAME_EDITOR_ID)
+//        RoundRepository.addRound(rows, columns)
+//        onRoundUpdated()
+//    }
 
     /**
      * objeto usado a modo de estatico para crar un intent de esta actividad pasandole un id de ronda a mostrar.
      */
     companion object {
         val GAME_REQUEST_ID = 1
+        val GAME_EDITOR_ID = 2
         val EXTRA_ROUND_ID = "com.sergioteso.conecta4.round_id"
+        val EXTRA_ROUND_ROWS = "com.sergioteso.conecta4.rows"
+        val EXTRA_ROUND_COLUMNS = "com.sergioteso.conecta4.columns"
+        val EXTRA_ROUND_NAME = "com.sergioteso.conecta4.name"
+        var name : String? = "Anonymus"
+
         fun newIntent(context: Context, round_id: String?): Intent {
             val intent = Intent(context, RoundListActivity::class.java)
             intent.putExtra(EXTRA_ROUND_ID, round_id)
+            intent.putExtra(EXTRA_ROUND_NAME, name)
             return intent
         }
     }

@@ -3,7 +3,7 @@
     <string name="app_name">Conecta4</string>
     <string name="new_game">Nuevo Juego</string>
     <string name="load_game">Cargar Juego</string>
-    <string name="options">Opciones</string>
+    <string name="about">Acerca de</string>
     <string name="rows">Filas</string>
     <string name="columns">Columnas</string>
     <string name="game_parameters">Parametros del Juego</string>
@@ -21,4 +21,5 @@
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="round_restarted">Ronda Reiniciada</string>
+    <string name="about_text">"Segunda Practica de Conecta4 de DADM.\n\nRealizada por: Sergio Teso Lorenzo"</string>
 </resources>

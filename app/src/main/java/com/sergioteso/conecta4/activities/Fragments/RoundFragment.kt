@@ -18,6 +18,7 @@ import java.lang.Exception
 
 
 private const val ROUND_ID = "round_id"
+private const val NAME = "name"
 
 /**
  * Fragmento que modela una partida con su tablero y sus listeners oportunos.
@@ -26,6 +27,7 @@ private const val ROUND_ID = "round_id"
  */
 class RoundFragment : Fragment(), PartidaListener {
     private lateinit var round: Round
+    private lateinit var name: String
     private lateinit var game: Partida
     private lateinit var tablero: TableroC4
     private lateinit var localPlayerC4: LocalPlayerC4
@@ -47,6 +49,7 @@ class RoundFragment : Fragment(), PartidaListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
+            name = it.getString(NAME)!!
             round = RoundRepository.getRound(it.getString(ROUND_ID))
         }
     }
@@ -69,7 +72,7 @@ class RoundFragment : Fragment(), PartidaListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         tv_title.text = round.title
-        localPlayerC4 = LocalPlayerC4("Anon")
+        localPlayerC4 = LocalPlayerC4(name)
         tablero = round.tableroc4
         reset_round_fab.setOnClickListener {
             if (tablero.estado != Tablero.EN_CURSO) {
@@ -119,10 +122,11 @@ class RoundFragment : Fragment(), PartidaListener {
      */
     companion object {
         @JvmStatic
-        fun newInstance(round_id: String) =
+        fun newInstance(round_id: String, name: String) =
             RoundFragment().apply {
                 arguments = Bundle().apply {
                     putString(ROUND_ID, round_id)
+                    putString(NAME, name)
                 }
             }
     }
@@ -153,7 +157,7 @@ class RoundFragment : Fragment(), PartidaListener {
                     Toast.makeText(context, "Tablas - Game Over", Toast.LENGTH_SHORT).show()
                 } else {
                     tablero.setComprobacionIJ(tablero.ultimoMovimiento as MovimientoC4)
-                    Toast.makeText(context, "Gana - ${game.getJugador(tablero.turno).nombre}", Toast.LENGTH_SHORT)
+                    Toast.makeText(context, "Gana - ${game.getJugador(tablero.turno).nombre}", Toast.LENGTH_LONG)
                         .show()
                 }
 
