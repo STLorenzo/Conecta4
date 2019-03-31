@@ -75,8 +75,4 @@ class GameEditorActivity : AppCompatActivity() {
         }
     }
 
-    fun getDimensiones() {
-        //TODO: calcular las dimensiones para el maximo del seekbar
-    }
-
 }

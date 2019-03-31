@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Conecta4</string>
+    <string name="new_game">Nuevo Juego</string>
+    <string name="load_game">Cargar Juego</string>
+    <string name="options">Opciones</string>
+    <string name="rows">Filas</string>
+    <string name="columns">Columnas</string>
+    <string name="game_parameters">Parametros del Juego</string>
+    <string name="player">Jugador</string>
+    <string name="insert_player_hint">Inserta tu nombre</string>
+    <string name="start">Empezar</string>
+    <string name="delete">Borrar</string>
+    <string name="player1">Jugador 1</string>
+    <string name="invalid_movement">Movimiento Incorrecto</string>
+    <string name="round_already_finished">La ronda ya ha terminado</string>
+    <string name="game_exception">Excepcion Juego</string>
+    <string name="new_round">Nueva Ronda</string>
+    <string name="game_over">Game Over</string>
+    <string name="game_over_message">La partida termino. ¿Desea empezar una nueva?</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    <string name="round_restarted">Ronda Reiniciada</string>
+</resources>
