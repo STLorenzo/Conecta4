@@ -24,7 +24,7 @@ private const val ROUND_ID = "round_id"
  * Inicializa al jugador local y el tablero y muestra este ultimo por pantalla para
  * poder jugar.
  */
-class GameFragment : Fragment(), PartidaListener {
+class RoundFragment : Fragment(), PartidaListener {
     private lateinit var round: Round
     private lateinit var game: Partida
     private lateinit var tablero: TableroC4
@@ -120,7 +120,7 @@ class GameFragment : Fragment(), PartidaListener {
     companion object {
         @JvmStatic
         fun newInstance(round_id: String) =
-            GameFragment().apply {
+            RoundFragment().apply {
                 arguments = Bundle().apply {
                     putString(ROUND_ID, round_id)
                 }

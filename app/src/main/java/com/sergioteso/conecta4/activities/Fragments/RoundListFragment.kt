@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 
 import com.sergioteso.conecta4.R
+import com.sergioteso.conecta4.activities.Logger.log
 import com.sergioteso.conecta4.activities.update
 import com.sergioteso.conecta4.models.Round
 import kotlinx.android.synthetic.main.fragment_round_list.*
@@ -50,11 +51,16 @@ class RoundListFragment : Fragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        log("onViewCreated")
+    }
+
+    override fun onResume() {
         round_recycler_view.apply {
-            layoutManager = LinearLayoutManager(view.context)
+            layoutManager = LinearLayoutManager(view?.context)
             itemAnimator = DefaultItemAnimator()
             update { round -> listener?.onRoundSelected(round) }
         }
+        super.onResume()
     }
 
     /**

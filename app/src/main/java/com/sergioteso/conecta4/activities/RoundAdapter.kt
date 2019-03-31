@@ -20,6 +20,7 @@ class RoundViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
     var idTextView: TextView
     var dateTextView: TextView
     var tableroViewC4: TextView
+    //var tableroViewC4: ViewC4
     var item_rl: RelativeLayout
 
     /**
@@ -31,6 +32,7 @@ class RoundViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
         idTextView = itemview.findViewById(R.id.list_item_id) as TextView
         dateTextView = itemview.findViewById(R.id.list_item_date) as TextView
         tableroViewC4 = itemview.findViewById(R.id.list_item_tablero) as TextView
+        //tableroViewC4 = itemview.findViewById(R.id.list_board_viewc4) as ViewC4
     }
 
     /**
@@ -41,6 +43,7 @@ class RoundViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
         idTextView.text = round.title
         dateTextView.text = round.date.substring(0, 19)
         tableroViewC4.text = round.tableroc4.tableroInString()
+        //tableroViewC4.setBoard(round.tableroc4)
 
         if (round.tableroc4.estado == Tablero.FINALIZADA) {
             itemView.setBackgroundResource(R.color.darkRed)

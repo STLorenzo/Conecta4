@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.*
 import android.widget.Toast
 import com.sergioteso.conecta4.R
+import com.sergioteso.conecta4.activities.Logger.log
 import com.sergioteso.conecta4.activities.setColor
 import com.sergioteso.conecta4.models.TableroC4
 import es.uam.eps.multij.Tablero

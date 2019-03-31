@@ -5,12 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import com.sergioteso.conecta4.R
-import com.sergioteso.conecta4.activities.Fragments.GameFragment
-import com.sergioteso.conecta4.activities.Logger.log
+import com.sergioteso.conecta4.activities.Fragments.RoundFragment
 import kotlinx.android.synthetic.main.activity_round_list.*
-import kotlinx.android.synthetic.main.fragment_round_list.*
 
 /**
  * clase que implementa la actividad la actividad del juego principal.
@@ -18,7 +15,7 @@ import kotlinx.android.synthetic.main.fragment_round_list.*
  * la UI y la logica de negocio.
  */
 class RoundActivity : AppCompatActivity(),
-    GameFragment.OnRoundFragmentInteractionListener {
+    RoundFragment.OnRoundFragmentInteractionListener {
 
 
     override fun onRoundUpdated() {
@@ -34,7 +31,7 @@ class RoundActivity : AppCompatActivity(),
         val fm = supportFragmentManager
         val round_id = intent.getStringExtra(EXTRA_ROUND_ID)
         if (fragment_game_container == null) {
-            val fragment = GameFragment.newInstance(round_id)
+            val fragment = RoundFragment.newInstance(round_id)
             fm.beginTransaction().add(R.id.fragment_round_list_container, fragment).commit()
         } else {
             val returnIntent = Intent()

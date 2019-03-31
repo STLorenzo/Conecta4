@@ -4,11 +4,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import com.sergioteso.conecta4.R
-import com.sergioteso.conecta4.activities.Fragments.GameFragment
+import com.sergioteso.conecta4.activities.Fragments.RoundFragment
 import com.sergioteso.conecta4.activities.Fragments.RoundListFragment
 import com.sergioteso.conecta4.models.Round
 import com.sergioteso.conecta4.models.RoundRepository
@@ -25,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_round_list.*
  */
 class RoundListActivity : AppCompatActivity(),
     RoundListFragment.OnFragmentInteractionListener,
-    GameFragment.OnRoundFragmentInteractionListener {
+    RoundFragment.OnRoundFragmentInteractionListener {
 
     /**
      * Metodo que actualiza la UI del RecyclerView de la lista de partidas notificandole que
@@ -42,7 +41,7 @@ class RoundListActivity : AppCompatActivity(),
     override fun onRoundSelected(round: Round) {
         val fm = supportFragmentManager
         if (fragment_game_container != null) {
-            val gameFragment = GameFragment.newInstance(round.id)
+            val gameFragment = RoundFragment.newInstance(round.id)
             fm.beginTransaction().add(R.id.fragment_game_container, gameFragment).commit()
         } else {
             val intento = RoundActivity.newIntentRound(this, round.id)
