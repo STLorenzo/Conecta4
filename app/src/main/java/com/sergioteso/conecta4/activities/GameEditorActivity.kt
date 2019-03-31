@@ -50,15 +50,6 @@ class GameEditorActivity : AppCompatActivity() {
             if (s == "") {
                 Toast.makeText(this, getString(R.string.insert_player_hint), Toast.LENGTH_SHORT).show()
             } else {
-                startActivity(
-                    RoundActivity.newIntentEditor(
-                        this,
-                        seekBar_columns_GameEditor.progress + MIN_COLUMN,
-                        seekBar_rows_GameEditor.progress + MIN_ROW,
-                        et_insertplayer_GameEditor.text.toString()
-                    )
-                )
-
                 val returnIntent = Intent()
                 returnIntent.putExtra(RoundListActivity.EXTRA_ROUND_ROWS, seekBar_rows_GameEditor.progress + MIN_ROW)
                 returnIntent.putExtra(RoundListActivity.EXTRA_ROUND_COLUMNS, seekBar_columns_GameEditor.progress + MIN_ROW)
