@@ -34,7 +34,7 @@ class AlertDialogFragment : DialogFragment() {
         alertDialogBuilder.apply {
             setTitle(R.string.game_over)
             setMessage(R.string.game_over_message)
-            setPositiveButton(R.string.yes) { dialog, which ->
+            setPositiveButton(R.string.yes) { dialog, _ ->
                 RoundRepository.addRound()
                 if (activity is RoundListActivity)
                     activity.onRoundUpdated()
