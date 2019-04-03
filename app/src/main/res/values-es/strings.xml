@@ -33,4 +33,5 @@
     <string name="title_activity_settings_c4">Ajustes</string>
     <string name="pref_header_general">General</string>
     <string name="pref_default_display_name">Segismundo De las Berzas</string>
+    <string name="db_login_error">Nombre de usuario o contraseña incorrectas</string>
 </resources>

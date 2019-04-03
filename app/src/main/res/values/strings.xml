@@ -37,4 +37,7 @@
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
     <string name="pref_default_display_name">Segismundo De las Berzas</string>
+
+    <!-- Database Strings -->
+    <string name="db_login_error">Username or password incorrect.</string>
 </resources>
