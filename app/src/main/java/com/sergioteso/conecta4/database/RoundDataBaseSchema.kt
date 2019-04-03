@@ -17,7 +17,8 @@ object RoundDataBaseSchema {
             val ROUNDUUID = "rounduuid"
             val DATE = "date"
             val TITLE = "title"
-            val SIZE = "size"
+            val ROWS = "rows"
+            val COLUMNS = "columns"
             val BOARD = "board"
         }
     }
