@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="com.sergioteso.conecta4">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.sergioteso.conecta4">
 
     <application
             android:allowBackup="true"
@@ -10,18 +11,24 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
+        <activity
+                android:name=".activities.SettingsActivityC4"
+                android:label="@string/title_activity_settings_c4">
+        </activity>
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity android:name=".activities.GameEditorActivity"/>
-        <activity android:name=".activities.RoundActivity"
-                  android:parentActivityName=".activities.RoundListActivity">
+        <activity
+                android:name=".activities.RoundActivity"
+                android:parentActivityName=".activities.RoundListActivity">
             <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.RoundListActivity"/>
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".activities.RoundListActivity"/>
         </activity>
         <activity android:name=".activities.RoundListActivity"/>
         <activity android:name=".activities.OptionsActivity"/>

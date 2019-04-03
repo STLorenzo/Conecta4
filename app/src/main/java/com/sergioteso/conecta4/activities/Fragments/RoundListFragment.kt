@@ -26,6 +26,7 @@ class RoundListFragment : Fragment() {
      */
     interface OnFragmentInteractionListener {
         fun onRoundSelected(round: Round)
+        fun onPreferenceSelected()
         fun onRoundAdded()
     }
 
@@ -106,6 +107,10 @@ class RoundListFragment : Fragment() {
                 round_recycler_view.update { round ->
                     listener?.onRoundSelected(round)
                 }
+                return true
+            }
+            R.id.menu_item_preferences -> {
+                listener?.onPreferenceSelected()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

@@ -108,13 +108,17 @@ class RoundListActivity : AppCompatActivity(),
      * Metodo que añade una ronda y actualiza la interfaz
      */
     override fun onRoundAdded() {
-        startActivityForResult(GameEditorActivity.newIntent(this), GAME_EDITOR_ID)
-        onRoundUpdated()
+        val rows = SettingsActivityC4.getRows(this)
+        val columns = SettingsActivityC4.getColumns(this)
+        RoundRepository.addRound(rows, columns)
     }
 
-//    override fun onRoundAdded(rows: Int, columns: Int) {
+    override fun onPreferenceSelected() {
+        startActivity(Intent(this, SettingsActivityC4::class.java))
+    }
+
+//    override fun onRoundAdded() {
 //        startActivityForResult(GameEditorActivity.newIntent(this), GAME_EDITOR_ID)
-//        RoundRepository.addRound(rows, columns)
 //        onRoundUpdated()
 //    }
 

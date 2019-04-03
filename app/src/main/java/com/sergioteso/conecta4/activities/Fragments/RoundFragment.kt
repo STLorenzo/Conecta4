@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import com.sergioteso.conecta4.R
+import com.sergioteso.conecta4.activities.SettingsActivityC4
 import com.sergioteso.conecta4.models.*
 import com.sergioteso.conecta4.views.ButtonC4
 import es.uam.eps.multij.*
@@ -49,7 +50,7 @@ class RoundFragment : Fragment(), PartidaListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            name = it.getString(NAME)!!
+            name = SettingsActivityC4.getName(context!!)
             round = RoundRepository.getRound(it.getString(ROUND_ID))
         }
     }

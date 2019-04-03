@@ -22,4 +22,15 @@
     <string name="no">No</string>
     <string name="round_restarted">Ronda Reiniciada</string>
     <string name="about_text">"Segunda Practica de Conecta4 de DADM.\n\nRealizada por: Sergio Teso Lorenzo"</string>
+    <string name="preferences">Preferencias</string>
+    <string name="general_settings">Ajustes Generales</string>
+    <string name="player_name">Nombre del Jugador</string>
+    <string name="game_settings">Ajustes del Juego</string>
+    <string name="sound">Sonido</string>
+    <string name="sound_summary">Hace que suenen preciosas melodias</string>
+    <string name="n_rows">Número de filas</string>
+    <string name="n_columns">Número de columnas</string>
+    <string name="title_activity_settings_c4">Ajustes</string>
+    <string name="pref_header_general">General</string>
+    <string name="pref_default_display_name">Segismundo De las Berzas</string>
 </resources>

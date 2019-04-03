@@ -1,7 +1,10 @@
 package com.sergioteso.conecta4.activities
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import com.sergioteso.conecta4.R
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -21,5 +24,10 @@ class MainActivity : AppCompatActivity() {
         btn_about_mainmenu.setOnClickListener {
             startActivity(OptionsActivity.newIntent(this))
         }
+
+
     }
+
 }
+
+
