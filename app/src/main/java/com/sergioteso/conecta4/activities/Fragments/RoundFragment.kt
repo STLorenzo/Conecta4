@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,9 +18,6 @@ import es.uam.eps.multij.*
 import kotlinx.android.synthetic.main.fragment_round2.*
 import java.lang.Exception
 
-
-private const val ROUND_ID = "round_id"
-private const val NAME = "name"
 
 /**
  * Fragmento que modela una partida con su tablero y sus listeners oportunos.
@@ -40,7 +38,7 @@ class RoundFragment : Fragment(), PartidaListener {
      * ocurre una interaccion en la ronda de este fragmento. Principalmente actualizaciones de UI.
      */
     interface OnRoundFragmentInteractionListener {
-        fun onRoundUpdated()
+        fun onRoundUpdated(round: Round)
     }
 
     /**
@@ -49,10 +47,15 @@ class RoundFragment : Fragment(), PartidaListener {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            name = SettingsActivityC4.getName(context!!)
-            round = RoundRepository.getRound(it.getString(ROUND_ID))
+        try {
+            arguments?.let {
+                round = Round.fromJSONString(it.getString(ARG_ROUND))
+            }
+        } catch (e: Exception) {
+            Log.d("DEBUG", e.message)
+            activity?.finish()
         }
+
     }
 
     /**
@@ -73,8 +76,14 @@ class RoundFragment : Fragment(), PartidaListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         tv_title.text = round.title
+        if( savedInstanceState != null){
+            round.board.stringToTablero(savedInstanceState.getString(BOARDSTRING))
+        }
+
+        name = SettingsActivityC4.getName(context!!)
         localPlayerC4 = LocalPlayerC4(name)
-        tablero = round.tableroc4
+        tablero = round.board
+
         reset_round_fab.setOnClickListener {
             if (tablero.estado != Tablero.EN_CURSO) {
                 Snackbar.make(
@@ -84,7 +93,7 @@ class RoundFragment : Fragment(), PartidaListener {
             } else {
                 tablero.reset()
                 startRound()
-                listener?.onRoundUpdated()
+                listener?.onRoundUpdated(round)
                 //updateUI()
                 board_viewc4.invalidate()
                 Snackbar.make(
@@ -93,6 +102,35 @@ class RoundFragment : Fragment(), PartidaListener {
                 ).show()
             }
         }
+    }
+
+    /**
+     * Metodo que inicia una ronda. Para ello añade a la partida un jugador local y un jugador aleatorio y
+     * la inicializa.
+     */
+    private fun startRound() {
+        val players = ArrayList<Jugador>()
+        val randomPlayer = JugadorAleatorio("Random Player")
+        players.add(localPlayerC4)
+        players.add(randomPlayer)
+        game = Partida(tablero, players)
+        game.addObservador(this)
+        localPlayerC4.setPartida(game)
+
+        board_viewc4.setBoard(round.board)
+        board_viewc4.setOnPlayListener(localPlayerC4)
+
+
+        if (game.tablero.estado == Tablero.EN_CURSO)
+            game.comenzar()
+    }
+
+    /**
+     * Metodo que se ejecuta al empezar la aplicacion. Crea el tablero e inicia la ronda.
+     */
+    override fun onStart() {
+        super.onStart()
+        startRound()
     }
 
     /**
@@ -118,18 +156,10 @@ class RoundFragment : Fragment(), PartidaListener {
         listener = null
     }
 
-    /**
-     * objeto estatico que permite a clases externas pasar el argumento del id de la ronda al instanciarse.
-     */
-    companion object {
-        @JvmStatic
-        fun newInstance(round_id: String, name: String) =
-            RoundFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ROUND_ID, round_id)
-                    putString(NAME, name)
-                }
-            }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString(BOARDSTRING, round.board.tableroToString())
+        super.onSaveInstanceState(outState)
     }
 
     /**
@@ -137,7 +167,6 @@ class RoundFragment : Fragment(), PartidaListener {
      */
     override fun onResume() {
         super.onResume()
-        //updateUI()
         board_viewc4.invalidate()
     }
 
@@ -148,12 +177,11 @@ class RoundFragment : Fragment(), PartidaListener {
     override fun onCambioEnPartida(evento: Evento?) {
         when (evento?.tipo) {
             Evento.EVENTO_CAMBIO -> {
-                //updateUI()
                 board_viewc4.invalidate()
-                listener?.onRoundUpdated()
+                listener?.onRoundUpdated(round)
             }
             Evento.EVENTO_FIN -> {
-                listener?.onRoundUpdated()
+                listener?.onRoundUpdated(round)
                 if (tablero.estado == Tablero.TABLAS) {
                     Toast.makeText(context, "Tablas - Game Over", Toast.LENGTH_SHORT).show()
                 } else {
@@ -162,118 +190,26 @@ class RoundFragment : Fragment(), PartidaListener {
                         .show()
                 }
 
-                //updateUI()
                 board_viewc4.invalidate()
                 AlertDialogFragment().show(
                     activity?.supportFragmentManager, "ALERT_DIALOG"
                 )
-
             }
         }
     }
 
     /**
-     * Metodo que actualiza la interfaz de Usuario del tablero
+     * objeto estatico que permite a clases externas pasar el argumento del id de la ronda al instanciarse.
      */
-    fun updateUI() {
-        for (j in 0..tablero.columnas - 1) {
-            for (i in 0..tablero.filas - 1) {
-                try {
-                    casillas[i][j].setBackgroundCasilla(tablero.getTablero(i, j))
-                } catch (e: ExcepcionJuego) {
-                    e.printStackTrace()
+    companion object {
+        private const val ARG_ROUND = "com.sergioteso.conecta4.round"
+        private const val BOARDSTRING = "com.sergioteso.conecta4.boardstring"
+        @JvmStatic
+        fun newInstance(round: String) =
+            RoundFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_ROUND, round)
                 }
             }
-        }
-    }
-
-    /**
-     * Metodo que se ejecuta al empezar la aplicacion. Crea el tablero e inicia la ronda.
-     */
-    override fun onStart() {
-        super.onStart()
-        //crearBoard()
-        startRound()
-    }
-
-    /**
-     * Metodo que inicia una ronda. Para ello añade a la partida un jugador local y un jugador aleatorio y
-     * la inicializa.
-     */
-    private fun startRound() {
-        val players = ArrayList<Jugador>()
-        val randomPlayer = JugadorAleatorio("Random Player")
-        players.add(localPlayerC4)
-        players.add(randomPlayer)
-        game = Partida(tablero, players)
-        game.addObservador(this)
-        localPlayerC4.setPartida(game)
-
-        board_viewc4.setBoard(round.tableroc4)
-        board_viewc4.setOnPlayListener(localPlayerC4)
-
-
-        if (game.tablero.estado == Tablero.EN_CURSO)
-            game.comenzar()
-    }
-
-
-    /**
-     * Crea el tablero en la UI llamando a crearColumna para cada columna que tenga el tablero
-
-    fun crearBoard() {
-    ll_board.removeAllViews()
-    for (i in 0..tablero.columnas - 1) {
-    val col = crearColumna(tablero.filas, i)
-    ll_board.addView(col)
-    }
-    }*/
-
-    /**
-     * Crea cada columna en la UI llamando al metodo de crearCasilla para cada casilla en la columna.
-     * A cada columna creada como le añade su correspondiente listener para realizar los movimientos
-     * en el Tablero.
-     */
-    fun crearColumna(filas: Int, indiceColumna: Int): LinearLayout {
-        val ll = LinearLayout(context)
-        var casilla: ButtonC4
-        ll.orientation = LinearLayout.VERTICAL
-        for (i in 0..filas - 1) {
-            if (casillas.size < filas) casillas.add(mutableListOf())
-            casilla = crearCasilla(indiceColumna, i)
-            ll.addView(casilla)
-            casillas[i].add(casilla)
-        }
-        ll.isClickable = true
-        ll.setOnClickListener {
-            try {
-                if (game.tablero.estado != Tablero.EN_CURSO) {
-                    Toast.makeText(context, R.string.round_already_finished, Toast.LENGTH_SHORT).show()
-                } else {
-                    val m = MovimientoC4(indiceColumna)
-                    val a = AccionMover(localPlayerC4, m)
-                    game.realizaAccion(a)
-                }
-            } catch (e: Exception) {
-                Toast.makeText(context, R.string.invalid_movement, Toast.LENGTH_SHORT).show()
-            }
-        }
-        return ll
-    }
-
-    /**
-     * Crea cada casilla en la UI creandola de la clase personalizada ButtonC4 mostrando cada casilla del color
-     * correspondiente a su posicion en el Tablero.
-     */
-    fun crearCasilla(indiceColumna: Int, indiceFila: Int): ButtonC4 {
-        if (context == null) {
-            throw ExcepcionJuego("Fallo al crear casilla")
-        } else {
-            val ib = ButtonC4(context!!)
-            ib.isClickable = false
-            ib.setBackgroundCasilla(tablero.matriz[indiceFila][indiceColumna])
-            return ib
-        }
-
     }
 }

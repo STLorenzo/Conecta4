@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import com.sergioteso.conecta4.R
@@ -11,6 +12,7 @@ import com.sergioteso.conecta4.activities.Fragments.RoundFragment
 import com.sergioteso.conecta4.activities.Fragments.RoundListFragment
 import com.sergioteso.conecta4.models.Round
 import com.sergioteso.conecta4.models.RoundRepository
+import com.sergioteso.conecta4.models.RoundRepositoryFactory
 import com.sergioteso.conecta4.models.TableroC4
 import kotlinx.android.synthetic.main.activity_round_list.*
 import kotlinx.android.synthetic.main.fragment_round_list.*
@@ -31,9 +33,24 @@ class RoundListActivity : AppCompatActivity(),
      * Metodo que actualiza la UI del RecyclerView de la lista de partidas notificandole que
      * los datos de esta han cambiado
      */
-    override fun onRoundUpdated() {
-        round_recycler_view.adapter?.notifyDataSetChanged()
+    override fun onRoundUpdated(round: Round) {
+        val repository = RoundRepositoryFactory.createRepository(this)
+        val callback = object : RoundRepository.BooleanCallback {
+            override fun onResponse(response: Boolean) {
+                if (response == true) {
+                    round_recycler_view.update(
+                        SettingsActivityC4.getPlayerUUID(baseContext),
+                        { round -> onRoundSelected(round) }
+                    )
+                } else
+                    Snackbar.make(findViewById(R.id.title),
+                        R.string.error_updating_round,
+                        Snackbar.LENGTH_LONG).show()
+            }
+        }
+        repository?.updateRound(round, callback)
     }
+
 
     /**
      * Funcion que se ejecuta al seleccionar una ronda en la lista. Segun la densidad instancia el fragmento
@@ -42,36 +59,73 @@ class RoundListActivity : AppCompatActivity(),
     override fun onRoundSelected(round: Round) {
         val fm = supportFragmentManager
         if (fragment_game_container != null) {
-            val gameFragment = RoundFragment.newInstance(round.id,name!!)
+            val gameFragment = RoundFragment.newInstance(round.toJSONString())
             fm.beginTransaction().add(R.id.fragment_game_container, gameFragment).commit()
         } else {
-            val intento = RoundActivity.newIntentRound(this, round.id)
+            val intento = RoundActivity.newIntentRound(this, round.toJSONString())
             startActivityForResult(intento, GAME_REQUEST_ID)
         }
     }
 
     /**
-     * Funcion que se ejecuta cuando termina la partida previamente lanzada. Recoge que la ronda
-     * ha terminado correctamente y el id de esta.
+     * Metodo que añade una ronda y actualiza la interfaz
      */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when(requestCode){
-            GAME_REQUEST_ID -> {
-                if (resultCode == Activity.RESULT_OK)
-                    onRoundSelected(RoundRepository.getRound(
-                        data?.getStringExtra(EXTRA_ROUND_ID)))
-            }
+    override fun onRoundAdded() {
+        val round = Round(SettingsActivityC4.getRows(this),
+            SettingsActivityC4.getColumns(this))
+        round.firstPlayerName = "Random"
+        round.firstPlayerUUID = "Random"
+        round.secondPlayerName = SettingsActivityC4.getPlayerName(this)
+        round.secondPlayerUUID = SettingsActivityC4.getPlayerUUID(this)
 
-            GAME_EDITOR_ID -> {
-                if (resultCode == Activity.RESULT_OK){
-                    val rows = data?.getIntExtra(EXTRA_ROUND_ROWS,4)
-                    val columns = data?.getIntExtra(EXTRA_ROUND_COLUMNS, 4)
-                    name = data?.getStringExtra(EXTRA_ROUND_NAME)
-                    RoundRepository.addRound(rows!!,columns!!)
+        val repository = RoundRepositoryFactory.createRepository(this)
+
+        val callback = object : RoundRepository.BooleanCallback {
+            override fun onResponse(response: Boolean) {
+                if (response == false)
+                    Snackbar.make(findViewById(R.id.round_recycler_view),
+                        R.string.error_adding_round, Snackbar.LENGTH_LONG).show()
+                else {
+                    Snackbar.make(findViewById(R.id.round_recycler_view),
+                        "New " + round.title + " added", Snackbar.LENGTH_LONG).show()
+                    val fragmentManager = supportFragmentManager
+                    val roundListFragment =
+                        fragmentManager.findFragmentById(R.id.fragment_round_list_container)
+                                as RoundListFragment
+                    roundListFragment.round_recycler_view.update(
+                        SettingsActivityC4.getPlayerUUID(baseContext),
+                        { round -> onRoundSelected(round) }
+                    )
                 }
             }
         }
+        repository?.addRound(round, callback)
     }
+
+
+
+//    /**
+//     * Funcion que se ejecuta cuando termina la partida previamente lanzada. Recoge que la ronda
+//     * ha terminado correctamente y el id de esta.
+//     */
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        when(requestCode){
+//            GAME_REQUEST_ID -> {
+//                if (resultCode == Activity.RESULT_OK)
+//                    onRoundSelected(RoundRepository.getRound(
+//                        data?.getStringExtra(EXTRA_ROUND_ID)))
+//            }
+//
+//            GAME_EDITOR_ID -> {
+//                if (resultCode == Activity.RESULT_OK){
+//                    val rows = data?.getIntExtra(EXTRA_ROUND_ROWS,4)
+//                    val columns = data?.getIntExtra(EXTRA_ROUND_COLUMNS, 4)
+//                    name = data?.getStringExtra(EXTRA_ROUND_NAME)
+//                    RoundRepository.addRound(rows!!,columns!!)
+//                }
+//            }
+//        }
+//    }
 
     /**
      * Funcion que instancia el fragmento de la lista de rondas al crear la actividad.
@@ -82,19 +136,15 @@ class RoundListActivity : AppCompatActivity(),
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_round_list_container, RoundListFragment()).commit()
         setSupportActionBar(roundList_toolbar)
-        val round_id = intent.getStringExtra(EXTRA_ROUND_ID)
-        if (round_id != null){
-            onRoundSelected(RoundRepository.getRound(round_id))
-        }
     }
 
-    /**
-     * Al resumir la actividad ejecuta el metodo onRoundUpdated por si hay que actualizar la UI
-     */
-    override fun onResume() {
-        super.onResume()
-        onRoundUpdated()
-    }
+//    /**
+//     * Al resumir la actividad ejecuta el metodo onRoundUpdated por si hay que actualizar la UI
+//     */
+//    override fun onResume() {
+//        super.onResume()
+//        onRoundUpdated()
+//    }
 
     /**
      * Funcion que crea el menu de opciones
@@ -102,15 +152,6 @@ class RoundListActivity : AppCompatActivity(),
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         return true
-    }
-
-    /**
-     * Metodo que añade una ronda y actualiza la interfaz
-     */
-    override fun onRoundAdded() {
-        val rows = SettingsActivityC4.getRows(this)
-        val columns = SettingsActivityC4.getColumns(this)
-        RoundRepository.addRound(rows, columns)
     }
 
     override fun onPreferenceSelected() {

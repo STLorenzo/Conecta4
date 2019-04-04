@@ -17,10 +17,12 @@ class RoundCursorWrapper(cursor: Cursor) : CursorWrapper(cursor) {
             val rounduuid = getString(getColumnIndex(RoundTable.Cols.ROUNDUUID))
             val date = getString(getColumnIndex(RoundTable.Cols.DATE))
             val title = getString(getColumnIndex(RoundTable.Cols.TITLE))
+            Log.d(DEBUG,"$playername - $title")
             val rows = getString(getColumnIndex(RoundTable.Cols.ROWS))
             val columns = getString(getColumnIndex(RoundTable.Cols.COLUMNS))
+            Log.d(DEBUG,"$rows - $columns")
             val board = getString(getColumnIndex(RoundTable.Cols.BOARD))
-            val round = Round(size.toInt())
+            val round = Round(rows.toInt(), columns.toInt())
 
             round.firstPlayerName = "Random"
             round.firstPlayerUUID = "Random"
@@ -30,7 +32,7 @@ class RoundCursorWrapper(cursor: Cursor) : CursorWrapper(cursor) {
             round.date = date
             round.title = title
             try {
-                round.tableroc4.stringToTablero(board)
+                round.board.stringToTablero(board)
             } catch (e: ExcepcionJuego) {
                 Log.d(DEBUG, "Error turning string into tablero")
             }

@@ -10,6 +10,7 @@ import android.view.*
 
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.Logger.log
+import com.sergioteso.conecta4.activities.SettingsActivityC4
 import com.sergioteso.conecta4.activities.update
 import com.sergioteso.conecta4.models.Round
 import com.sergioteso.conecta4.models.TableroC4
@@ -54,7 +55,11 @@ class RoundListFragment : Fragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        log("onViewCreated")
+        round_recycler_view.apply {
+            layoutManager = LinearLayoutManager(activity)
+            update(SettingsActivityC4.getPlayerUUID(context!!))
+                { round -> listener?.onRoundSelected(round) }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -62,12 +67,9 @@ class RoundListFragment : Fragment() {
     }
 
     override fun onResume() {
-        round_recycler_view.apply {
-            layoutManager = LinearLayoutManager(view?.context)
-            itemAnimator = DefaultItemAnimator()
-            update { round -> listener?.onRoundSelected(round) }
-        }
         super.onResume()
+        round_recycler_view.update(SettingsActivityC4.getPlayerUUID(context!!))
+        { round -> listener?.onRoundSelected(round) }
     }
 
     /**
@@ -101,12 +103,9 @@ class RoundListFragment : Fragment() {
      * actualizando la UI de la lista
      */
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+        when (item!!.itemId) {
             R.id.menu_item_new_round -> {
                 listener?.onRoundAdded()
-                round_recycler_view.update { round ->
-                    listener?.onRoundSelected(round)
-                }
                 return true
             }
             R.id.menu_item_preferences -> {
@@ -116,4 +115,5 @@ class RoundListFragment : Fragment() {
             else -> return super.onOptionsItemSelected(item)
         }
     }
+
 }

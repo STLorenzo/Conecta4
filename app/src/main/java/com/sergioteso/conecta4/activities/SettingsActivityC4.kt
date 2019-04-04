@@ -19,6 +19,7 @@ import android.text.TextUtils
 import android.view.MenuItem
 import android.widget.Toast
 import com.sergioteso.conecta4.R
+import com.sergioteso.conecta4.models.Round
 
 /**
  * A [PreferenceActivity] that presents a set of application settings. On
@@ -113,12 +114,17 @@ class SettingsActivityC4 : AppCompatPreferenceActivity() {
         val BOARD_NAME_KEY = "board_name"
         val BOARD_ROWS_KEY = "board_rows_list"
         val BOARD_COLUMNS_KEY = "board_columns_list"
+        val BOARD_NAME_DEFAULT = "Tablero C4 Default"
         val BOARD_ROWS_DEFAULT = "4"
         val BOARD_COLUMNS_DEFAULT = "4"
+        val PLAYER_UUID_KEY = "board_player_uuid"
+        val PLAYER_NAME_KEY = "board_player_name"
+        val PLAYER_UUID_DEFAULT = "1234"
+        val PLAYER_NAME_DEFAULT = "Segismundo"
 
         fun getName(context: Context): String {
             return PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(BOARD_NAME_KEY, context.resources.getString(R.string.pref_default_display_name))
+                .getString(BOARD_NAME_KEY, BOARD_NAME_DEFAULT)
         }
         fun getRows(context: Context): Int {
             return PreferenceManager.getDefaultSharedPreferences(context)
@@ -129,6 +135,17 @@ class SettingsActivityC4 : AppCompatPreferenceActivity() {
             return PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(BOARD_COLUMNS_KEY, BOARD_COLUMNS_DEFAULT).toInt()
         }
+
+        fun getPlayerUUID(context: Context?): String{
+            return PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(PLAYER_UUID_KEY, PLAYER_UUID_DEFAULT)
+        }
+
+        fun getPlayerName(context: Context?): String{
+            return PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(PLAYER_NAME_KEY, PLAYER_NAME_DEFAULT)
+        }
+
         fun setRowsSize(context: Context, size: Int) {
             val sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context)
@@ -142,6 +159,22 @@ class SettingsActivityC4 : AppCompatPreferenceActivity() {
                 .getDefaultSharedPreferences(context)
             val editor = sharedPreferences.edit()
             editor.putInt(SettingsActivityC4.BOARD_COLUMNS_KEY, size)
+            editor.commit()
+        }
+
+        fun setPlayerUUID(context: Context, playerUuid: String) {
+            val sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context)
+            val editor = sharedPreferences.edit()
+            editor.putString(SettingsActivityC4.PLAYER_UUID_KEY, playerUuid)
+            editor.commit()
+        }
+
+        fun setPlayerName(context: Context, name: String) {
+            val sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context)
+            val editor = sharedPreferences.edit()
+            editor.putString(SettingsActivityC4.PLAYER_NAME_KEY, name)
             editor.commit()
         }
 
@@ -206,5 +239,6 @@ class SettingsActivityC4 : AppCompatPreferenceActivity() {
                     .getString(preference.key, "")
             )
         }
+
     }
 }

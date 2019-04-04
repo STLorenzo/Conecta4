@@ -42,12 +42,12 @@ class RoundViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
     fun bindRound(round: Round, listener: (Round) -> Unit) {
         idTextView.text = round.title
         dateTextView.text = round.date.substring(0, 19)
-        tableroViewC4.text = round.tableroc4.tableroInString()
-        //tableroViewC4.setBoard(round.tableroc4)
+        tableroViewC4.text = round.board.tableroInString()
+        //tableroViewC4.setBoard(round.board)
 
-        if (round.tableroc4.estado == Tablero.FINALIZADA) {
+        if (round.board.estado == Tablero.FINALIZADA) {
             itemView.setBackgroundResource(R.color.darkRed)
-        } else if (round.tableroc4.estado == Tablero.TABLAS) {
+        } else if (round.board.estado == Tablero.TABLAS) {
             itemView.setBackgroundResource(R.color.darkYellow)
         } else {
             itemView.setBackgroundResource(R.color.darkGreen)

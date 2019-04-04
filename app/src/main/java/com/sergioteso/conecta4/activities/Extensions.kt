@@ -11,6 +11,7 @@ import android.widget.ImageButton
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.models.Round
 import com.sergioteso.conecta4.models.RoundRepository
+import com.sergioteso.conecta4.models.RoundRepositoryFactory
 import com.sergioteso.conecta4.models.TableroC4
 import kotlinx.android.synthetic.main.fragment_round_list.*
 import kotlinx.android.synthetic.main.fragment_round_list.view.*
@@ -48,10 +49,22 @@ fun Paint.setColor(board: TableroC4, i: Int, j: Int, context: Context) {
  * Funcion que extiende la funcionalidad de RecyclerView Actualizando su adaptador si es null pasandole la lista de rondas
  * y un listener con una ronda como parametro.
  */
-fun RecyclerView.update(onClickListener: (Round) -> Unit) {
-    if (adapter == null)
-        adapter = RoundAdapter(RoundRepository.rounds, onClickListener)
-    adapter?.notifyDataSetChanged()
+fun RecyclerView.update(userName: String, onClickListener: (Round) -> Unit) {
+    val repository = RoundRepositoryFactory.createRepository(context)
+    val roundsCallback = object : RoundRepository.RoundsCallback {
+        override fun onResponse(rounds: List<Round>) {
+            if (adapter == null)
+                adapter = RoundAdapter(rounds, onClickListener)
+            else {
+                (adapter as RoundAdapter).rounds = rounds
+                (adapter as RoundAdapter).notifyDataSetChanged()
+            }
+        }
+        override fun onError(error: String) {
+        }
+    }
+    repository?.getRounds(userName, "", "", roundsCallback)
+
 }
 
 /**

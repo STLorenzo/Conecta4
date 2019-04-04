@@ -34,4 +34,13 @@
     <string name="pref_header_general">General</string>
     <string name="pref_default_display_name">Segismundo De las Berzas</string>
     <string name="db_login_error">Nombre de usuario o contraseña incorrectas</string>
+    <string name="prompt_email">Inserta tu email</string>
+    <string name="prompt_password">Inserta tu password</string>
+    <string name="action_sign_in_short">Acceder</string>
+    <string name="action_sign_in">Acceder</string>
+    <string name="action_register">Registrarse</string>
+    <string name="error_invalid_email">Email invalido</string>
+    <string name="error_incorrect_password">Contraseña incorrecta</string>
+    <string name="error_updating_round">Error actualizando la ronda</string>
+    <string name="error_adding_round">Error añadiendo la ronda</string>
 </resources>

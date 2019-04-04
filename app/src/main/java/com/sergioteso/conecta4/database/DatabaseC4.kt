@@ -22,8 +22,6 @@ class DatabaseC4(context: Context) : RoundRepository {
         helper = DatabaseHelper(context)
     }
 
-
-
     private class DatabaseHelper(context: Context) :
             SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -50,7 +48,8 @@ class DatabaseC4(context: Context) : RoundRepository {
                     + UserTable.Cols.PLAYERUUID + ", "
                     + RoundTable.Cols.DATE + " TEXT, "
                     + RoundTable.Cols.TITLE + " TEXT, "
-                    + RoundTable.Cols.SIZE + " TEXT, "
+                    + RoundTable.Cols.ROWS + " TEXT, "
+                    + RoundTable.Cols.COLUMNS + " TEXT, "
                     + RoundTable.Cols.BOARD + " TEXT);")
 
             try{
@@ -103,8 +102,6 @@ class DatabaseC4(context: Context) : RoundRepository {
             callback.onLogin(uuid)
     }
 
-
-
     override fun addRound(round: Round, callback: RoundRepository.BooleanCallback) {
         val values = getContentValues(round)
         val id = db!!.insert(RoundTable.NAME, null, values)
@@ -119,7 +116,7 @@ class DatabaseC4(context: Context) : RoundRepository {
         values.put(RoundTable.Cols.TITLE, round.title)
         values.put(RoundTable.Cols.ROWS, round.rows)
         values.put(RoundTable.Cols.COLUMNS, round.columns)
-        values.put(RoundTable.Cols.BOARD, round.tableroc4.tableroToString())
+        values.put(RoundTable.Cols.BOARD, round.board.tableroToString())
         return values
 
     }
@@ -154,8 +151,6 @@ class DatabaseC4(context: Context) : RoundRepository {
             else
                 callback.onError("No rounds found in database")
         }
-
-
     }
 
     private fun queryRounds(): RoundCursorWrapper? {
@@ -164,7 +159,8 @@ class DatabaseC4(context: Context) : RoundRepository {
                 RoundTable.Cols.ROUNDUUID + ", " +
                 RoundTable.Cols.DATE + ", " +
                 RoundTable.Cols.TITLE + ", " +
-                RoundTable.Cols.SIZE + ", " +
+                RoundTable.Cols.ROWS + ", " +
+                RoundTable.Cols.COLUMNS + ", " +
                 RoundTable.Cols.BOARD + " " +
                 "FROM " + UserTable.NAME + " AS p, " +
                 RoundTable.NAME + " AS r " +

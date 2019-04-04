@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         btn_new_game_mainmenu.setOnClickListener {
-            startActivity(RoundListActivity.newIntent(this, null))
+            startActivity(Intent(this, LoginActivityC4::class.java))
         }
 
         btn_about_mainmenu.setOnClickListener {
