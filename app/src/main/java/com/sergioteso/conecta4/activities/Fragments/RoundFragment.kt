@@ -138,6 +138,7 @@ class RoundFragment : Fragment(), PartidaListener {
      */
     override fun onAttach(context: Context?) {
         super.onAttach(context)
+        Log.d("DEBUG","attach")
         if (context is OnRoundFragmentInteractionListener)
             listener = context
         else {

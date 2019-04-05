@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.Fragments.RoundFragment
@@ -29,15 +30,17 @@ class RoundListActivity : AppCompatActivity(),
     RoundListFragment.OnFragmentInteractionListener,
     RoundFragment.OnRoundFragmentInteractionListener {
 
+    private var repository: RoundRepository? = null
     /**
      * Metodo que actualiza la UI del RecyclerView de la lista de partidas notificandole que
      * los datos de esta han cambiado
      */
     override fun onRoundUpdated(round: Round) {
-        val repository = RoundRepositoryFactory.createRepository(this)
+        repository = RoundRepositoryFactory.createRepository(this)
         val callback = object : RoundRepository.BooleanCallback {
             override fun onResponse(response: Boolean) {
                 if (response == true) {
+                    Log.d("DEBUG","onRoundUpdated")
                     round_recycler_view.update(
                         SettingsActivityC4.getPlayerUUID(baseContext),
                         { round -> onRoundSelected(round) }
@@ -78,7 +81,7 @@ class RoundListActivity : AppCompatActivity(),
         round.secondPlayerName = SettingsActivityC4.getPlayerName(this)
         round.secondPlayerUUID = SettingsActivityC4.getPlayerUUID(this)
 
-        val repository = RoundRepositoryFactory.createRepository(this)
+        repository = RoundRepositoryFactory.createRepository(this)
 
         val callback = object : RoundRepository.BooleanCallback {
             override fun onResponse(response: Boolean) {
@@ -136,6 +139,11 @@ class RoundListActivity : AppCompatActivity(),
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_round_list_container, RoundListFragment()).commit()
         setSupportActionBar(roundList_toolbar)
+    }
+
+    override fun onDestroy() {
+        repository?.close()
+        super.onDestroy()
     }
 
 //    /**

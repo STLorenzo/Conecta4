@@ -55,6 +55,8 @@ class RoundListFragment : Fragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
         round_recycler_view.apply {
             layoutManager = LinearLayoutManager(activity)
             update(SettingsActivityC4.getPlayerUUID(context!!))
@@ -71,6 +73,7 @@ class RoundListFragment : Fragment() {
         round_recycler_view.update(SettingsActivityC4.getPlayerUUID(context!!))
         { round -> listener?.onRoundSelected(round) }
     }
+
 
     /**
      *

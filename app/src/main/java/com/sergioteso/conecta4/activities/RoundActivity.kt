@@ -4,11 +4,15 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.Fragments.RoundFragment
 import com.sergioteso.conecta4.models.Round
+import com.sergioteso.conecta4.models.RoundRepository
+import com.sergioteso.conecta4.models.RoundRepositoryFactory
 import kotlinx.android.synthetic.main.activity_round_list.*
+import kotlinx.android.synthetic.main.fragment_round_list.*
 
 /**
  * clase que implementa la actividad la actividad del juego principal.
@@ -18,8 +22,26 @@ import kotlinx.android.synthetic.main.activity_round_list.*
 class RoundActivity : AppCompatActivity(),
     RoundFragment.OnRoundFragmentInteractionListener {
 
+    private var repository : RoundRepository? = null
 
     override fun onRoundUpdated(round: Round) {
+        repository = RoundRepositoryFactory.createRepository(this)
+        val callback = object : RoundRepository.BooleanCallback {
+            override fun onResponse(response: Boolean) {
+                if (response == true) {
+
+                } else
+                    Snackbar.make(findViewById(R.id.title),
+                        R.string.error_updating_round,
+                        Snackbar.LENGTH_LONG).show()
+            }
+        }
+        repository?.updateRound(round, callback)
+    }
+
+    override fun onDestroy() {
+        repository?.close()
+        super.onDestroy()
     }
 
     /**
