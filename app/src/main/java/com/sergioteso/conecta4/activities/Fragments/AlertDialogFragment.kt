@@ -6,17 +6,24 @@ import android.content.Context
 import android.content.DialogInterface
 import android.net.Uri
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.RoundActivity
 import com.sergioteso.conecta4.activities.RoundListActivity
+import com.sergioteso.conecta4.activities.SettingsActivityC4
+import com.sergioteso.conecta4.activities.update
+import com.sergioteso.conecta4.models.Round
 import com.sergioteso.conecta4.models.RoundRepository
+import com.sergioteso.conecta4.models.RoundRepositoryFactory
+import kotlinx.android.synthetic.main.fragment_round_list.*
 
 /**
  * Clase que modela una simple ventana de dialogo que permite crear una nueva partida.
@@ -38,6 +45,27 @@ class AlertDialogFragment : DialogFragment() {
                 if (activity is RoundListActivity)
                     activity.onRoundAdded()
                     //activity.onRoundUpdated()
+                else if ( activity is RoundActivity){
+                    val round = Round(
+                        SettingsActivityC4.getRows(context),
+                        SettingsActivityC4.getColumns(context))
+                    round.firstPlayerName = "Random"
+                    round.firstPlayerUUID = "Random"
+                    round.secondPlayerName = SettingsActivityC4.getPlayerName(context)
+                    round.secondPlayerUUID = SettingsActivityC4.getPlayerUUID(context)
+
+                    val callback = object : RoundRepository.BooleanCallback {
+                        override fun onResponse(response: Boolean) {
+                            if (response == false)
+                                Toast.makeText(context,
+                                    R.string.error_adding_round, Toast.LENGTH_LONG).show()
+                        }
+                    }
+
+                    val repository = RoundRepositoryFactory.createRepository(context)
+                    repository?.addRound(round, callback)
+                    activity.finish()
+                }
                 else
                     activity?.finish()
                 dialog.dismiss()

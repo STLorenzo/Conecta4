@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
@@ -136,8 +137,9 @@ class RoundListActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_round_list)
-        supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_round_list_container, RoundListFragment()).commit()
+
+        val fm : FragmentManager = supportFragmentManager
+        fm.beginTransaction().replace(R.id.fragment_round_list_container, RoundListFragment()).commit()
         setSupportActionBar(roundList_toolbar)
     }
 
@@ -146,9 +148,9 @@ class RoundListActivity : AppCompatActivity(),
         super.onDestroy()
     }
 
-//    /**
-//     * Al resumir la actividad ejecuta el metodo onRoundUpdated por si hay que actualizar la UI
-//     */
+    /**
+     * Al resumir la actividad ejecuta el metodo onRoundUpdated por si hay que actualizar la UI
+     */
 //    override fun onResume() {
 //        super.onResume()
 //        onRoundUpdated()

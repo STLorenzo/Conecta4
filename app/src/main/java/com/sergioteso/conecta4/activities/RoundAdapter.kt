@@ -19,8 +19,8 @@ class RoundViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
     var cardView: CardView
     var idTextView: TextView
     var dateTextView: TextView
-    var tableroViewC4: TextView
-    //var tableroViewC4: ViewC4
+    //var tableroViewC4: TextView
+    var tableroViewC4: ViewC4
     var item_rl: RelativeLayout
 
     /**
@@ -31,8 +31,8 @@ class RoundViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
         cardView = itemview.findViewById(R.id.list_cardview)
         idTextView = itemview.findViewById(R.id.list_item_id) as TextView
         dateTextView = itemview.findViewById(R.id.list_item_date) as TextView
-        tableroViewC4 = itemview.findViewById(R.id.list_item_tablero) as TextView
-        //tableroViewC4 = itemview.findViewById(R.id.list_board_viewc4) as ViewC4
+        //tableroViewC4 = itemview.findViewById(R.id.list_item_tablero) as TextView
+        tableroViewC4 = itemview.findViewById(R.id.list_board_viewc4) as ViewC4
     }
 
     /**
@@ -42,8 +42,10 @@ class RoundViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
     fun bindRound(round: Round, listener: (Round) -> Unit) {
         idTextView.text = round.title
         dateTextView.text = round.date.substring(0, 19)
-        tableroViewC4.text = round.board.tableroInString()
-        //tableroViewC4.setBoard(round.board)
+        //tableroViewC4.text = round.board.tableroInString()
+        tableroViewC4.setBoard(round.board)
+
+        tableroViewC4.print_board()
 
         if (round.board.estado == Tablero.FINALIZADA) {
             itemView.setBackgroundResource(R.color.darkRed)
@@ -72,7 +74,7 @@ class RoundAdapter(var rounds: List<Round>, val listener: (Round) -> Unit) : Rec
      */
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RoundViewHolder {
         val layoutInflater = LayoutInflater.from(p0.context)
-        val view = layoutInflater.inflate(R.layout.list_item_round, p0, false)
+        val view = layoutInflater.inflate(R.layout.list_item_round2, p0, false)
         return RoundViewHolder(view)
     }
 

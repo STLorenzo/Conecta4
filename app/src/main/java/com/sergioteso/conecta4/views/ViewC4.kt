@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.support.design.widget.Snackbar
 import android.util.AttributeSet
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import com.sergioteso.conecta4.R
@@ -86,6 +87,7 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
         val boardHeight = height.toFloat()
         canvas.drawRect(0f, 0f, boardWidth, boardHeight, backgroundPaint)
         drawCircles(canvas, linePaint)
+        Log.d("DEBUG","onDraw")
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -147,6 +149,10 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
         this.board = board
         this.rows = board.filas
         this.columns = board.columnas
+    }
+
+    fun print_board(){
+        print(this.board)
     }
 
 }

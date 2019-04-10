@@ -43,8 +43,8 @@
                 android:background="@color/colorWhite"/>
 
         <com.sergioteso.conecta4.views.ViewC4
-                android:layout_width="100sp"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:id="@+id/list_board_viewc4"
                 android:layout_margin="10dp"
                 android:layout_alignParentEnd="true">
