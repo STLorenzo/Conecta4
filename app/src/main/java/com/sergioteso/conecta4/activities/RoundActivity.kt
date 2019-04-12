@@ -55,12 +55,9 @@ class RoundActivity : AppCompatActivity(),
         val round = intent.getStringExtra(EXTRA_ROUND)
         if (fragment_game_container == null) {
             val fragment = RoundFragment.newInstance(round)
-            fm.beginTransaction().add(R.id.fragment_round_list_container, fragment).commit()
+            fm.beginTransaction().replace(R.id.fragment_round_list_container, fragment).commit()
         } else {
-//            val returnIntent = Intent()
-//            returnIntent.putExtra(RoundListActivity.EXTRA_ROUND_ID, round_id)
-//            setResult(Activity.RESULT_OK, returnIntent)
-//            finish()
+            finish()
         }
         // my_toolbar is defined in the layout file
         setSupportActionBar(roundList_toolbar)
