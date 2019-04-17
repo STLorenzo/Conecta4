@@ -142,9 +142,9 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
         }
         ultimoMovimiento = m
         // comprobar si se ha ganado
-        if (comprobacion(m)) estado = 2
+        if (comprobacion(m)) estado = FINALIZADA
         // comrpobar si se ha acabado en tablas
-        else if (comprobarTablas()) estado = 3
+        else if (comprobarTablas()) estado = TABLAS
         else cambiaTurno()
     }
 
@@ -300,6 +300,10 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
      * @return String que guarda el estado del tablero actual
      */
     override fun tableroToString(): String {
+        if( numJugadores < 0 || numJugadas < 0 || filas <= 0 || columnas <= 0){
+            throw ExcepcionJuego("Error en los parametros del tablero. No se puede pasar a String")
+        }
+
         val m = getUltimoMovimiento()
         val mov: Int
         mov = if (m == null) -1

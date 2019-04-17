@@ -24,10 +24,10 @@ class MovimientoC4(private val columna: Int) : Movimiento() {
      * @param other MovimientoC4 a comparar
      * @return Bool con la comparación entre los movimientos
      */
-    override fun equals(other: Any?): Boolean =
-        if (this === other) true
-        else if (other == null || other !is MovimientoC4) false
-        else this.columna == other.columna
+    override fun equals(other: Any?) = if (other !is MovimientoC4)
+            false
+        else
+            this.columna == other.columna
 
 
     /**
