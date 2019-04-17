@@ -53,6 +53,10 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
 
     /**
      * funcion que devuelve el valor en la coordenada (i,j)
+     *
+     * @param i Int con la coordenada de la fila
+     * @param j Int con la coordenada de la columna
+     * @return Int con el valor de la matriz en la coordenada recibida
      */
     fun getTablero(i: Int, j: Int): Int {
         if (i < 0 || i >= MAX_FILAS || j < 0 || j >= MAX_COLUMNAS) throw ExcepcionJuego("Error getTablero")
@@ -61,6 +65,8 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
 
     /**
      * Funcion que devuelve un String a partir de un Tablero para representar el estado de la partida
+     *
+     * @return String con toda la información del tablero en formato de impresion
      */
     override fun toString(): String {
         var string =
@@ -87,6 +93,8 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
 
     /**
      * Funcion que devuelve la matriz del tablero unicamente como string
+     *
+     * @return String con la matriz del tablero
      */
     fun tableroInString(): String {
         var string = ""
@@ -318,6 +326,11 @@ class TableroC4(var filas: Int, var columnas: Int) : Tablero() {
         return string
     }
 
+    /**
+     * Funcion que resetea el tablero poniendo la matriz a cero
+     *
+     * @return Boolean que indica si se realizo con éxito
+     */
     override fun reset(): Boolean {
         for (i in 0..filas - 1)
             for (j in 0..columnas - 1)
