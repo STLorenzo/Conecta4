@@ -1,5 +1,8 @@
 package com.sergioteso.conecta4.database
 
+/**
+ * Objeto que guarda la estructura de las tablas de la database
+ */
 object RoundDataBaseSchema {
     object UserTable {
         val NAME = "users"

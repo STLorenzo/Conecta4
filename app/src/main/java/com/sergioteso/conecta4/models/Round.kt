@@ -28,6 +28,11 @@ class Round(var rows: Int, var columns: Int) {
         board = TableroC4(rows, columns)
     }
 
+    /**
+     * Funcion que devuelve un string del estilo JSON con los datos de la ronda
+     *
+     * @return String del JSON con los datos
+     */
     fun toJSONString(): String {
         val json = JSONObject()
         json.put("id", id)
@@ -45,6 +50,12 @@ class Round(var rows: Int, var columns: Int) {
 
 
     companion object {
+        /**
+         * Funcion que a partir del string del JSON crea una ronda con los datos y la devuelve
+         *
+         * @param string String JSON de la cual crear la ronda
+         * @return La ronda creada con los datos pasados en el string
+         */
         fun fromJSONString(string: String): Round {
             val jsonObject = JSONObject(string)
             val rows = jsonObject.get("rows") as Int

@@ -15,6 +15,20 @@ import com.sergioteso.conecta4.activities.setColor
 import com.sergioteso.conecta4.models.TableroC4
 import es.uam.eps.multij.Tablero
 
+/**
+ * Clase que extiende una view para dibujar la vista del tablero
+ *
+ * @property backgroundPaint Paint con el color del fondo
+ * @property linePaint pintura de la casilla
+ * @property heightOfTile tamaño de la altura de la casilla
+ * @property widthOfTile tamaño del ancho de la casilla
+ * @property radio radio de la casilla
+ * @property columns numero de columnas del tablero
+ * @property rows numero de filas del tablero
+ * @property board TableroC4 en el cula se basa la vista
+ * @property onPlayListener Interfaz que implementa el comportamiento al hacer una jugada en el tablero
+ * @property myGestureDetector Detector de los eventos generados al usar la pantalla del movil
+ */
 class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
     private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -37,6 +51,9 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
         myGestureDetector = GestureDetector(context, MyGestureListener())
     }
 
+    /**
+     * Clase interna que modela los eventos de la pantalla
+     */
     internal inner class MyGestureListener : GestureDetector.SimpleOnGestureListener() {
         override fun onDown(e: MotionEvent?): Boolean {
             Toast.makeText(context, "onDown: " + e.toString(), Toast.LENGTH_SHORT).show()
@@ -57,6 +74,12 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
         }
     }
 
+    /**
+     * Funcion que se ejecuta siempre que se tenga que redibujar la vista la cual calcula las dimensiones de la vista
+     *
+     * @param widthMeasureSpec Int con el ancho esperado de la vista
+     * @param heightMeasureSpec Int con el alto esperado de la vista
+     */
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
 //        val desiredWidth = 500
 //        val wMode: String
@@ -81,15 +104,27 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
         setMeasuredDimension(width, height)
     }
 
+    /**
+     * Funcion que se ejecuta al dibujar la vista dibujando el tablero
+     *
+     * @param canvas que dibujara el tablero
+     */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val boardWidth = width.toFloat()
         val boardHeight = height.toFloat()
         canvas.drawRect(0f, 0f, boardWidth, boardHeight, backgroundPaint)
         drawCircles(canvas, linePaint)
-        Log.d("DEBUG","onDraw")
     }
 
+    /**
+     * Funcion que se ejecuta cuando cambia el tamaño de la vista
+     *
+     * @param w ancho nuevo
+     * @param h alto nuevo
+     * @param oldw ancho antiguo
+     * @param oldh alto antiguo
+     */
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         widthOfTile = (w / columns).toFloat()
         heightOfTile = (h / rows).toFloat()
@@ -100,6 +135,12 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
         super.onSizeChanged(w, h, oldw, oldh)
     }
 
+    /**
+     * Funcion que dibuja todos los circulos de las casillas en el tablero
+     *
+     * @param canvas Canvas que dibuja los circulos
+     * @param paint Paint que guardara los colores para dibujar
+     */
     private fun drawCircles(canvas: Canvas, paint: Paint) {
         var centerRow: Float
         var centerColumn: Float
@@ -115,6 +156,12 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
         }
     }
 
+    /**
+     * Funcion que se ejecuta cuando se realiza una pulsacion en la vista
+     *
+     * @param event Evento con los datos de la pulsacion
+     * @return Booleano que incdica si ha salido bien o no la funcion
+     */
     override fun onTouchEvent(event: MotionEvent): Boolean {
 //        myGestureDetector.onTouchEvent(event)
 //        return true
@@ -137,19 +184,35 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
         return true
     }
 
+    /**
+     * Funcion que dado un evento devuelve la coordenada de la columna pulsada en la vista
+     *
+     * @param event El evento del cual sacar la columna
+     */
     private fun fromEventToJ(event: MotionEvent): Int {
         return (event.x / widthOfTile).toInt()
     }
 
+    /**
+     * Setter del OnPLayListener
+     *
+     * @param listener el listener del cual hacer set
+     */
     fun setOnPlayListener(listener: OnPlayListener) {
         this.onPlayListener = listener
     }
 
+    /**
+     * Setter del tablero en la clase
+     *
+     * @param board Tablero del cual hacer set
+     */
     fun setBoard(board: TableroC4) {
         this.board = board
         this.rows = board.filas
         this.columns = board.columnas
     }
+
 
     fun print_board(){
         print(this.board)

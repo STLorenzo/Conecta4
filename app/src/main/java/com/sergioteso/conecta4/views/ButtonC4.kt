@@ -13,6 +13,10 @@ import com.sergioteso.conecta4.models.TableroC4
 
 /**
  * Clase que extiende la view de Boton para modelar una casilla en el tablero.
+ *
+ * @property radious Float con el radio de las casillas
+ * @property currentColor color del radio
+ * @property paint Paint clase con la que se pintara con el boton
  */
 class ButtonC4(context: Context) : Button(context){
     private var radious: Float = 0.toFloat()
@@ -25,6 +29,8 @@ class ButtonC4(context: Context) : Button(context){
     /**
      * sobreescribe el metodo onDraw para crear circulas que representan las casillas del tablero.
      * Su color depende de su valor real en el tablero.
+     *
+     * @param canvas Canvas que dibuja el circulo de la casilla
      */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)

@@ -13,6 +13,13 @@ import com.sergioteso.conecta4.database.RoundDataBaseSchema.RoundTable
 import java.sql.SQLException
 import java.util.*
 
+/**
+ * Clase que modela la database de las rondas
+ *
+ * @property context Contexto de la aplicacion
+ * @property helper Clase interna encargada de crear y actualizar la database
+ * @property db La database de tipo SQLite
+ */
 class DatabaseC4(context: Context) : RoundRepository {
     private val DEBUG_TAG = "DEBUG"
     private val helper: DatabaseHelper
@@ -22,19 +29,40 @@ class DatabaseC4(context: Context) : RoundRepository {
         helper = DatabaseHelper(context)
     }
 
+    /**
+     * Clase interna encargada de crear y actualizar la database
+     *
+     * @property context Contexto de la aplicacion
+     */
     private class DatabaseHelper(context: Context) :
             SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
+        /**
+         * Funcion que se ejecuta al crear la database. Crea las tablas de usuarios y rondas
+         *
+         * @param db La database SQLite a actualizar
+         */
         override fun onCreate(db: SQLiteDatabase) {
             createTable(db)
         }
 
+        /**
+         * Funcion que se ejecuta cuando la database se actualiza a una nueva version.
+         * Borra las tablas antiguas y crea las nuevas.
+         *
+         * @param db La database SQLite a actualizar
+         */
         override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
             db.execSQL("DROP TABLE IF EXISTS "+ UserTable.NAME)
             db.execSQL("DROP TABLE IF EXISTS "+ RoundTable.NAME)
             createTable(db)
         }
 
+        /**
+         * Funcion que crea las tablas en la database
+         *
+         * @param db La database SQLite en la cual crear las tablas
+         */
         private fun createTable(db: SQLiteDatabase) {
             val str1 = ("CREATE TABLE " + UserTable.NAME + " ("
                     + "_id integer primary key autoincrement, "
@@ -62,14 +90,28 @@ class DatabaseC4(context: Context) : RoundRepository {
         }
     }
 
+    /**
+     * Funcion que abre la database
+     */
     override fun open() {
         db = helper.writableDatabase
     }
 
+    /**
+     * Funcion que cierra la database
+     */
     override fun close() {
         db?.close()
     }
 
+    /**
+     * Funcion que realiza un login a la database y ejecuta el meotodo onLogin o onError del callback segun
+     * el exito de este
+     *
+     * @param playername String con el nombre del jugador
+     * @param password String con la contraseña del jugador
+     * @param callback Interfaz que implementa los metodos onLogin y OnError
+     */
     override fun login(playername: String, password: String, callback: RoundRepository.LoginRegisterCallback) {
         Log.d(DEBUG_TAG, "Login $playername")
         val cursor =  db!!.query(UserTable.NAME,
@@ -89,6 +131,14 @@ class DatabaseC4(context: Context) : RoundRepository {
             callback.onError("Username or password incorrect.")
     }
 
+    /**
+     * Funcion que registra un usuario nuevo en la database y ejecuta el meotodo onLogin o onError del callback segun
+     * el exito de este
+     *
+     * @param playername String con el nombre del jugador
+     * @param password String con la contraseña del jugador
+     * @param callback Interfaz que implementa los metodos onLogin y OnError
+     */
     override fun register(playername: String, password: String, callback: RoundRepository.LoginRegisterCallback) {
         val values = ContentValues()
         val uuid = UUID.randomUUID().toString()
@@ -102,12 +152,24 @@ class DatabaseC4(context: Context) : RoundRepository {
             callback.onLogin(uuid)
     }
 
+    /**
+     * Funcion que añade una ronda a la database y ejecuta el metodo onResponse del callback
+     *
+     * @param round Ronda a añadir
+     * @param callback Interfaz que implementa el metodo onResponse ejecutado al añadir la ronda
+     */
     override fun addRound(round: Round, callback: RoundRepository.BooleanCallback) {
         val values = getContentValues(round)
         val id = db!!.insert(RoundTable.NAME, null, values)
         callback.onResponse( id >= 0)
     }
 
+    /**
+     * Funcion la cual a partir de una ronda crea un objeto ContentValues con sus datos
+     *
+     * @param round Ronda de la cual obtener los datos
+     * @return ContentValues con los datos de la ronda
+     */
     private fun getContentValues(round: Round): ContentValues {
         val values = ContentValues()
         values.put(RoundTable.Cols.PLAYERUUID, round.secondPlayerUUID)
@@ -121,6 +183,12 @@ class DatabaseC4(context: Context) : RoundRepository {
 
     }
 
+    /**
+     * Funcion que actualiza la ronda dada y llama al metodo onResponse del callback
+     *
+     * @param round Ronda a usar
+     * @param callback Callback del cual llamar al metodo onResponse
+     */
     override fun updateRound(round: Round, callback: RoundRepository.BooleanCallback) {
         val values = getContentValues(round)
         val id = db!!.update(RoundTable.NAME, values,
@@ -129,6 +197,14 @@ class DatabaseC4(context: Context) : RoundRepository {
         callback.onResponse(id >= 0)
     }
 
+    /**
+     * Funcion que obtiene las rondas de un jugador y llama al metodo onResponse del callback con las rondas obtenidas
+     *
+     * @param playeruuid String con el uuid del jugador
+     * @param orderByField
+     * @param group
+     * @param callback Callback del cual se ejecutara el metodo onResponse con las rondas
+     */
     override fun getRounds(playeruuid: String, orderByField: String,
                            group: String, callback: RoundRepository.RoundsCallback) {
 
@@ -153,6 +229,11 @@ class DatabaseC4(context: Context) : RoundRepository {
         }
     }
 
+    /**
+     * Funcion que realiza una query para obtener todas las rondas asociadas a todos los jugadores de la app
+     *
+     * @return cursor con el resultado de la query
+     */
     private fun queryRounds(): RoundCursorWrapper? {
         val sql = "SELECT " + UserTable.Cols.PLAYERNAME + ", " +
                 UserTable.Cols.PLAYERUUID + ", " +

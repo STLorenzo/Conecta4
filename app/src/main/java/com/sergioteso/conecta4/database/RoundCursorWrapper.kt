@@ -8,6 +8,9 @@ import es.uam.eps.multij.ExcepcionJuego
 import com.sergioteso.conecta4.database.RoundDataBaseSchema.RoundTable
 import com.sergioteso.conecta4.database.RoundDataBaseSchema.UserTable
 
+/**
+ * Clase que obtiene los datos de la database y crea la ronda
+ */
 class RoundCursorWrapper(cursor: Cursor) : CursorWrapper(cursor) {
     private val DEBUG = "DEBUG"
     val round: Round
