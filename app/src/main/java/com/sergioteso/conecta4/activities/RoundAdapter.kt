@@ -74,7 +74,7 @@ class RoundAdapter(var rounds: List<Round>, val listener: (Round) -> Unit) : Rec
      */
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RoundViewHolder {
         val layoutInflater = LayoutInflater.from(p0.context)
-        val view = layoutInflater.inflate(R.layout.list_item_round2, p0, false)
+        val view = layoutInflater.inflate(R.layout.list_item_round, p0, false)
         return RoundViewHolder(view)
     }
 

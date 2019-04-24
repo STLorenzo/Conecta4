@@ -37,10 +37,10 @@ class FRDataBase: RoundRepository {
 
     override fun login(playername: String, password: String, callback: RoundRepository.LoginRegisterCallback) {
         val firebaseAuth = FirebaseAuth.getInstance()
-        firebaseAuth.signInWithEmailAndPassword(playername, password).addOnCompleteListener
-        { it ->
-
-        }
+//        firebaseAuth.signInWithEmailAndPassword(playername, password).addOnCompleteListener
+//        { it ->
+//
+//        }
     }
 
     override fun register(playername: String, password: String, callback: RoundRepository.LoginRegisterCallback) {
@@ -59,11 +59,11 @@ class FRDataBase: RoundRepository {
             }
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 var rounds = listOf<Round>()
-                for (postSnapshot in dataSnapshot.children) {
-                    val round = postSnapshot.getValue(Round::class.java)!!
-                    if (isOpenOrIamIn(round))
-                        rounds += round
-                }
+//                for (postSnapshot in dataSnapshot.children) {
+//                    val round = postSnapshot.getValue(Round::class.java)!!
+//                    if (isOpenOrIamIn(round))
+//                        rounds += round
+//                }
                 callback.onResponse(rounds)
             }
         })

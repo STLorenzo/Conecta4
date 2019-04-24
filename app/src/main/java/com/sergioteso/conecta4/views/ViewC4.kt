@@ -35,8 +35,6 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
     private var heightOfTile: Float = 0.toFloat()
     private var widthOfTile: Float = 0.toFloat()
     private var radio: Float = 0.toFloat()
-    private var columns: Int = 4
-    private var rows: Int = 6
     private var board: TableroC4? = null
     private var onPlayListener: OnPlayListener? = null
     private var myGestureDetector: GestureDetector
@@ -126,8 +124,8 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
      * @param oldh alto antiguo
      */
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        widthOfTile = (w / columns).toFloat()
-        heightOfTile = (h / rows).toFloat()
+        widthOfTile = (w / board!!.columnas).toFloat()
+        heightOfTile = (h / board!!.filas).toFloat()
         if (widthOfTile < heightOfTile)
             radio = widthOfTile * 0.3f
         else
@@ -144,13 +142,12 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
     private fun drawCircles(canvas: Canvas, paint: Paint) {
         var centerRow: Float
         var centerColumn: Float
-        for (i in 0 until rows) {
-            val pos = rows - i - 1
+        for (i in 0 until board!!.filas) {
+            val pos = board!!.filas - i - 1
             centerRow = heightOfTile * (1 + 2 * pos) / 2f
-            for (j in 0 until columns) {
+            for (j in 0 until board!!.columnas) {
                 centerColumn = widthOfTile * (1 + 2 * j) / 2f
-                paint.setColor(board!!, rows - 1 - i, j, context)
-                //paint.color = Color.RED
+                paint.setColor(board!!, board!!.filas - 1 - i, j, context)
                 canvas.drawCircle(centerColumn, centerRow, radio, paint)
             }
         }
@@ -209,8 +206,6 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
      */
     fun setBoard(board: TableroC4) {
         this.board = board
-        this.rows = board.filas
-        this.columns = board.columnas
     }
 
 

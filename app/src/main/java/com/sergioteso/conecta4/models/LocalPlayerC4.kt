@@ -26,7 +26,7 @@ class LocalPlayerC4(var name: String) : Jugador, ViewC4.OnPlayListener {
      */
     override fun onPlay(column: Int) {
         if(game.tablero.estado != Tablero.EN_CURSO)
-            return
+            throw ExcepcionJuego("La partida no esta en curso")
         val m : MovimientoC4
         m = MovimientoC4(column)
         game.realizaAccion(AccionMover(this,m))

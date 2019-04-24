@@ -8,14 +8,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.Toast
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.SettingsActivityC4
 import com.sergioteso.conecta4.models.*
 import com.sergioteso.conecta4.views.ButtonC4
 import es.uam.eps.multij.*
-import kotlinx.android.synthetic.main.fragment_round2.*
+import kotlinx.android.synthetic.main.fragment_round.*
 import java.lang.Exception
 
 
@@ -49,7 +48,7 @@ class RoundFragment : Fragment(), PartidaListener {
         super.onCreate(savedInstanceState)
         try {
             arguments?.let {
-                round = Round.fromJSONString(it.getString(ARG_ROUND))
+                round = Round.fromJSONString(it.getString(ARG_ROUND)!!)
             }
         } catch (e: Exception) {
             Log.d("DEBUG", e.message)
@@ -66,7 +65,7 @@ class RoundFragment : Fragment(), PartidaListener {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_round2, container, false)
+        return inflater.inflate(R.layout.fragment_round, container, false)
     }
 
     /**
@@ -119,7 +118,6 @@ class RoundFragment : Fragment(), PartidaListener {
 
         board_viewc4.setBoard(round.board)
         board_viewc4.setOnPlayListener(localPlayerC4)
-
 
         if (game.tablero.estado == Tablero.EN_CURSO)
             game.comenzar()

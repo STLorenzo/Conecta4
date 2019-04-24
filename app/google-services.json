@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "230001594589",
+    "firebase_url": "https://c4firebase.firebaseio.com",
+    "project_id": "c4firebase",
+    "storage_bucket": "c4firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:230001594589:android:f5c87f5b41f4b88d",
+        "android_client_info": {
+          "package_name": "com.sergioteso.conecta4"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "230001594589-6er3rdki2oab6oc03uqoc0i9r3j40fot.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sergioteso.conecta4",
+            "certificate_hash": "0791cdb3f7afe9cb46787ba602885c586c9ef186"
+          }
+        },
+        {
+          "client_id": "230001594589-b0qf00uqgtqcceh2rqapv8tdk4tol8do.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNUsqO9NPlMbt8sHwdr3h6mWPNqXOl6XE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "230001594589-b0qf00uqgtqcceh2rqapv8tdk4tol8do.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

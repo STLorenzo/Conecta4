@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.Fragments.RoundFragment
 import com.sergioteso.conecta4.models.Round
@@ -36,13 +37,14 @@ class RoundActivity : AppCompatActivity(),
                         Snackbar.LENGTH_LONG).show()
             }
         }
+        Log.d("DEBUG","update_roudn_activity")
         repository?.updateRound(round, callback)
     }
 
-    override fun onDestroy() {
-        repository?.close()
-        super.onDestroy()
-    }
+//    override fun onDestroy() {
+//        repository?.close()
+//        super.onDestroy()
+//    }
 
     /**
      * función que sobreescribe el onCreate básico de las Activities en Android

@@ -41,7 +41,7 @@ class RoundListActivity : AppCompatActivity(),
         val callback = object : RoundRepository.BooleanCallback {
             override fun onResponse(response: Boolean) {
                 if (response == true) {
-                    Log.d("DEBUG","onRoundUpdated")
+                    //Log.d("DEBUG","onRoundUpdated")
                     round_recycler_view.update(
                         SettingsActivityC4.getPlayerUUID(baseContext),
                         { round -> onRoundSelected(round) }
@@ -52,6 +52,7 @@ class RoundListActivity : AppCompatActivity(),
                         Snackbar.LENGTH_LONG).show()
             }
         }
+        Log.d("DEBUG","update_roudn_list")
         repository?.updateRound(round, callback)
     }
 
@@ -64,7 +65,7 @@ class RoundListActivity : AppCompatActivity(),
         val fm = supportFragmentManager
         if (fragment_game_container != null) {
             val gameFragment = RoundFragment.newInstance(round.toJSONString())
-            fm.beginTransaction().add(R.id.fragment_game_container, gameFragment).commit()
+            fm.beginTransaction().replace(R.id.fragment_game_container, gameFragment).commit()
         } else {
             val intento = RoundActivity.newIntentRound(this, round.toJSONString())
             startActivityForResult(intento, GAME_REQUEST_ID)
