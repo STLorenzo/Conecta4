@@ -29,7 +29,6 @@ class RoundFragment : Fragment(), PartidaListener {
     private lateinit var game: Partida
     private lateinit var tablero: TableroC4
     private lateinit var localPlayerC4: LocalPlayerC4
-    private var casillas = mutableListOf<MutableList<ButtonC4>>()
     var listener: OnRoundFragmentInteractionListener? = null
 
     /**
@@ -180,7 +179,6 @@ class RoundFragment : Fragment(), PartidaListener {
                 listener?.onRoundUpdated(round)
             }
             Evento.EVENTO_FIN -> {
-                listener?.onRoundUpdated(round)
                 if (tablero.estado == Tablero.TABLAS) {
                     Toast.makeText(context, "Tablas - Game Over", Toast.LENGTH_SHORT).show()
                 } else {
@@ -188,6 +186,7 @@ class RoundFragment : Fragment(), PartidaListener {
                     Toast.makeText(context, "Gana - ${game.getJugador(tablero.turno).nombre}", Toast.LENGTH_LONG)
                         .show()
                 }
+                listener?.onRoundUpdated(round)
 
                 board_viewc4.invalidate()
                 AlertDialogFragment().show(

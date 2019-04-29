@@ -120,15 +120,6 @@ class RoundListActivity : AppCompatActivity(),
 //                    onRoundSelected(RoundRepository.getRound(
 //                        data?.getStringExtra(EXTRA_ROUND_ID)))
 //            }
-//
-//            GAME_EDITOR_ID -> {
-//                if (resultCode == Activity.RESULT_OK){
-//                    val rows = data?.getIntExtra(EXTRA_ROUND_ROWS,4)
-//                    val columns = data?.getIntExtra(EXTRA_ROUND_COLUMNS, 4)
-//                    name = data?.getStringExtra(EXTRA_ROUND_NAME)
-//                    RoundRepository.addRound(rows!!,columns!!)
-//                }
-//            }
 //        }
 //    }
 
