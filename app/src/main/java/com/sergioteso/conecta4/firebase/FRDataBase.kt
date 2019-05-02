@@ -10,7 +10,7 @@ import com.sergioteso.conecta4.models.RoundRepository
 import java.lang.Exception
 import java.util.*
 
-class FRDataBase(var context: Context): RoundRepository {
+class FRDataBase(var context: Context) : RoundRepository {
     private val DATABASENAME = "partidas"
     lateinit var db: DatabaseReference
 
@@ -20,6 +20,7 @@ class FRDataBase(var context: Context): RoundRepository {
             override fun onCancelled(p0: DatabaseError) {
                 Log.d("DEBUG", p0.toString())
             }
+
             override fun onDataChange(p0: DataSnapshot) {
                 var rounds = listOf<Round>()
                 for (postSnapshot in p0.children)
@@ -41,38 +42,37 @@ class FRDataBase(var context: Context): RoundRepository {
 
     override fun login(playername: String, password: String, callback: RoundRepository.LoginRegisterCallback) {
         Log.d("DEBUG", "Empieza Login")
-        db.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                Log.d("DEBUG", p0.toString())
-            }
+        val table = RoundDataBaseSchema.UserTable
+        val cols = RoundDataBaseSchema.UserTable.Cols
+        val auth = FirebaseAuth.getInstance()
 
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                Log.d("DEBUG", "Empieza onDataCHange")
-                var uuid: String?
-                val table = RoundDataBaseSchema.UserTable
-                val cols = RoundDataBaseSchema.UserTable.Cols
-                var flag = true
-
-                for (postSnapshot in dataSnapshot.child(table.NAME).children){
-                    val name : String = (postSnapshot.child(cols.PLAYERNAME).value) as String
-                    if ( name == playername ){
-                        val pass : String = (postSnapshot.child(cols.PLAYERPASSWORD).value) as String
-                        if( pass == password) {
-                            uuid = (postSnapshot.child(cols.PLAYERUUID).value) as String
-                            flag = false
-                            callback.onLogin(uuid)
-                        }
-
-
+        auth.signInWithEmailAndPassword(playername, password).addOnCompleteListener {
+            it.addOnSuccessListener {
+                db.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                        Log.d("DEBUG", p0.toString())
                     }
-                }
-                if(flag) callback.onError(LOGIN_CREDENTIALS_ERROR)
-            }
 
-        })
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        var uuid: String?
+                        for (postSnapshot in dataSnapshot.child(table.NAME).children) {
+                            val name: String = (postSnapshot.child(cols.PLAYERNAME).value) as String
+                            if (name == playername) {
+                                uuid = (postSnapshot.child(cols.PLAYERUUID).value) as String
+                                Log.d("DEBUG", "login con exito")
+                                callback.onLogin(uuid)
+                            }
+                        }
+                    }
+                })
+            }
+            it.addOnFailureListener {
+                callback.onError(LOGIN_CREDENTIALS_ERROR)
+            }
+        }
     }
 
-    companion object ErrorCodes{
+    companion object ErrorCodes {
         val REGISTER_ERROR = "reg_error"
         val REGISTER_ALREADY_EXISTS = "reg_exists"
         val LOGIN_CREDENTIALS_ERROR = "log_cre_error"
@@ -83,31 +83,51 @@ class FRDataBase(var context: Context): RoundRepository {
         val cols = RoundDataBaseSchema.UserTable.Cols
         val uuid = UUID.randomUUID().toString()
 
-        db.addListenerForSingleValueEvent(object: ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {
-                    Log.d("DEBUG", p0.toString())
-                }
+        db.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                Log.d("DEBUG", p0.toString())
+            }
 
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    var flag = true
-                    for (postSnapshot in dataSnapshot.child(table.NAME).children){
-                        val name = (postSnapshot.child(cols.PLAYERNAME).value) as String
-                        if (name == playername){
-                            Log.d("DEBUG", REGISTER_ALREADY_EXISTS)
-                            callback.onError(REGISTER_ALREADY_EXISTS)
-                            flag = false
-                        }
-                    }
-                    if (flag){
-                        db.child(table.NAME).child(playername)
-                        db.child(table.NAME).child(playername).child(cols.PLAYERNAME).setValue(playername)
-                        db.child(table.NAME).child(playername).child(cols.PLAYERPASSWORD).setValue(password)
-                        db.child(table.NAME).child(playername).child(cols.PLAYERUUID).setValue(uuid)
-                        Log.d("DEBUG","registrado con exito")
-                        callback.onLogin(uuid)
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                var flag = true
+                for (postSnapshot in dataSnapshot.child(table.NAME).children) {
+                    val name = (postSnapshot.child(cols.PLAYERNAME).value) as String
+                    if (name == playername) {
+                        Log.d("DEBUG", REGISTER_ALREADY_EXISTS)
+                        callback.onError(REGISTER_ALREADY_EXISTS)
+                        flag = false
                     }
                 }
-            })
+                if (flag) {
+                    createEmailPassword(playername, password, uuid, callback)
+                }
+            }
+        })
+    }
+
+    fun createEmailPassword(
+        email: String,
+        password: String,
+        uuid: String,
+        callback: RoundRepository.LoginRegisterCallback
+    ) {
+        val table = RoundDataBaseSchema.UserTable
+        val cols = RoundDataBaseSchema.UserTable.Cols
+        val auth = FirebaseAuth.getInstance()
+        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+            it.addOnSuccessListener {
+                db.child(table.NAME).child(uuid)
+                db.child(table.NAME).child(uuid).child(cols.PLAYERNAME).setValue(email)
+                db.child(table.NAME).child(uuid).child(cols.PLAYERPASSWORD).setValue(password)
+                db.child(table.NAME).child(uuid).child(cols.PLAYERUUID).setValue(uuid)
+                Log.d("DEBUG", "registrado con exito")
+                callback.onLogin(uuid)
+            }
+
+            it.addOnFailureListener {
+                callback.onError(REGISTER_ERROR)
+            }
+        }
     }
 
     override fun getRounds(
@@ -121,14 +141,15 @@ class FRDataBase(var context: Context): RoundRepository {
             override fun onCancelled(p0: DatabaseError) {
                 Log.d("DEBUG", p0.toString())
             }
+
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                var rounds = listOf<Round>()
+                val rounds = mutableListOf<Round>()
                 for (postSnapshot in dataSnapshot.children) {
                     val round_string = postSnapshot.value as String?
-                    if(round_string != null){
+                    if (round_string != null) {
                         val round = Round.fromJSONString(round_string)
                         if (isOpenOrIamIn(round))
-                            rounds += round
+                            rounds.add(round)
                     }
                 }
                 callback.onResponse(rounds)
@@ -136,8 +157,11 @@ class FRDataBase(var context: Context): RoundRepository {
         })
     }
 
-    fun isOpenOrIamIn(round: Round): Boolean{
-        return true
+    fun isOpenOrIamIn(round: Round): Boolean {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (round.firstPlayerName == user?.email || round.secondPlayerName == user?.email)
+            return true
+        return false
     }
 
     override fun addRound(round: Round, callback: RoundRepository.BooleanCallback) {
@@ -147,7 +171,7 @@ class FRDataBase(var context: Context): RoundRepository {
         task.addOnSuccessListener {
             callback.onResponse(true)
         }
-        task.addOnFailureListener{
+        task.addOnFailureListener {
             callback.onResponse(false)
         }
     }
@@ -159,16 +183,17 @@ class FRDataBase(var context: Context): RoundRepository {
             override fun onCancelled(p0: DatabaseError) {
                 Log.d("DEBUG", p0.toString())
             }
+
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (postSnapshot in dataSnapshot.children) {
                     val roundId = postSnapshot.key
-                    if( roundId == round.id){
+                    if (roundId == round.id) {
                         val task = db.child(table.NAME).child(round.id).setValue(round.toJSONString())
 
                         task.addOnSuccessListener {
                             callback.onResponse(true)
-                            }
-                        task.addOnFailureListener{
+                        }
+                        task.addOnFailureListener {
                             callback.onResponse(false)
                         }
                     }
