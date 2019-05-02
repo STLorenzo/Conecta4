@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
 import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
 import com.sergioteso.conecta4.R
+import com.sergioteso.conecta4.firebase.FRDataBase
 import com.sergioteso.conecta4.models.RoundRepository
 import com.sergioteso.conecta4.models.RoundRepositoryFactory
 import kotlinx.android.synthetic.main.activity_loginc4.*
@@ -42,9 +44,20 @@ class LoginActivityC4 : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curso
                 finish()
             }
             override fun onError(error: String) {
-                email.error = getString(R.string.error_invalid_email)
-                password.error = getString(R.string.error_incorrect_password)
-                password.requestFocus()
+                when (error){
+                    FRDataBase.LOGIN_CREDENTIALS_ERROR -> {
+                        email.error = getString(R.string.error_invalid_email)
+                        password.error = getString(R.string.error_incorrect_password)
+                        password.requestFocus()
+                    }
+                    FRDataBase.REGISTER_ALREADY_EXISTS -> {
+                        Toast.makeText(applicationContext, "User Already Exists", Toast.LENGTH_SHORT).show()
+                    }
+                    FRDataBase.REGISTER_ERROR -> {
+                        Toast.makeText(applicationContext, "DB error User couldn't be registered", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
             }
         }
         when (type) {
