@@ -142,27 +142,35 @@ class FRDataBase(var context: Context): RoundRepository {
 
     override fun addRound(round: Round, callback: RoundRepository.BooleanCallback) {
         val table = RoundDataBaseSchema.RoundTable
-        Log.d("DEBUG", round.board.toString())
-        if (db.child(table.NAME).child(round.id).setValue(round.toJSONString()).isSuccessful)
+        val task = db.child(table.NAME).child(round.id).setValue(round.toJSONString())
+
+        task.addOnSuccessListener {
             callback.onResponse(true)
-        else
+        }
+        task.addOnFailureListener{
             callback.onResponse(false)
+        }
     }
 
     override fun updateRound(round: Round, callback: RoundRepository.BooleanCallback) {
         val table = RoundDataBaseSchema.RoundTable
+
         db.child(table.NAME).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 Log.d("DEBUG", p0.toString())
             }
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (postSnapshot in dataSnapshot.children) {
-                    val roundId = postSnapshot.value as String?
+                    val roundId = postSnapshot.key
                     if( roundId == round.id){
-                        if (db.child(table.NAME).child(round.id).setValue(round.toJSONString()).isSuccessful)
+                        val task = db.child(table.NAME).child(round.id).setValue(round.toJSONString())
+
+                        task.addOnSuccessListener {
                             callback.onResponse(true)
-                        else
+                            }
+                        task.addOnFailureListener{
                             callback.onResponse(false)
+                        }
                     }
                 }
             }

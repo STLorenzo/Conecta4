@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.widget.Toast
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.Fragments.RoundFragment
 import com.sergioteso.conecta4.models.Round
@@ -32,9 +33,9 @@ class RoundActivity : AppCompatActivity(),
                 if (response == true) {
 
                 } else
-                    Snackbar.make(findViewById(R.id.title),
+                    Toast.makeText(applicationContext,
                         R.string.error_updating_round,
-                        Snackbar.LENGTH_LONG).show()
+                        Toast.LENGTH_SHORT).show()
             }
         }
         Log.d("DEBUG","update_roudn_activity")
