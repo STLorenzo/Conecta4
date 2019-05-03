@@ -10,9 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.sergioteso.conecta4.R
-import com.sergioteso.conecta4.activities.SettingsActivityC4
+import com.sergioteso.conecta4.firebase.FRDataBase
 import com.sergioteso.conecta4.models.*
-import com.sergioteso.conecta4.views.ButtonC4
 import es.uam.eps.multij.*
 import kotlinx.android.synthetic.main.fragment_round.*
 import java.lang.Exception
@@ -28,7 +27,6 @@ class RoundFragment : Fragment(), PartidaListener {
     private lateinit var name: String
     private lateinit var game: Partida
     private lateinit var tablero: TableroC4
-    private lateinit var localPlayerC4: LocalPlayerC4
     var listener: OnRoundFragmentInteractionListener? = null
 
     /**
@@ -77,9 +75,6 @@ class RoundFragment : Fragment(), PartidaListener {
         if( savedInstanceState != null){
             round.board.stringToTablero(savedInstanceState.getString(BOARDSTRING))
         }
-
-        name = SettingsActivityC4.getName(context!!)
-        localPlayerC4 = LocalPlayerC4(name)
         tablero = round.board
 
         reset_round_fab.setOnClickListener {
@@ -108,18 +103,26 @@ class RoundFragment : Fragment(), PartidaListener {
      */
     private fun startRound() {
         val players = ArrayList<Jugador>()
-        val randomPlayer = JugadorAleatorio("Random Player")
-        players.add(localPlayerC4)
-        players.add(randomPlayer)
-        game = Partida(tablero, players)
-        game.addObservador(this)
-        localPlayerC4.setPartida(game)
+        name = round.firstPlayerName
+        val local = round.local == "true"
+        val secondPlayer: Jugador
+        if(local){
+            secondPlayer = JugadorAleatorio("Random Player")
+            val localPlayer = LocalPlayerC4(name)
+            players.add(localPlayer)
+            players.add(secondPlayer)
+            game = Partida(tablero, players)
+            game.addObservador(this)
+            localPlayer.setPartida(game)
+            board_viewc4.setBoard(round.board)
+            board_viewc4.setOnPlayListener(localPlayer)
 
-        board_viewc4.setBoard(round.board)
-        board_viewc4.setOnPlayListener(localPlayerC4)
+            if (game.tablero.estado == Tablero.EN_CURSO)
+                game.comenzar()
+        }else{
 
-        if (game.tablero.estado == Tablero.EN_CURSO)
-            game.comenzar()
+            secondPlayer = RemotePlayerC4(round.secondPlayerName)
+        }
     }
 
     /**

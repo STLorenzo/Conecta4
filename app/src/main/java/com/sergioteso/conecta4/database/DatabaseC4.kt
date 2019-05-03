@@ -258,6 +258,7 @@ class DatabaseC4(context: Context) : RoundRepository {
         round.secondPlayerUUID = "RandomUUID"
         round.firstPlayerName = SettingsActivityC4.getPlayerName(context)
         round.firstPlayerUUID = SettingsActivityC4.getPlayerUUID(context)
+        round.local = "true"
         addRound(round,callback)
     }
 

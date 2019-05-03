@@ -225,34 +225,34 @@ class FRDataBase(var context: Context) : RoundRepository {
         builder.setPositiveButton("OK")
         { _, _ ->
             email = input.text.toString()
-            val uuid = getUUIDfromEmail(email)
+            val table = RoundDataBaseSchema.UserTable
+            val cols = RoundDataBaseSchema.UserTable.Cols
+            db.child(table.NAME).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    Log.d("DEBUG", p0.toString())
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    for (postSnapshot in dataSnapshot.children) {
+                        val email2 = postSnapshot.child(cols.PLAYERNAME).value as String
+                        Log.d("DEBUG",email2)
+                        if(email2 == email){
+                            val uuid = postSnapshot.child(cols.PLAYERUUID).value as String
+                            val round = Round(rows, columns)
+                            round.firstPlayerName = SettingsActivityC4.getPlayerName(context)
+                            round.firstPlayerUUID = SettingsActivityC4.getPlayerUUID(context)
+                            round.secondPlayerName = email2
+                            round.secondPlayerUUID = uuid
+                            round.local = "false"
+                            addRound(round,callback)
+                            break
+                        }
+                    }
+                }
+            })
         }
         builder.setNegativeButton("Cancel")
         { dialog, _ -> dialog.cancel() }
         builder.show()
-    }
-
-    fun getUUIDfromEmail(email: String):String?{
-        val table = RoundDataBaseSchema.UserTable
-        val cols = RoundDataBaseSchema.UserTable.Cols
-        var uuid :String? = null
-        db.child(table.NAME).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                Log.d("DEBUG", p0.toString())
-            }
-
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (postSnapshot in dataSnapshot.children) {
-                    val email2 = postSnapshot.child(cols.PLAYERNAME).value as String
-                    Log.d("DEBUG",email2)
-                    if(email2 == email){
-                        uuid = postSnapshot.child(cols.PLAYERUUID).value as String
-                        break
-                    }
-                }
-            }
-        })
-        Log.d("DEBUG",uuid)
-        return uuid
     }
 }
