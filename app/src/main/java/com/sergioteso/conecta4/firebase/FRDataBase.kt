@@ -209,43 +209,9 @@ class FRDataBase(var context: Context) : RoundRepository {
         })
     }
 
-    override fun createRound(rows: Int, columns: Int, context: Context): Round? {
-        val round = Round(rows, columns)
-        val table = RoundDataBaseSchema.UserTable
-        val cols = RoundDataBaseSchema.UserTable.Cols
-        val email = askForEmail(context)
-        var uuid : String = ""
-        var flag = true
-
-        db.child(table.NAME).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                Log.d("DEBUG", p0.toString())
-            }
-
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (postSnapshot in dataSnapshot.children) {
-                    if(postSnapshot.child(cols.PLAYERNAME).value == email){
-                        uuid = postSnapshot.child(cols.PLAYERUUID).value as String
-                        flag = false
-                    }
-                }
-            }
-        })
-
-        if(flag){
-            Toast.makeText(context, "User not found",Toast.LENGTH_SHORT).show()
-            return null
-        }else{
-            round.secondPlayerName = email
-            round.secondPlayerUUID = uuid
-            round.firstPlayerName = SettingsActivityC4.getPlayerName(context)
-            round.firstPlayerUUID = SettingsActivityC4.getPlayerUUID(context)
-            return round
-        }
-    }
-
-    fun askForEmail(context: Context):String{
-        var email = ""
+    override fun createRound(rows: Int, columns: Int, context: Context, callback: RoundRepository.BooleanCallback){
+        Log.d("DEBUG","createround")
+        var email: String
         val builder = AlertDialog.Builder(context)
         builder.setTitle("Insert Email of the player")
 
@@ -257,12 +223,36 @@ class FRDataBase(var context: Context) : RoundRepository {
 
         // Set up the buttons
         builder.setPositiveButton("OK")
-            { _, _ -> email = input.text.toString() }
+        { _, _ ->
+            email = input.text.toString()
+            val uuid = getUUIDfromEmail(email)
+        }
         builder.setNegativeButton("Cancel")
-            { dialog, _ -> dialog.cancel() }
-
+        { dialog, _ -> dialog.cancel() }
         builder.show()
+    }
 
-        return email
+    fun getUUIDfromEmail(email: String):String?{
+        val table = RoundDataBaseSchema.UserTable
+        val cols = RoundDataBaseSchema.UserTable.Cols
+        var uuid :String? = null
+        db.child(table.NAME).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                Log.d("DEBUG", p0.toString())
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (postSnapshot in dataSnapshot.children) {
+                    val email2 = postSnapshot.child(cols.PLAYERNAME).value as String
+                    Log.d("DEBUG",email2)
+                    if(email2 == email){
+                        uuid = postSnapshot.child(cols.PLAYERUUID).value as String
+                        break
+                    }
+                }
+            }
+        })
+        Log.d("DEBUG",uuid)
+        return uuid
     }
 }

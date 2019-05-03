@@ -1,14 +1,17 @@
 package com.sergioteso.conecta4.activities
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
+import android.text.InputType
 import android.util.Log
 import android.view.Menu
+import android.widget.EditText
 import android.widget.Toast
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.Fragments.RoundFragment
@@ -101,9 +104,7 @@ class RoundListActivity : AppCompatActivity(),
             }
         }
         repository = RoundRepositoryFactory.createRepository(this)
-        val round = repository?.createRound(rows, columns, this, callback) ?: callback.onResponse(false)
-
-        repository?.addRound(round, callback)
+        repository?.createRound(rows,columns,this, callback)
     }
 
 

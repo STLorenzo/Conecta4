@@ -54,7 +54,7 @@ interface RoundRepository{
         fun onResponse(ok: Boolean)
     }
 
-    fun createRound(rows: Int, columns: Int, context: Context, callback: BooleanCallback): Round
+    fun createRound(rows: Int, columns: Int, context: Context, callback: BooleanCallback)
     fun getRounds(playeruuid: String, orderByField: String, group: String,
                   callback: RoundsCallback)
     fun addRound(round: Round, callback: BooleanCallback)

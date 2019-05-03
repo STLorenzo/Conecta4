@@ -252,13 +252,13 @@ class DatabaseC4(context: Context) : RoundRepository {
         return RoundCursorWrapper(cursor)
     }
 
-    override fun createRound(rows: Int, columns: Int,context: Context, callback: RoundRepository.BooleanCallback): Round {
+    override fun createRound(rows: Int, columns: Int, context: Context,callback: RoundRepository.BooleanCallback) {
         val round = Round(rows, columns)
         round.secondPlayerName = "Random"
         round.secondPlayerUUID = "RandomUUID"
         round.firstPlayerName = SettingsActivityC4.getPlayerName(context)
         round.firstPlayerUUID = SettingsActivityC4.getPlayerUUID(context)
-        return round
+        addRound(round,callback)
     }
 
     companion object {
