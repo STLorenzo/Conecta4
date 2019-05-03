@@ -20,6 +20,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.models.Round
+import es.uam.eps.multij.ExcepcionJuego
 
 /**
  * A [PreferenceActivity] that presents a set of application settings. On
@@ -58,7 +59,7 @@ class SettingsActivityC4 : AppCompatPreferenceActivity() {
      * {@inheritDoc}
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    override fun onBuildHeaders(target: List<PreferenceActivity.Header>) {
+    override fun onBuildHeaders(target: List<Header>) {
         //loadHeadersFromResource(R.xml.pref_headers, target)
 
     }
@@ -82,12 +83,6 @@ class SettingsActivityC4 : AppCompatPreferenceActivity() {
             super.onCreate(savedInstanceState)
             addPreferencesFromResource(R.xml.preferences)
             setHasOptionsMenu(true)
-
-            val preferences = findPreference("prueba")
-            preferences.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-                Toast.makeText(activity, "Preferecia pulsada", Toast.LENGTH_SHORT).show()
-                true
-            }
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
@@ -125,57 +120,66 @@ class SettingsActivityC4 : AppCompatPreferenceActivity() {
         fun getName(context: Context): String {
             return PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(BOARD_NAME_KEY, BOARD_NAME_DEFAULT)
+                ?: throw ExcepcionJuego("Error en Settings en getName")
         }
         fun getRows(context: Context): Int {
-            return PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(BOARD_ROWS_KEY, BOARD_ROWS_DEFAULT).toInt()
+            val rows =  PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(BOARD_ROWS_KEY, BOARD_ROWS_DEFAULT)
+                ?: throw ExcepcionJuego("Error en Settings en getName")
+
+            return rows.toInt()
         }
 
         fun getColumns(context: Context): Int {
-            return PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(BOARD_COLUMNS_KEY, BOARD_COLUMNS_DEFAULT).toInt()
+            val columns =  PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(BOARD_COLUMNS_KEY, BOARD_COLUMNS_DEFAULT)
+                ?: throw ExcepcionJuego("Error en Settings en getName")
+
+            return columns.toInt()
         }
 
         fun getPlayerUUID(context: Context?): String{
             return PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(PLAYER_UUID_KEY, PLAYER_UUID_DEFAULT)
+                ?: throw ExcepcionJuego("Error en Settings en getName")
         }
 
         fun getPlayerName(context: Context?): String{
             return PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(PLAYER_NAME_KEY, PLAYER_NAME_DEFAULT)
+                ?: throw ExcepcionJuego("Error en Settings en getName")
         }
 
         fun setRowsSize(context: Context, size: Int) {
             val sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context)
             val editor = sharedPreferences.edit()
-            editor.putInt(SettingsActivityC4.BOARD_ROWS_KEY, size)
-            editor.commit()
+            editor.putInt(BOARD_ROWS_KEY, size)
+            editor.apply()
         }
 
         fun setColumnsSize(context: Context, size: Int) {
             val sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context)
             val editor = sharedPreferences.edit()
-            editor.putInt(SettingsActivityC4.BOARD_COLUMNS_KEY, size)
-            editor.commit()
+            editor.putInt(BOARD_COLUMNS_KEY, size)
+            editor.apply()
         }
 
         fun setPlayerUUID(context: Context, playerUuid: String) {
             val sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context)
             val editor = sharedPreferences.edit()
-            editor.putString(SettingsActivityC4.PLAYER_UUID_KEY, playerUuid)
-            editor.commit()
+            editor.putString(PLAYER_UUID_KEY, playerUuid)
+            editor.apply()
         }
 
         fun setPlayerName(context: Context, name: String) {
             val sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context)
             val editor = sharedPreferences.edit()
-            editor.putString(SettingsActivityC4.PLAYER_NAME_KEY, name)
-            editor.commit()
+            editor.putString(PLAYER_NAME_KEY, name)
+            editor.apply()
         }
 
         /**

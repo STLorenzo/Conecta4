@@ -17,6 +17,7 @@ import com.sergioteso.conecta4.models.Round
 import com.sergioteso.conecta4.models.RoundRepository
 import com.sergioteso.conecta4.models.RoundRepositoryFactory
 import com.sergioteso.conecta4.models.TableroC4
+import es.uam.eps.multij.ExcepcionJuego
 import kotlinx.android.synthetic.main.activity_round_list.*
 import kotlinx.android.synthetic.main.fragment_round_list.*
 
@@ -77,14 +78,8 @@ class RoundListActivity : AppCompatActivity(),
      * Metodo que añade una ronda y actualiza la interfaz
      */
     override fun onRoundAdded() {
-        val round = Round(SettingsActivityC4.getRows(this),
-            SettingsActivityC4.getColumns(this))
-        round.firstPlayerName = "Random"
-        round.firstPlayerUUID = "Random"
-        round.secondPlayerName = SettingsActivityC4.getPlayerName(this)
-        round.secondPlayerUUID = SettingsActivityC4.getPlayerUUID(this)
-
-        repository = RoundRepositoryFactory.createRepository(this)
+        val rows = SettingsActivityC4.getRows(this)
+        val columns = SettingsActivityC4.getColumns(this)
 
         val callback = object : RoundRepository.BooleanCallback {
             override fun onResponse(response: Boolean) {
@@ -93,7 +88,7 @@ class RoundListActivity : AppCompatActivity(),
                         R.string.error_adding_round, Snackbar.LENGTH_LONG).show()
                 else {
                     Snackbar.make(findViewById(R.id.round_recycler_view),
-                        "New " + round.title + " added", Snackbar.LENGTH_LONG).show()
+                        "New round added", Snackbar.LENGTH_LONG).show()
                     val fragmentManager = supportFragmentManager
                     val roundListFragment =
                         fragmentManager.findFragmentById(R.id.fragment_round_list_container)
@@ -105,6 +100,9 @@ class RoundListActivity : AppCompatActivity(),
                 }
             }
         }
+        repository = RoundRepositoryFactory.createRepository(this)
+        val round = repository?.createRound(rows, columns, this, callback) ?: callback.onResponse(false)
+
         repository?.addRound(round, callback)
     }
 

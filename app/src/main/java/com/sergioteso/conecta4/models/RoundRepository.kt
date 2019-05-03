@@ -1,5 +1,6 @@
 package com.sergioteso.conecta4.models
 
+import android.content.Context
 import java.lang.Exception
 import kotlin.random.Random
 
@@ -53,6 +54,7 @@ interface RoundRepository{
         fun onResponse(ok: Boolean)
     }
 
+    fun createRound(rows: Int, columns: Int, context: Context, callback: BooleanCallback): Round
     fun getRounds(playeruuid: String, orderByField: String, group: String,
                   callback: RoundsCallback)
     fun addRound(round: Round, callback: BooleanCallback)

@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.sergioteso.conecta4.R
+import com.sergioteso.conecta4.activities.SettingsActivityC4
 import com.sergioteso.conecta4.models.Round
 import com.sergioteso.conecta4.models.RoundRepository
 import com.sergioteso.conecta4.database.RoundDataBaseSchema.UserTable
@@ -249,6 +250,15 @@ class DatabaseC4(context: Context) : RoundRepository {
                 "r." + RoundTable.Cols.PLAYERUUID + ";"
         val cursor = db!!.rawQuery(sql, null)
         return RoundCursorWrapper(cursor)
+    }
+
+    override fun createRound(rows: Int, columns: Int,context: Context, callback: RoundRepository.BooleanCallback): Round {
+        val round = Round(rows, columns)
+        round.secondPlayerName = "Random"
+        round.secondPlayerUUID = "RandomUUID"
+        round.firstPlayerName = SettingsActivityC4.getPlayerName(context)
+        round.firstPlayerUUID = SettingsActivityC4.getPlayerUUID(context)
+        return round
     }
 
     companion object {

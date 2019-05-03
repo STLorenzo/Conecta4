@@ -9,6 +9,14 @@ import com.sergioteso.conecta4.models.Round
 import com.sergioteso.conecta4.models.RoundRepository
 import java.lang.Exception
 import java.util.*
+import android.R.string.cancel
+import android.app.AlertDialog
+import android.content.DialogInterface
+import android.text.InputType
+import android.widget.EditText
+import android.widget.Toast
+import com.sergioteso.conecta4.activities.SettingsActivityC4
+
 
 class FRDataBase(var context: Context) : RoundRepository {
     private val DATABASENAME = "partidas"
@@ -93,7 +101,6 @@ class FRDataBase(var context: Context) : RoundRepository {
                 for (postSnapshot in dataSnapshot.child(table.NAME).children) {
                     val name = (postSnapshot.child(cols.PLAYERNAME).value) as String
                     if (name == playername) {
-                        Log.d("DEBUG", REGISTER_ALREADY_EXISTS)
                         callback.onError(REGISTER_ALREADY_EXISTS)
                         flag = false
                     }
@@ -200,6 +207,62 @@ class FRDataBase(var context: Context) : RoundRepository {
                 }
             }
         })
+    }
 
+    override fun createRound(rows: Int, columns: Int, context: Context): Round? {
+        val round = Round(rows, columns)
+        val table = RoundDataBaseSchema.UserTable
+        val cols = RoundDataBaseSchema.UserTable.Cols
+        val email = askForEmail(context)
+        var uuid : String = ""
+        var flag = true
+
+        db.child(table.NAME).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                Log.d("DEBUG", p0.toString())
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (postSnapshot in dataSnapshot.children) {
+                    if(postSnapshot.child(cols.PLAYERNAME).value == email){
+                        uuid = postSnapshot.child(cols.PLAYERUUID).value as String
+                        flag = false
+                    }
+                }
+            }
+        })
+
+        if(flag){
+            Toast.makeText(context, "User not found",Toast.LENGTH_SHORT).show()
+            return null
+        }else{
+            round.secondPlayerName = email
+            round.secondPlayerUUID = uuid
+            round.firstPlayerName = SettingsActivityC4.getPlayerName(context)
+            round.firstPlayerUUID = SettingsActivityC4.getPlayerUUID(context)
+            return round
+        }
+    }
+
+    fun askForEmail(context: Context):String{
+        var email = ""
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Insert Email of the player")
+
+        // Set up the input
+        val input = EditText(context)
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        builder.setView(input)
+
+        // Set up the buttons
+        builder.setPositiveButton("OK")
+            { _, _ -> email = input.text.toString() }
+        builder.setNegativeButton("Cancel")
+            { dialog, _ -> dialog.cancel() }
+
+        builder.show()
+
+        return email
     }
 }
