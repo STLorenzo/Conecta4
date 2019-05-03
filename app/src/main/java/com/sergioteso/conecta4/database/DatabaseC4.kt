@@ -82,6 +82,8 @@ class DatabaseC4(context: Context) : RoundRepository {
                     + RoundTable.Cols.BOARD + " TEXT);")
 
             try{
+                Log.d("DEBUG", str1)
+                Log.d("DEBUG", str2)
                 db.execSQL(str1)
                 db.execSQL(str2)
             }catch (e: SQLException){

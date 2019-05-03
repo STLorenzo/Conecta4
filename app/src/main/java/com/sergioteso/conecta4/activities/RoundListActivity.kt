@@ -105,9 +105,8 @@ class RoundListActivity : AppCompatActivity(),
                 }
             }
         }
-        repository = RoundRepositoryFactory.createRepository(this)
-        Log.d("DEBUG","${RoundRepositoryFactory.LOCAL}")
-        repository?.createRound(rows,columns,this, callback)
+        repository = RoundRepositoryFactory.createRepository(baseContext)
+        repository?.createRound(rows,columns,baseContext, callback)
     }
 
 
@@ -155,7 +154,7 @@ class RoundListActivity : AppCompatActivity(),
                 Toast.makeText(applicationContext, "Error on Start",Toast.LENGTH_SHORT).show()
             }
         }
-        FRDataBase(this).startListeningChanges(callback)
+        //FRDataBase(this).startListeningChanges(callback)
         super.onStart()
     }
 

@@ -23,7 +23,7 @@ class Round(var rows: Int, var columns: Int) {
 
     init {
         id = UUID.randomUUID().toString()
-        title = "ROUND ${id.substring(19, 23).toUpperCase()}"
+        title = "ROUND ${id.toString().substring(19, 23).toUpperCase()}"
         date = Date().toString()
         board = TableroC4(rows, columns)
     }

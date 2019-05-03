@@ -16,8 +16,7 @@ object RoundRepositoryFactory {
      * @param context Contexto de la aplicacion
      */
     fun createRepository(context: Context): RoundRepository? {
-        val repository: RoundRepository
-        repository = if (LOCAL) DatabaseC4(context) else FRDataBase(context)
+        val repository = if (LOCAL) DatabaseC4(context) else FRDataBase(context)
         try{
             repository.open()
         } catch (e: Exception){
