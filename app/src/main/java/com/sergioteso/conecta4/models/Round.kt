@@ -18,7 +18,6 @@ class Round(var rows: Int, var columns: Int) {
     lateinit var firstPlayerUUID: String
     lateinit var secondPlayerName: String
     lateinit var secondPlayerUUID: String
-    lateinit var local: String
 
     constructor(filas: Int) : this(filas, columns = filas)
 
@@ -46,7 +45,6 @@ class Round(var rows: Int, var columns: Int) {
         json.put("firstPlayerUUID", firstPlayerUUID)
         json.put("secondPlayerName", secondPlayerName)
         json.put("secondPlayerUUID", secondPlayerUUID)
-        json.put("local",local)
         return json.toString()
     }
 
@@ -71,7 +69,6 @@ class Round(var rows: Int, var columns: Int) {
             round.firstPlayerUUID = jsonObject.get("firstPlayerUUID") as String
             round.secondPlayerName = jsonObject.get("secondPlayerName") as String
             round.secondPlayerUUID = jsonObject.get("secondPlayerUUID") as String
-            round.local = jsonObject.get("local") as String
             return round
         }
     }

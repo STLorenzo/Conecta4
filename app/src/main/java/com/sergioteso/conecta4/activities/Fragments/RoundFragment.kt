@@ -104,25 +104,33 @@ class RoundFragment : Fragment(), PartidaListener {
     private fun startRound() {
         val players = ArrayList<Jugador>()
         name = round.firstPlayerName
-        val local = round.local == "true"
-        val secondPlayer: Jugador
+        val local = RoundRepositoryFactory.LOCAL
+        val localPlayer: Jugador
+        val remotePlayer: Jugador
         if(local){
-            secondPlayer = JugadorAleatorio("Random Player")
-            val localPlayer = LocalPlayerC4(name)
+            remotePlayer = JugadorAleatorio("Random Player")
+            localPlayer = LocalPlayerC4(name)
             players.add(localPlayer)
-            players.add(secondPlayer)
-            game = Partida(tablero, players)
-            game.addObservador(this)
-            localPlayer.setPartida(game)
-            board_viewc4.setBoard(round.board)
-            board_viewc4.setOnPlayListener(localPlayer)
-
-            if (game.tablero.estado == Tablero.EN_CURSO)
-                game.comenzar()
+            players.add(remotePlayer)
         }else{
-
-            secondPlayer = RemotePlayerC4(round.secondPlayerName)
+            val frDataBase = FRDataBase(context!!)
+            localPlayer = LocalPlayerC4(round.firstPlayerName)
+            remotePlayer = RemotePlayerC4(round.secondPlayerName)
+            if(frDataBase.checkPlayerPosition(round.firstPlayerUUID) == 1){
+                players.add(localPlayer)
+                players.add(remotePlayer)
+            }else{
+                players.add(remotePlayer)
+                players.add(localPlayer)
+            }
         }
+        game = Partida(tablero, players)
+        game.addObservador(this)
+        localPlayer.setPartida(game)
+        board_viewc4.setBoard(round.board)
+        board_viewc4.setOnPlayListener(localPlayer)
+        if (game.tablero.estado == Tablero.EN_CURSO)
+            game.comenzar()
     }
 
     /**

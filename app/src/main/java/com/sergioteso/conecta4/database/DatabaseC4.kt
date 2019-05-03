@@ -173,7 +173,7 @@ class DatabaseC4(context: Context) : RoundRepository {
      */
     private fun getContentValues(round: Round): ContentValues {
         val values = ContentValues()
-        values.put(RoundTable.Cols.PLAYERUUID, round.secondPlayerUUID)
+        values.put(RoundTable.Cols.PLAYERUUID, round.firstPlayerUUID)
         values.put(RoundTable.Cols.ROUNDUUID, round.id)
         values.put(RoundTable.Cols.DATE, round.date)
         values.put(RoundTable.Cols.TITLE, round.title)
@@ -258,7 +258,6 @@ class DatabaseC4(context: Context) : RoundRepository {
         round.secondPlayerUUID = "RandomUUID"
         round.firstPlayerName = SettingsActivityC4.getPlayerName(context)
         round.firstPlayerUUID = SettingsActivityC4.getPlayerUUID(context)
-        round.local = "true"
         addRound(round,callback)
     }
 

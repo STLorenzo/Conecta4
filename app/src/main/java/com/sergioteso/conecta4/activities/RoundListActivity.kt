@@ -16,6 +16,7 @@ import android.widget.Toast
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.Fragments.RoundFragment
 import com.sergioteso.conecta4.activities.Fragments.RoundListFragment
+import com.sergioteso.conecta4.firebase.FRDataBase
 import com.sergioteso.conecta4.models.Round
 import com.sergioteso.conecta4.models.RoundRepository
 import com.sergioteso.conecta4.models.RoundRepositoryFactory
@@ -72,7 +73,8 @@ class RoundListActivity : AppCompatActivity(),
             val gameFragment = RoundFragment.newInstance(round.toJSONString())
             fm.beginTransaction().replace(R.id.fragment_game_container, gameFragment).commit()
         } else {
-            val intento = RoundActivity.newIntentRound(this, round.toJSONString())
+            val local = intent.getBooleanExtra(EXTRA_ROUND_LOCAL,true)
+            val intento = RoundActivity.newIntentRound(this, round.toJSONString(),local)
             startActivityForResult(intento, GAME_REQUEST_ID)
         }
     }
@@ -104,6 +106,7 @@ class RoundListActivity : AppCompatActivity(),
             }
         }
         repository = RoundRepositoryFactory.createRepository(this)
+        Log.d("DEBUG","${RoundRepositoryFactory.LOCAL}")
         repository?.createRound(rows,columns,this, callback)
     }
 
@@ -140,6 +143,22 @@ class RoundListActivity : AppCompatActivity(),
         super.onDestroy()
     }
 
+    override fun onStart() {
+        val callback = object : RoundRepository.RoundsCallback {
+            override fun onResponse(rounds: List<Round>) {
+                for(round in rounds){
+                    onRoundUpdated(round)
+                }
+            }
+
+            override fun onError(error: String) {
+                Toast.makeText(applicationContext, "Error on Start",Toast.LENGTH_SHORT).show()
+            }
+        }
+        FRDataBase(this).startListeningChanges(callback)
+        super.onStart()
+    }
+
     /**
      * Al resumir la actividad ejecuta el metodo onRoundUpdated por si hay que actualizar la UI
      */
@@ -170,17 +189,12 @@ class RoundListActivity : AppCompatActivity(),
      */
     companion object {
         val GAME_REQUEST_ID = 1
-        val GAME_EDITOR_ID = 2
-        val EXTRA_ROUND_ID = "com.sergioteso.conecta4.round_id"
-        val EXTRA_ROUND_ROWS = "com.sergioteso.conecta4.rows"
-        val EXTRA_ROUND_COLUMNS = "com.sergioteso.conecta4.columns"
-        val EXTRA_ROUND_NAME = "com.sergioteso.conecta4.name"
+        val EXTRA_ROUND_LOCAL= "com.sergioteso.conecta4.round_local"
         var name : String? = "Anonymus"
 
-        fun newIntent(context: Context, round_id: String?): Intent {
+        fun newIntent(context: Context, local: Boolean): Intent {
             val intent = Intent(context, RoundListActivity::class.java)
-            intent.putExtra(EXTRA_ROUND_ID, round_id)
-            intent.putExtra(EXTRA_ROUND_NAME, name)
+            intent.putExtra(EXTRA_ROUND_LOCAL, local)
             return intent
         }
     }

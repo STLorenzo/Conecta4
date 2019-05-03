@@ -13,6 +13,7 @@ import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.Logger.log
 import com.sergioteso.conecta4.activities.setColor
 import com.sergioteso.conecta4.models.TableroC4
+import es.uam.eps.multij.ExcepcionJuego
 import es.uam.eps.multij.Tablero
 
 /**
@@ -171,11 +172,11 @@ class ViewC4(context: Context, attrs: AttributeSet? = null) : View(context, attr
             ).show()
             return super.onTouchEvent(event)
         }
-        if (event.action == MotionEvent.ACTION_DOWN) {
+        if (event.action == MotionEvent.ACTION_DOWN ) {
             try {
                 onPlayListener?.onPlay(fromEventToJ(event))
-            } catch (e: Exception) {
-                Toast.makeText(context, "Jugada inválida", Toast.LENGTH_SHORT).show()
+            } catch (e: ExcepcionJuego) {
+                Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
             }
         }
         return true

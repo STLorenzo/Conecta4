@@ -37,10 +37,8 @@ class LoginActivityC4 : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curso
                 SettingsActivityC4.setPlayerUUID(this@LoginActivityC4, playerUuid)
                 SettingsActivityC4.setPlayerName(this@LoginActivityC4,
                     email.text.toString())
-                startActivity(
-                    Intent(this@LoginActivityC4,
-                    RoundListActivity::class.java)
-                )
+                val intent = RoundListActivity.newIntent(this@LoginActivityC4, false)
+                startActivity(intent)
                 finish()
             }
             override fun onError(error: String) {

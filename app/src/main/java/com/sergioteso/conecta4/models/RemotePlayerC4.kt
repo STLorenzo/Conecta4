@@ -25,11 +25,7 @@ class RemotePlayerC4(var name: String) : Jugador, ViewC4.OnPlayListener {
      * @param column Int con la columna en la que realizar el movimiento
      */
     override fun onPlay(column: Int) {
-        if(game.tablero.estado != Tablero.EN_CURSO)
-            throw ExcepcionJuego("La partida no esta en curso")
-        val m : MovimientoC4
-        m = MovimientoC4(column)
-        game.realizaAccion(AccionMover(this,m))
+        throw ExcepcionJuego("No es tu turno")
     }
 
     /**

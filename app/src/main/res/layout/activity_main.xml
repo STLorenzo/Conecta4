@@ -33,12 +33,18 @@
             android:padding="20sp">
 
         <Button
-                android:id="@+id/btn_new_game_mainmenu"
+                android:id="@+id/btn_local_mainmenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/start"
+                android:text="Local"
                 style="@style/BtnStartMenu"/>
 
+        <Button
+                android:id="@+id/btn_remote_mainmenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Online"
+                style="@style/BtnStartMenu"/>
 
         <Button
                 android:id="@+id/btn_about_mainmenu"

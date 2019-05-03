@@ -10,6 +10,7 @@ import android.util.Log
 import android.widget.Toast
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.Fragments.RoundFragment
+import com.sergioteso.conecta4.firebase.FRDataBase
 import com.sergioteso.conecta4.models.Round
 import com.sergioteso.conecta4.models.RoundRepository
 import com.sergioteso.conecta4.models.RoundRepositoryFactory
@@ -27,6 +28,7 @@ class RoundActivity : AppCompatActivity(),
     private var repository : RoundRepository? = null
 
     override fun onRoundUpdated(round: Round) {
+        val local = intent.getBooleanExtra(RoundListActivity.EXTRA_ROUND_LOCAL,true)
         repository = RoundRepositoryFactory.createRepository(this)
         val callback = object : RoundRepository.BooleanCallback {
             override fun onResponse(response: Boolean) {
@@ -69,16 +71,33 @@ class RoundActivity : AppCompatActivity(),
 
     }
 
+    override fun onStart() {
+        val callback = object : RoundRepository.RoundsCallback {
+            override fun onResponse(rounds: List<Round>) {
+                for(round in rounds){
+                    onRoundUpdated(round)
+                }
+            }
+
+            override fun onError(error: String) {
+                Toast.makeText(applicationContext, "Error on Start",Toast.LENGTH_SHORT).show()
+            }
+        }
+        FRDataBase(this).startListeningChanges(callback)
+        super.onStart()
+    }
 
     /**
      * objeto que permite crear intents para iniciar esta actividad de acorde a los parametros que le pasemos
      */
     companion object {
         val EXTRA_ROUND = "com.sergioteso.conecta4.round_id"
+        val EXTRA_LOCAL = "com.sergioteso.conecta4.local"
 
-        fun newIntentRound(context: Context, round: String): Intent {
+        fun newIntentRound(context: Context, round: String, local:Boolean): Intent {
             val intent = Intent(context, RoundActivity::class.java)
             intent.putExtra(EXTRA_ROUND, round)
+            intent.putExtra(EXTRA_LOCAL, local)
             return intent
         }
     }

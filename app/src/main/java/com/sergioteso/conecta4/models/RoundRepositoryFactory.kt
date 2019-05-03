@@ -9,8 +9,7 @@ import java.lang.Exception
  * Objeto que crea la factoria donde se almacenaran todas las rondas
  */
 object RoundRepositoryFactory {
-    private val LOCAL = false
-
+    var LOCAL = true
     /**
      * Funcion que accede a la database de la factoria devolviendo el repositorio
      *
@@ -25,5 +24,9 @@ object RoundRepositoryFactory {
             return null
         }
         return repository
+    }
+
+    fun setLocal(local: Boolean){
+        LOCAL = local
     }
 }

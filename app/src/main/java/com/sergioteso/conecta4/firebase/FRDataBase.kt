@@ -24,15 +24,22 @@ class FRDataBase(var context: Context) : RoundRepository {
 
     fun startListeningChanges(callback: RoundRepository.RoundsCallback) {
         db = FirebaseDatabase.getInstance().getReference().child(DATABASENAME)
-        db.addValueEventListener(object : ValueEventListener {
+        val table = RoundDataBaseSchema.RoundTable
+        db.child(table.NAME).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 Log.d("DEBUG", p0.toString())
             }
 
-            override fun onDataChange(p0: DataSnapshot) {
-                var rounds = listOf<Round>()
-                for (postSnapshot in p0.children)
-                    rounds += postSnapshot.getValue(Round::class.java)!!
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val rounds = mutableListOf<Round>()
+                for (postSnapshot in dataSnapshot.children) {
+                    val round_string = postSnapshot.value as String?
+                    if (round_string != null) {
+                        val round = Round.fromJSONString(round_string)
+                        if (isOpenOrIamIn(round))
+                            rounds.add(round)
+                    }
+                }
                 callback.onResponse(rounds)
             }
         })
@@ -243,7 +250,6 @@ class FRDataBase(var context: Context) : RoundRepository {
                             round.firstPlayerUUID = SettingsActivityC4.getPlayerUUID(context)
                             round.secondPlayerName = email2
                             round.secondPlayerUUID = uuid
-                            round.local = "false"
                             addRound(round,callback)
                             break
                         }
@@ -254,5 +260,12 @@ class FRDataBase(var context: Context) : RoundRepository {
         builder.setNegativeButton("Cancel")
         { dialog, _ -> dialog.cancel() }
         builder.show()
+    }
+
+    fun checkPlayerPosition(email: String): Int{
+        val user = FirebaseAuth.getInstance().currentUser
+        if (email == user?.email)
+            return 1
+        return 2
     }
 }
