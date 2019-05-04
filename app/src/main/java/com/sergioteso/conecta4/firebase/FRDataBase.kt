@@ -24,8 +24,8 @@ class FRDataBase(var context: Context) : RoundRepository {
 
     fun startListeningChanges(callback: RoundRepository.RoundsCallback) {
         val table = RoundDataBaseSchema.RoundTable
-        db = FirebaseDatabase.getInstance().getReference().child(DATABASENAME).child(table.NAME)
-        db.child(table.NAME).addListenerForSingleValueEvent(object : ValueEventListener {
+        db = FirebaseDatabase.getInstance().getReference().child(DATABASENAME)
+        db.child(table.NAME).addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 Log.d("DEBUG", p0.toString())
             }
