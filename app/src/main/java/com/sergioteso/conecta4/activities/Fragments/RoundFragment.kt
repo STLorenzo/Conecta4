@@ -109,17 +109,18 @@ class RoundFragment : Fragment(), PartidaListener {
         val remotePlayer: Jugador
         if(local){
             remotePlayer = JugadorAleatorio("Random Player")
-            localPlayer = LocalPlayerC4(name)
+            localPlayer = LocalPlayerC4(name,0)
             players.add(localPlayer)
             players.add(remotePlayer)
         }else{
             val frDataBase = FRDataBase(context!!)
-            localPlayer = LocalPlayerC4(round.firstPlayerName)
             remotePlayer = RemotePlayerC4(round.secondPlayerName)
-            if(frDataBase.checkPlayerPosition(round.firstPlayerUUID) == 1){
+            if(frDataBase.checkPlayerPosition(round.firstPlayerName) == 1){
+                localPlayer = LocalPlayerC4(round.firstPlayerName,0)
                 players.add(localPlayer)
                 players.add(remotePlayer)
             }else{
+                localPlayer = LocalPlayerC4(round.firstPlayerName,1)
                 players.add(remotePlayer)
                 players.add(localPlayer)
             }

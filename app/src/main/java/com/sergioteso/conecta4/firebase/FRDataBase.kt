@@ -23,8 +23,8 @@ class FRDataBase(var context: Context) : RoundRepository {
     lateinit var db: DatabaseReference
 
     fun startListeningChanges(callback: RoundRepository.RoundsCallback) {
-        db = FirebaseDatabase.getInstance().getReference().child(DATABASENAME)
         val table = RoundDataBaseSchema.RoundTable
+        db = FirebaseDatabase.getInstance().getReference().child(DATABASENAME).child(table.NAME)
         db.child(table.NAME).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 Log.d("DEBUG", p0.toString())
@@ -268,6 +268,7 @@ class FRDataBase(var context: Context) : RoundRepository {
 
     fun checkPlayerPosition(email: String): Int{
         val user = FirebaseAuth.getInstance().currentUser
+        Log.d("DEBUG", "$email - ${user?.email}")
         if (email == user?.email)
             return 1
         return 2

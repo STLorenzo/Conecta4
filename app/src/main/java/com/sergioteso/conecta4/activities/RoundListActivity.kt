@@ -153,7 +153,7 @@ class RoundListActivity : AppCompatActivity(),
                 Toast.makeText(applicationContext, "Error on Start",Toast.LENGTH_SHORT).show()
             }
         }
-        //FRDataBase(this).startListeningChanges(callback)
+        if(!RoundRepositoryFactory.LOCAL) FRDataBase(this).startListeningChanges(callback)
         super.onStart()
     }
 

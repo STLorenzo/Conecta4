@@ -16,7 +16,7 @@ import java.lang.Exception
  * @property name String con el nombre del Jugador
  * @property game Partida en curso
  */
-class LocalPlayerC4(var name: String) : Jugador, ViewC4.OnPlayListener {
+class LocalPlayerC4(var name: String, val turno: Int) : Jugador, ViewC4.OnPlayListener {
     private lateinit var game: Partida
 
     /**
@@ -28,6 +28,8 @@ class LocalPlayerC4(var name: String) : Jugador, ViewC4.OnPlayListener {
         if(game.tablero.estado != Tablero.EN_CURSO)
             throw ExcepcionJuego("La partida no esta en curso")
         val m : MovimientoC4
+        if(game.tablero.turno != turno)
+            throw ExcepcionJuego("No es tu turno ${turno}, ${game.tablero.turno}")
         m = MovimientoC4(column)
         game.realizaAccion(AccionMover(this,m))
     }
