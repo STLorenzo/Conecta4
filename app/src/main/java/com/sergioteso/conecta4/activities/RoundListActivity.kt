@@ -73,8 +73,7 @@ class RoundListActivity : AppCompatActivity(),
             val gameFragment = RoundFragment.newInstance(round.toJSONString())
             fm.beginTransaction().replace(R.id.fragment_game_container, gameFragment).commit()
         } else {
-            val local = intent.getBooleanExtra(EXTRA_ROUND_LOCAL,true)
-            val intento = RoundActivity.newIntentRound(this, round.toJSONString(),local)
+            val intento = RoundActivity.newIntentRound(this, round.toJSONString())
             startActivityForResult(intento, GAME_REQUEST_ID)
         }
     }
@@ -99,14 +98,14 @@ class RoundListActivity : AppCompatActivity(),
                         fragmentManager.findFragmentById(R.id.fragment_round_list_container)
                                 as RoundListFragment
                     roundListFragment.round_recycler_view.update(
-                        SettingsActivityC4.getPlayerUUID(baseContext),
+                        SettingsActivityC4.getPlayerUUID(applicationContext),
                         { round -> onRoundSelected(round) }
                     )
                 }
             }
         }
-        repository = RoundRepositoryFactory.createRepository(baseContext)
-        repository?.createRound(rows,columns,baseContext, callback)
+        repository = RoundRepositoryFactory.createRepository(this)
+        repository?.createRound(rows,columns,this, callback)
     }
 
 
@@ -188,13 +187,10 @@ class RoundListActivity : AppCompatActivity(),
      */
     companion object {
         val GAME_REQUEST_ID = 1
-        val EXTRA_ROUND_LOCAL= "com.sergioteso.conecta4.round_local"
         var name : String? = "Anonymus"
 
-        fun newIntent(context: Context, local: Boolean): Intent {
-            val intent = Intent(context, RoundListActivity::class.java)
-            intent.putExtra(EXTRA_ROUND_LOCAL, local)
-            return intent
+        fun newIntent(context: Context): Intent {
+            return Intent(context, RoundListActivity::class.java)
         }
     }
 }

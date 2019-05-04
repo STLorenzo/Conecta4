@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.Toast
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.firebase.FRDataBase
@@ -37,7 +38,7 @@ class LoginActivityC4 : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curso
                 SettingsActivityC4.setPlayerUUID(this@LoginActivityC4, playerUuid)
                 SettingsActivityC4.setPlayerName(this@LoginActivityC4,
                     email.text.toString())
-                val intent = RoundListActivity.newIntent(this@LoginActivityC4, false)
+                val intent = RoundListActivity.newIntent(this@LoginActivityC4)
                 startActivity(intent)
                 finish()
             }
@@ -53,6 +54,11 @@ class LoginActivityC4 : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curso
                     }
                     FRDataBase.REGISTER_ERROR -> {
                         Toast.makeText(applicationContext, "DB error User couldn't be registered", Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+                        email.error = getString(R.string.error_invalid_email)
+                        password.error = getString(R.string.error_incorrect_password)
+                        password.requestFocus()
                     }
                 }
 
@@ -70,6 +76,7 @@ class LoginActivityC4 : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curso
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loginc4)
 
+        tv_local.text = if( RoundRepositoryFactory.LOCAL) "LOCAL" else "ONLINE"
         email_sign_in_button.setOnClickListener { attemptLogin("login") }
         email_register_button.setOnClickListener { attemptLogin("register")}
     }

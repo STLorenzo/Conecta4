@@ -88,7 +88,7 @@ class SettingsActivityC4 : AppCompatPreferenceActivity() {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("board_name"))
+            bindPreferenceSummaryToValue(findPreference("board_player_name"))
             bindPreferenceSummaryToValue(findPreference("board_rows_list"))
             bindPreferenceSummaryToValue(findPreference("board_columns_list"))
         }

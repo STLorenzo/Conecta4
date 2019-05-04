@@ -82,8 +82,6 @@ class DatabaseC4(context: Context) : RoundRepository {
                     + RoundTable.Cols.BOARD + " TEXT);")
 
             try{
-                Log.d("DEBUG", str1)
-                Log.d("DEBUG", str2)
                 db.execSQL(str1)
                 db.execSQL(str2)
             }catch (e: SQLException){
@@ -175,7 +173,7 @@ class DatabaseC4(context: Context) : RoundRepository {
      */
     private fun getContentValues(round: Round): ContentValues {
         val values = ContentValues()
-        values.put(RoundTable.Cols.PLAYERUUID, round.firstPlayerUUID)
+        values.put(RoundTable.Cols.PLAYERUUID, round.secondPlayerUUID)
         values.put(RoundTable.Cols.ROUNDUUID, round.id)
         values.put(RoundTable.Cols.DATE, round.date)
         values.put(RoundTable.Cols.TITLE, round.title)
@@ -256,10 +254,10 @@ class DatabaseC4(context: Context) : RoundRepository {
 
     override fun createRound(rows: Int, columns: Int, context: Context,callback: RoundRepository.BooleanCallback) {
         val round = Round(rows, columns)
-        round.secondPlayerName = "Random"
-        round.secondPlayerUUID = "RandomUUID"
-        round.firstPlayerName = SettingsActivityC4.getPlayerName(context)
-        round.firstPlayerUUID = SettingsActivityC4.getPlayerUUID(context)
+        round.firstPlayerName = "Random"
+        round.firstPlayerUUID = "RandomUUID"
+        round.secondPlayerName = SettingsActivityC4.getPlayerName(context)
+        round.secondPlayerUUID = SettingsActivityC4.getPlayerUUID(context)
         addRound(round,callback)
     }
 

@@ -28,12 +28,11 @@ class RoundActivity : AppCompatActivity(),
     private var repository : RoundRepository? = null
 
     override fun onRoundUpdated(round: Round) {
-        val local = intent.getBooleanExtra(RoundListActivity.EXTRA_ROUND_LOCAL,true)
         repository = RoundRepositoryFactory.createRepository(this)
         val callback = object : RoundRepository.BooleanCallback {
             override fun onResponse(response: Boolean) {
                 if (response == true) {
-
+                    Log.d("DEBUG","Response of RoundUpdated succesful")
                 } else
                     Toast.makeText(applicationContext,
                         R.string.error_updating_round,
@@ -92,12 +91,10 @@ class RoundActivity : AppCompatActivity(),
      */
     companion object {
         val EXTRA_ROUND = "com.sergioteso.conecta4.round_id"
-        val EXTRA_LOCAL = "com.sergioteso.conecta4.local"
 
-        fun newIntentRound(context: Context, round: String, local:Boolean): Intent {
+        fun newIntentRound(context: Context, round: String): Intent {
             val intent = Intent(context, RoundActivity::class.java)
             intent.putExtra(EXTRA_ROUND, round)
-            intent.putExtra(EXTRA_LOCAL, local)
             return intent
         }
     }

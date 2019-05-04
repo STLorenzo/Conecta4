@@ -240,10 +240,12 @@ class FRDataBase(var context: Context) : RoundRepository {
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    var flag = true
                     for (postSnapshot in dataSnapshot.children) {
                         val email2 = postSnapshot.child(cols.PLAYERNAME).value as String
                         Log.d("DEBUG",email2)
                         if(email2 == email){
+                            flag = false
                             val uuid = postSnapshot.child(cols.PLAYERUUID).value as String
                             val round = Round(rows, columns)
                             round.firstPlayerName = SettingsActivityC4.getPlayerName(context)
@@ -254,6 +256,8 @@ class FRDataBase(var context: Context) : RoundRepository {
                             break
                         }
                     }
+                    if (flag)
+                        Toast.makeText(context,"User Not Found", Toast.LENGTH_SHORT).show()
                 }
             })
         }

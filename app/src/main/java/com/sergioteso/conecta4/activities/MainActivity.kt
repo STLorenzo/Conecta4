@@ -18,8 +18,7 @@ class MainActivity : AppCompatActivity() {
 
         btn_local_mainmenu.setOnClickListener {
             RoundRepositoryFactory.setLocal(true)
-            intent = RoundListActivity.newIntent(this, true)
-            startActivity(intent)
+            startActivity(Intent(this, LoginActivityC4::class.java))
         }
 
         btn_remote_mainmenu.setOnClickListener {

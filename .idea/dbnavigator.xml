@@ -74,7 +74,7 @@
           <port value="" />
           <database value="" />
           <files>
-            <file path="C:\Users\sergi\Documents\AndroidStudio\DeviceExplorer\Pixel_2_API_28 [emulator-5554]\data\data\com.sergioteso.conecta4\databases\c4local.db" schema="main" />
+            <file path="C:\Users\sergi\Documents\AndroidStudio\DeviceExplorer\Pixel_2_API_28 [emulator-5554]\data\data\com.sergioteso.conecta4\databases\c4.db" schema="main" />
           </files>
           <os-authentication value="false" />
           <empty-authentication value="false" />
