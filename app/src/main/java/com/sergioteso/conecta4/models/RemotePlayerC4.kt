@@ -16,7 +16,7 @@ import java.lang.Exception
  * @property name String con el nombre del Jugador
  * @property game Partida en curso
  */
-class RemotePlayerC4(var name: String) : Jugador, ViewC4.OnPlayListener {
+class RemotePlayerC4(var name: String, public var turno: Int) : Jugador, ViewC4.OnPlayListener {
     private lateinit var game: Partida
 
     /**

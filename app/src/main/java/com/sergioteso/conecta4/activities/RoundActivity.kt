@@ -32,7 +32,7 @@ class RoundActivity : AppCompatActivity(),
         val callback = object : RoundRepository.BooleanCallback {
             override fun onResponse(response: Boolean) {
                 if (response == true) {
-                    Log.d("DEBUG","Response of RoundUpdated succesful")
+                    //Log.d("DEBUG","Response of RoundUpdated succesful")
                 } else
                     Toast.makeText(applicationContext,
                         R.string.error_updating_round,

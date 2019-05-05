@@ -15,6 +15,7 @@ import android.content.DialogInterface
 import android.text.InputType
 import android.widget.EditText
 import android.widget.Toast
+import com.sergioteso.conecta4.activities.Fragments.RoundFragment
 import com.sergioteso.conecta4.activities.SettingsActivityC4
 
 
@@ -45,7 +46,24 @@ class FRDataBase(var context: Context) : RoundRepository {
         })
     }
 
-    //fun startListeningBoardChanges(callback: RoundRepository.RoundsCallback) { ... }
+    fun startListeningBoardChanges(callback: RoundFragment.RoundUICallback, round_id: String) {
+        Log.d("DEBUG", "boardChanges")
+        val table = RoundDataBaseSchema.RoundTable
+        db = FirebaseDatabase.getInstance().getReference().child(DATABASENAME)
+        Log.d("DEBUG","round id $round_id")
+        db.child(table.NAME).child(round_id).addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                Log.d("DEBUG", p0.toString())
+                callback.onError()
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val round_string = dataSnapshot.value as String
+                val round = Round.fromJSONString(round_string)
+                callback.updateUI(round)
+            }
+        })
+    }
 
     override fun open() {
         db = FirebaseDatabase.getInstance().reference.child(DATABASENAME)

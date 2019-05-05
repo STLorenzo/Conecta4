@@ -29,7 +29,7 @@ class LocalPlayerC4(var name: String, val turno: Int) : Jugador, ViewC4.OnPlayLi
             throw ExcepcionJuego("La partida no esta en curso")
         val m : MovimientoC4
         if(game.tablero.turno != turno)
-            throw ExcepcionJuego("No es tu turno ${turno}, ${game.tablero.turno}")
+            throw ExcepcionJuego("No es tu turno")
         m = MovimientoC4(column)
         game.realizaAccion(AccionMover(this,m))
     }

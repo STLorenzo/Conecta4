@@ -47,7 +47,6 @@ class RoundListActivity : AppCompatActivity(),
         val callback = object : RoundRepository.BooleanCallback {
             override fun onResponse(response: Boolean) {
                 if (response == true) {
-                    Log.d("DEBUG","onRoundUpdated")
                     round_recycler_view.update(
                         SettingsActivityC4.getPlayerUUID(baseContext),
                         { round -> onRoundSelected(round) }
@@ -145,7 +144,10 @@ class RoundListActivity : AppCompatActivity(),
         val callback = object : RoundRepository.RoundsCallback {
             override fun onResponse(rounds: List<Round>) {
                 for(round in rounds){
-                    onRoundUpdated(round)
+                    round_recycler_view.update(
+                        SettingsActivityC4.getPlayerUUID(baseContext),
+                        { round -> onRoundSelected(round) }
+                    )
                 }
             }
 

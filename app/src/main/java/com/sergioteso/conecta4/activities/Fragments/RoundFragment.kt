@@ -114,21 +114,42 @@ class RoundFragment : Fragment(), PartidaListener {
             players.add(remotePlayer)
         }else{
             val frDataBase = FRDataBase(context!!)
-            remotePlayer = RemotePlayerC4(round.secondPlayerName)
+
             if(frDataBase.checkPlayerPosition(round.firstPlayerName) == 1){
                 localPlayer = LocalPlayerC4(round.firstPlayerName,0)
+                remotePlayer = RemotePlayerC4(round.secondPlayerName,1)
                 players.add(localPlayer)
                 players.add(remotePlayer)
             }else{
                 localPlayer = LocalPlayerC4(round.firstPlayerName,1)
+                remotePlayer = RemotePlayerC4(round.secondPlayerName,0)
                 players.add(remotePlayer)
                 players.add(localPlayer)
             }
+
+            val callback = object : RoundUICallback {
+                override fun updateUI(round_updated: Round) {
+                    try{
+                        if (remotePlayer.turno != round_updated.board.turno && game.tablero.estado==Tablero.EN_CURSO)
+                            game.realizaAccion(AccionMover(remotePlayer,round_updated.board.ultimoMovimiento))
+                    }catch(e: ExcepcionJuego){
+                        //Nada
+                    }
+                    if(board_viewc4 != null){
+                        board_viewc4.invalidate()
+                    }
+                }
+
+                override fun onError() {
+                    Toast.makeText(context, "Error on UpdateUIRound", Toast.LENGTH_SHORT).show()
+                }
+            }
+            FRDataBase(context!!).startListeningBoardChanges(callback, round.id)
         }
         game = Partida(tablero, players)
         game.addObservador(this)
         localPlayer.setPartida(game)
-        board_viewc4.setBoard(round.board)
+        board_viewc4.setBoard(tablero)
         board_viewc4.setOnPlayListener(localPlayer)
         if (game.tablero.estado == Tablero.EN_CURSO)
             game.comenzar()
@@ -140,6 +161,13 @@ class RoundFragment : Fragment(), PartidaListener {
     override fun onStart() {
         super.onStart()
         startRound()
+
+
+    }
+
+    interface RoundUICallback{
+        fun updateUI(round_updated: Round)
+        fun onError()
     }
 
     /**

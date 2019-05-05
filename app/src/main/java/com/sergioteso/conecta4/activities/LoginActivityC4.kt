@@ -14,6 +14,8 @@ import com.sergioteso.conecta4.models.RoundRepository
 import com.sergioteso.conecta4.models.RoundRepositoryFactory
 import kotlinx.android.synthetic.main.activity_loginc4.*
 
+
+
 class LoginActivityC4 : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cursor> {
     override fun onLoadFinished(p0: Loader<Cursor>, p1: Cursor?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -77,6 +79,16 @@ class LoginActivityC4 : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curso
         setContentView(R.layout.activity_loginc4)
 
         tv_local.text = if( RoundRepositoryFactory.LOCAL) "LOCAL" else "ONLINE"
+
+        val configuration = getResources().getConfiguration()
+        val screenWidthDp = configuration.screenWidthDp
+        if(screenWidthDp >= 900 ){
+            email.setText("antonio@gmail.com")
+            password.setText("antonio")
+        }else{
+            email.setText("a@a.com")
+            password.setText("aaaaaa")
+        }
         email_sign_in_button.setOnClickListener { attemptLogin("login") }
         email_register_button.setOnClickListener { attemptLogin("register")}
     }

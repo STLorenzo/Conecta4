@@ -46,25 +46,21 @@ class AlertDialogFragment : DialogFragment() {
                     activity.onRoundAdded()
                     //activity.onRoundUpdated()
                 else if ( activity is RoundActivity){
-                    val round = Round(
-                        SettingsActivityC4.getRows(context),
-                        SettingsActivityC4.getColumns(context))
-                    round.firstPlayerName = "Random"
-                    round.firstPlayerUUID = "Random"
-                    round.secondPlayerName = SettingsActivityC4.getPlayerName(context)
-                    round.secondPlayerUUID = SettingsActivityC4.getPlayerUUID(context)
+                    val rows = SettingsActivityC4.getRows(activity)
+                    val columns = SettingsActivityC4.getColumns(activity)
 
                     val callback = object : RoundRepository.BooleanCallback {
                         override fun onResponse(response: Boolean) {
                             if (response == false)
-                                Toast.makeText(context,
-                                    R.string.error_adding_round, Toast.LENGTH_LONG).show()
+
+                            else {
+                                Toast.makeText(activity,
+                                    "New round added", Toast.LENGTH_LONG).show()
+                            }
                         }
                     }
-
-                    val repository = RoundRepositoryFactory.createRepository(context)
-                    repository?.addRound(round, callback)
-                    activity.finish()
+                    val repository = RoundRepositoryFactory.createRepository(activity)
+                    repository?.createRound(rows,columns,activity, callback)
                 }
                 else
                     activity?.finish()
