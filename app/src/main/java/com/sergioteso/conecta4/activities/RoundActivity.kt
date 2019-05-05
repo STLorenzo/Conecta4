@@ -71,18 +71,6 @@ class RoundActivity : AppCompatActivity(),
     }
 
     override fun onStart() {
-        val callback = object : RoundRepository.RoundsCallback {
-            override fun onResponse(rounds: List<Round>) {
-                for(round in rounds){
-                    onRoundUpdated(round)
-                }
-            }
-
-            override fun onError(error: String) {
-                Toast.makeText(applicationContext, "Error on Start",Toast.LENGTH_SHORT).show()
-            }
-        }
-        if(!RoundRepositoryFactory.LOCAL) FRDataBase(this).startListeningChanges(callback)
         super.onStart()
     }
 

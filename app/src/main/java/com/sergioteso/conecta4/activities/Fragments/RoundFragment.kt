@@ -126,12 +126,22 @@ class RoundFragment : Fragment(), PartidaListener {
                 players.add(remotePlayer)
                 players.add(localPlayer)
             }
-
+        }
+        game = Partida(tablero, players)
+        game.addObservador(this)
+        localPlayer.setPartida(game)
+        board_viewc4.setBoard(tablero)
+        board_viewc4.setOnPlayListener(localPlayer)
+        if(!local){
             val callback = object : RoundUICallback {
                 override fun updateUI(round_updated: Round) {
                     try{
-                        if (remotePlayer.turno != round_updated.board.turno && game.tablero.estado==Tablero.EN_CURSO)
+                        val remoteP = remotePlayer as RemotePlayerC4
+                        if (remoteP.turno != round_updated.board.turno && remoteP.turno == game.tablero.turno && round_updated.board.estado!=Tablero.FINALIZADA && board_viewc4 != null){
                             game.realizaAccion(AccionMover(remotePlayer,round_updated.board.ultimoMovimiento))
+                            listener?.onRoundUpdated(round_updated)
+                        }
+
                     }catch(e: ExcepcionJuego){
                         //Nada
                     }
@@ -146,11 +156,8 @@ class RoundFragment : Fragment(), PartidaListener {
             }
             FRDataBase(context!!).startListeningBoardChanges(callback, round.id)
         }
-        game = Partida(tablero, players)
-        game.addObservador(this)
-        localPlayer.setPartida(game)
-        board_viewc4.setBoard(tablero)
-        board_viewc4.setOnPlayListener(localPlayer)
+
+
         if (game.tablero.estado == Tablero.EN_CURSO)
             game.comenzar()
     }
