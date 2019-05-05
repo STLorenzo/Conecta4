@@ -1,5 +1,6 @@
 package com.sergioteso.conecta4.activities.Fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -69,32 +70,38 @@ class RoundFragment : Fragment(), PartidaListener {
      * Metodo llamado una vez la vista es creada. Es el encargado en asignar al jugador local y el tablero y
      * establecer el listener del boton de reset
      */
+    @SuppressLint("RestrictedApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         tv_title.text = round.title
-        if( savedInstanceState != null){
+        if (savedInstanceState != null) {
             round.board.stringToTablero(savedInstanceState.getString(BOARDSTRING))
         }
         tablero = round.board
 
-        reset_round_fab.setOnClickListener {
-            if (tablero.estado != Tablero.EN_CURSO) {
-                Snackbar.make(
-                    view,
-                    R.string.round_already_finished, Snackbar.LENGTH_SHORT
-                ).show()
-            } else {
-                tablero.reset()
-                startRound()
-                listener?.onRoundUpdated(round)
-                //updateUI()
-                board_viewc4.invalidate()
-                Snackbar.make(
-                    view, R.string.round_restarted,
-                    Snackbar.LENGTH_SHORT
-                ).show()
+        if (RoundRepositoryFactory.LOCAL) {
+            reset_round_fab.setOnClickListener {
+                if (tablero.estado != Tablero.EN_CURSO) {
+                    Snackbar.make(
+                        view,
+                        R.string.round_already_finished, Snackbar.LENGTH_SHORT
+                    ).show()
+                } else {
+                    tablero.reset()
+                    startRound()
+                    listener?.onRoundUpdated(round)
+                    //updateUI()
+                    board_viewc4.invalidate()
+                    Snackbar.make(
+                        view, R.string.round_restarted,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
             }
+        } else {
+            reset_round_fab.visibility = View.GONE
         }
+
     }
 
     /**
@@ -103,26 +110,26 @@ class RoundFragment : Fragment(), PartidaListener {
      */
     private fun startRound() {
         val players = ArrayList<Jugador>()
-        name = round.firstPlayerName
+        name = round.secondPlayerName
         val local = RoundRepositoryFactory.LOCAL
         val localPlayer: Jugador
         val remotePlayer: Jugador
-        if(local){
+        if (local) {
             remotePlayer = JugadorAleatorio("Random Player")
-            localPlayer = LocalPlayerC4(name,0)
+            localPlayer = LocalPlayerC4(name, 0)
             players.add(localPlayer)
             players.add(remotePlayer)
-        }else{
+        } else {
             val frDataBase = FRDataBase(context!!)
 
-            if(frDataBase.checkPlayerPosition(round.firstPlayerName) == 1){
-                localPlayer = LocalPlayerC4(round.firstPlayerName,0)
-                remotePlayer = RemotePlayerC4(round.secondPlayerName,1)
+            if (frDataBase.checkPlayerPosition(round.firstPlayerName) == 1) {
+                localPlayer = LocalPlayerC4(round.firstPlayerName, 0)
+                remotePlayer = RemotePlayerC4(round.secondPlayerName, 1)
                 players.add(localPlayer)
                 players.add(remotePlayer)
-            }else{
-                localPlayer = LocalPlayerC4(round.firstPlayerName,1)
-                remotePlayer = RemotePlayerC4(round.secondPlayerName,0)
+            } else {
+                localPlayer = LocalPlayerC4(round.firstPlayerName, 1)
+                remotePlayer = RemotePlayerC4(round.secondPlayerName, 0)
                 players.add(remotePlayer)
                 players.add(localPlayer)
             }
@@ -132,20 +139,20 @@ class RoundFragment : Fragment(), PartidaListener {
         localPlayer.setPartida(game)
         board_viewc4.setBoard(tablero)
         board_viewc4.setOnPlayListener(localPlayer)
-        if(!local){
+        if (!local) {
             val callback = object : RoundUICallback {
                 override fun updateUI(round_updated: Round) {
-                    try{
+                    try {
                         val remoteP = remotePlayer as RemotePlayerC4
-                        if (remoteP.turno != round_updated.board.turno && remoteP.turno == game.tablero.turno && round_updated.board.estado!=Tablero.FINALIZADA && board_viewc4 != null){
-                            game.realizaAccion(AccionMover(remotePlayer,round_updated.board.ultimoMovimiento))
+                        if (remoteP.turno != round_updated.board.turno && remoteP.turno == game.tablero.turno && round_updated.board.estado != Tablero.FINALIZADA && board_viewc4 != null) {
+                            game.realizaAccion(AccionMover(remotePlayer, round_updated.board.ultimoMovimiento))
                             listener?.onRoundUpdated(round_updated)
                         }
 
-                    }catch(e: ExcepcionJuego){
+                    } catch (e: ExcepcionJuego) {
                         //Nada
                     }
-                    if(board_viewc4 != null){
+                    if (board_viewc4 != null) {
                         board_viewc4.invalidate()
                     }
                 }
@@ -172,7 +179,7 @@ class RoundFragment : Fragment(), PartidaListener {
 
     }
 
-    interface RoundUICallback{
+    interface RoundUICallback {
         fun updateUI(round_updated: Round)
         fun onError()
     }
@@ -182,7 +189,7 @@ class RoundFragment : Fragment(), PartidaListener {
      */
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        Log.d("DEBUG","attach")
+        Log.d("DEBUG", "attach")
         if (context is OnRoundFragmentInteractionListener)
             listener = context
         else {
@@ -231,14 +238,16 @@ class RoundFragment : Fragment(), PartidaListener {
                 } else {
                     tablero.setComprobacionIJ(tablero.ultimoMovimiento as MovimientoC4)
                     Toast.makeText(context, "Gana - ${game.getJugador(tablero.turno).nombre}", Toast.LENGTH_LONG)
-                        .show()
+                    .show()
                 }
                 listener?.onRoundUpdated(round)
 
                 board_viewc4.invalidate()
-                AlertDialogFragment().show(
-                    activity?.supportFragmentManager, "ALERT_DIALOG"
-                )
+                if (RoundRepositoryFactory.LOCAL) {
+                    AlertDialogFragment().show(
+                        activity?.supportFragmentManager, "ALERT_DIALOG"
+                    )
+                }
             }
         }
     }

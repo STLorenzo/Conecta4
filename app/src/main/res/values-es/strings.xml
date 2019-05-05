@@ -21,7 +21,7 @@
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="round_restarted">Ronda Reiniciada</string>
-    <string name="about_text">"Segunda Practica de Conecta4 de DADM.\n\nRealizada por: Sergio Teso Lorenzo"</string>
+    <string name="about_text">"Tercera Practica de Conecta4 de DADM.\n\nRealizada por: Sergio Teso Lorenzo"</string>
     <string name="preferences">Preferencias</string>
     <string name="general_settings">Ajustes Generales</string>
     <string name="player_name">Nombre del Jugador</string>
@@ -43,4 +43,8 @@
     <string name="error_incorrect_password">Contraseña incorrecta</string>
     <string name="error_updating_round">Error actualizando la ronda</string>
     <string name="error_adding_round">Error añadiendo la ronda</string>
+
+    <string name="insert_email">Inserte el Email del Jugador</string>
+    <string name="error_adding_yourself">No puedes invitarte a ti mismo</string>
+    <string name="error_user_not_found">Usuario no encontrado</string>
 </resources>

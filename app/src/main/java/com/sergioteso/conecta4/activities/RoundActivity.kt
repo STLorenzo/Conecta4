@@ -1,21 +1,17 @@
 package com.sergioteso.conecta4.activities
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.Fragments.RoundFragment
-import com.sergioteso.conecta4.firebase.FRDataBase
 import com.sergioteso.conecta4.models.Round
 import com.sergioteso.conecta4.models.RoundRepository
 import com.sergioteso.conecta4.models.RoundRepositoryFactory
 import kotlinx.android.synthetic.main.activity_round_list.*
-import kotlinx.android.synthetic.main.fragment_round_list.*
 
 /**
  * clase que implementa la actividad la actividad del juego principal.
@@ -25,7 +21,7 @@ import kotlinx.android.synthetic.main.fragment_round_list.*
 class RoundActivity : AppCompatActivity(),
     RoundFragment.OnRoundFragmentInteractionListener {
 
-    private var repository : RoundRepository? = null
+    private var repository: RoundRepository? = null
 
     override fun onRoundUpdated(round: Round) {
         repository = RoundRepositoryFactory.createRepository(this)
@@ -34,12 +30,14 @@ class RoundActivity : AppCompatActivity(),
                 if (response == true) {
                     //Log.d("DEBUG","Response of RoundUpdated succesful")
                 } else
-                    Toast.makeText(applicationContext,
+                    Toast.makeText(
+                        applicationContext,
                         R.string.error_updating_round,
-                        Toast.LENGTH_SHORT).show()
+                        Toast.LENGTH_SHORT
+                    ).show()
             }
         }
-        Log.d("DEBUG","update_roudn_activity")
+        Log.d("DEBUG", "update_roudn_activity")
         repository?.updateRound(round, callback)
     }
 
@@ -68,10 +66,6 @@ class RoundActivity : AppCompatActivity(),
         // Enable the Up button from the support ActionBar corresponding to this toolbar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-    }
-
-    override fun onStart() {
-        super.onStart()
     }
 
     /**

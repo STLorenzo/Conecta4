@@ -44,25 +44,25 @@ class AlertDialogFragment : DialogFragment() {
             setPositiveButton(R.string.yes) { dialog, _ ->
                 if (activity is RoundListActivity)
                     activity.onRoundAdded()
-                    //activity.onRoundUpdated()
-                else if ( activity is RoundActivity){
+                //activity.onRoundUpdated()
+                else if (activity is RoundActivity) {
                     val rows = SettingsActivityC4.getRows(activity)
                     val columns = SettingsActivityC4.getColumns(activity)
 
                     val callback = object : RoundRepository.BooleanCallback {
                         override fun onResponse(response: Boolean) {
                             if (response == false)
-
                             else {
-                                Toast.makeText(activity,
-                                    "New round added", Toast.LENGTH_LONG).show()
+                                Toast.makeText(
+                                    activity,
+                                    "New round added", Toast.LENGTH_LONG
+                                ).show()
                             }
                         }
                     }
                     val repository = RoundRepositoryFactory.createRepository(activity)
-                    repository?.createRound(rows,columns,activity, callback)
-                }
-                else
+                    repository?.createRound(rows, columns, activity, callback)
+                } else
                     activity?.finish()
                 dialog.dismiss()
             }

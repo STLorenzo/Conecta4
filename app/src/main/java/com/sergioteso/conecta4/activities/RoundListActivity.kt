@@ -1,17 +1,13 @@
 package com.sergioteso.conecta4.activities
 
-import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
-import android.text.InputType
 import android.util.Log
 import android.view.Menu
-import android.widget.EditText
 import android.widget.Toast
 import com.sergioteso.conecta4.R
 import com.sergioteso.conecta4.activities.Fragments.RoundFragment
@@ -20,8 +16,6 @@ import com.sergioteso.conecta4.firebase.FRDataBase
 import com.sergioteso.conecta4.models.Round
 import com.sergioteso.conecta4.models.RoundRepository
 import com.sergioteso.conecta4.models.RoundRepositoryFactory
-import com.sergioteso.conecta4.models.TableroC4
-import es.uam.eps.multij.ExcepcionJuego
 import kotlinx.android.synthetic.main.activity_round_list.*
 import kotlinx.android.synthetic.main.fragment_round_list.*
 
@@ -52,12 +46,14 @@ class RoundListActivity : AppCompatActivity(),
                         { round -> onRoundSelected(round) }
                     )
                 } else
-                    Toast.makeText(applicationContext,
+                    Toast.makeText(
+                        applicationContext,
                         R.string.error_updating_round,
-                        Toast.LENGTH_SHORT).show()
+                        Toast.LENGTH_SHORT
+                    ).show()
             }
         }
-        Log.d("DEBUG","update_roudn_list")
+        Log.d("DEBUG", "update_roudn_list")
         repository?.updateRound(round, callback)
     }
 
@@ -87,11 +83,15 @@ class RoundListActivity : AppCompatActivity(),
         val callback = object : RoundRepository.BooleanCallback {
             override fun onResponse(response: Boolean) {
                 if (response == false)
-                    Snackbar.make(findViewById(R.id.round_recycler_view),
-                        R.string.error_adding_round, Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(
+                        findViewById(R.id.round_recycler_view),
+                        R.string.error_adding_round, Snackbar.LENGTH_LONG
+                    ).show()
                 else {
-                    Snackbar.make(findViewById(R.id.round_recycler_view),
-                        "New round added", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(
+                        findViewById(R.id.round_recycler_view),
+                        "New round added", Snackbar.LENGTH_LONG
+                    ).show()
                     val fragmentManager = supportFragmentManager
                     val roundListFragment =
                         fragmentManager.findFragmentById(R.id.fragment_round_list_container)
@@ -104,9 +104,8 @@ class RoundListActivity : AppCompatActivity(),
             }
         }
         repository = RoundRepositoryFactory.createRepository(this)
-        repository?.createRound(rows,columns,this, callback)
+        repository?.createRound(rows, columns, this, callback)
     }
-
 
 
 //    /**
@@ -130,7 +129,7 @@ class RoundListActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_round_list)
 
-        val fm : FragmentManager = supportFragmentManager
+        val fm: FragmentManager = supportFragmentManager
         fm.beginTransaction().replace(R.id.fragment_round_list_container, RoundListFragment()).commit()
         setSupportActionBar(roundList_toolbar)
     }
@@ -143,7 +142,7 @@ class RoundListActivity : AppCompatActivity(),
     override fun onStart() {
         val callback = object : RoundRepository.RoundsCallback {
             override fun onResponse(rounds: List<Round>) {
-                for(round in rounds){
+                for (round in rounds) {
                     round_recycler_view.update(
                         SettingsActivityC4.getPlayerUUID(baseContext),
                         { round -> onRoundSelected(round) }
@@ -152,10 +151,10 @@ class RoundListActivity : AppCompatActivity(),
             }
 
             override fun onError(error: String) {
-                Toast.makeText(applicationContext, "Error on Start",Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Error on Start", Toast.LENGTH_SHORT).show()
             }
         }
-        if(!RoundRepositoryFactory.LOCAL) FRDataBase(this).startListeningChanges(callback)
+        if (!RoundRepositoryFactory.LOCAL) FRDataBase(this).startListeningChanges(callback)
         super.onStart()
     }
 
@@ -189,7 +188,7 @@ class RoundListActivity : AppCompatActivity(),
      */
     companion object {
         val GAME_REQUEST_ID = 1
-        var name : String? = "Anonymus"
+        var name: String? = "Anonymus"
 
         fun newIntent(context: Context): Intent {
             return Intent(context, RoundListActivity::class.java)

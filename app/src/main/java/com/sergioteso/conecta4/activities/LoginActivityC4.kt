@@ -15,7 +15,6 @@ import com.sergioteso.conecta4.models.RoundRepositoryFactory
 import kotlinx.android.synthetic.main.activity_loginc4.*
 
 
-
 class LoginActivityC4 : AppCompatActivity(), LoaderManager.LoaderCallbacks<Cursor> {
     override fun onLoadFinished(p0: Loader<Cursor>, p1: Cursor?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -38,14 +37,17 @@ class LoginActivityC4 : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curso
         val loginRegisterCallback = object : RoundRepository.LoginRegisterCallback {
             override fun onLogin(playerUuid: String) {
                 SettingsActivityC4.setPlayerUUID(this@LoginActivityC4, playerUuid)
-                SettingsActivityC4.setPlayerName(this@LoginActivityC4,
-                    email.text.toString())
+                SettingsActivityC4.setPlayerName(
+                    this@LoginActivityC4,
+                    email.text.toString()
+                )
                 val intent = RoundListActivity.newIntent(this@LoginActivityC4)
                 startActivity(intent)
                 finish()
             }
+
             override fun onError(error: String) {
-                when (error){
+                when (error) {
                     FRDataBase.LOGIN_CREDENTIALS_ERROR -> {
                         email.error = getString(R.string.error_invalid_email)
                         password.error = getString(R.string.error_incorrect_password)
@@ -55,7 +57,8 @@ class LoginActivityC4 : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curso
                         Toast.makeText(applicationContext, "User Already Exists", Toast.LENGTH_SHORT).show()
                     }
                     FRDataBase.REGISTER_ERROR -> {
-                        Toast.makeText(applicationContext, "DB error User couldn't be registered", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, "DB error User couldn't be registered", Toast.LENGTH_SHORT)
+                            .show()
                     }
                     else -> {
                         email.error = getString(R.string.error_invalid_email)
@@ -67,10 +70,14 @@ class LoginActivityC4 : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curso
             }
         }
         when (type) {
-            "login" -> repository?.login(email.text.toString(),
-                password.text.toString(), loginRegisterCallback)
-            "register" -> repository?.register(email.text.toString(),
-                password.text.toString(), loginRegisterCallback)
+            "login" -> repository?.login(
+                email.text.toString(),
+                password.text.toString(), loginRegisterCallback
+            )
+            "register" -> repository?.register(
+                email.text.toString(),
+                password.text.toString(), loginRegisterCallback
+            )
         }
     }
 
@@ -78,19 +85,19 @@ class LoginActivityC4 : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curso
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loginc4)
 
-        tv_local.text = if( RoundRepositoryFactory.LOCAL) "LOCAL" else "ONLINE"
+        tv_local.text = if (RoundRepositoryFactory.LOCAL) "LOCAL" else "ONLINE"
 
         val configuration = getResources().getConfiguration()
         val screenWidthDp = configuration.screenWidthDp
-        if(screenWidthDp >= 900 ){
+        if (screenWidthDp >= 900) {
             email.setText("antonio@gmail.com")
             password.setText("antonio")
-        }else{
-            email.setText("a@a.com")
-            password.setText("aaaaaa")
+        } else {
+            email.setText("natasha@gmail.com")
+            password.setText("natasha")
         }
         email_sign_in_button.setOnClickListener { attemptLogin("login") }
-        email_register_button.setOnClickListener { attemptLogin("register")}
+        email_register_button.setOnClickListener { attemptLogin("register") }
     }
 
     /**

@@ -7,11 +7,8 @@ import com.google.firebase.database.*
 import com.sergioteso.conecta4.database.RoundDataBaseSchema
 import com.sergioteso.conecta4.models.Round
 import com.sergioteso.conecta4.models.RoundRepository
-import java.lang.Exception
 import java.util.*
-import android.R.string.cancel
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.text.InputType
 import android.widget.EditText
 import android.widget.Toast
@@ -47,10 +44,8 @@ class FRDataBase(var context: Context) : RoundRepository {
     }
 
     fun startListeningBoardChanges(callback: RoundFragment.RoundUICallback, round_id: String) {
-        Log.d("DEBUG", "boardChanges")
         val table = RoundDataBaseSchema.RoundTable
         db = FirebaseDatabase.getInstance().getReference().child(DATABASENAME)
-        Log.d("DEBUG","round id $round_id")
         db.child(table.NAME).child(round_id).addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 Log.d("DEBUG", p0.toString())
@@ -74,7 +69,6 @@ class FRDataBase(var context: Context) : RoundRepository {
     }
 
     override fun login(playername: String, password: String, callback: RoundRepository.LoginRegisterCallback) {
-        Log.d("DEBUG", "Empieza Login")
         val table = RoundDataBaseSchema.UserTable
         val cols = RoundDataBaseSchema.UserTable.Cols
         val auth = FirebaseAuth.getInstance()
@@ -234,8 +228,7 @@ class FRDataBase(var context: Context) : RoundRepository {
         })
     }
 
-    override fun createRound(rows: Int, columns: Int, context: Context, callback: RoundRepository.BooleanCallback){
-        Log.d("DEBUG","createround")
+    override fun createRound(rows: Int, columns: Int, context: Context, callback: RoundRepository.BooleanCallback) {
         var email: String
         val builder = AlertDialog.Builder(context)
         builder.setTitle("Insert Email of the player")
@@ -261,8 +254,12 @@ class FRDataBase(var context: Context) : RoundRepository {
                     var flag = true
                     for (postSnapshot in dataSnapshot.children) {
                         val email2 = postSnapshot.child(cols.PLAYERNAME).value as String
-                        Log.d("DEBUG",email2)
-                        if(email2 == email){
+                        if (email == FirebaseAuth.getInstance().currentUser?.email) {
+                            Toast.makeText(context, "You can´t invite yourself", Toast.LENGTH_SHORT).show()
+                            flag = false
+                            break
+                        }
+                        if (email2 == email) {
                             flag = false
                             val uuid = postSnapshot.child(cols.PLAYERUUID).value as String
                             val round = Round(rows, columns)
@@ -270,12 +267,12 @@ class FRDataBase(var context: Context) : RoundRepository {
                             round.firstPlayerUUID = SettingsActivityC4.getPlayerUUID(context)
                             round.secondPlayerName = email2
                             round.secondPlayerUUID = uuid
-                            addRound(round,callback)
+                            addRound(round, callback)
                             break
                         }
                     }
                     if (flag)
-                        Toast.makeText(context,"User Not Found", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "User Not Found", Toast.LENGTH_SHORT).show()
                 }
             })
         }
@@ -284,7 +281,7 @@ class FRDataBase(var context: Context) : RoundRepository {
         builder.show()
     }
 
-    fun checkPlayerPosition(email: String): Int{
+    fun checkPlayerPosition(email: String): Int {
         val user = FirebaseAuth.getInstance().currentUser
         Log.d("DEBUG", "$email - ${user?.email}")
         if (email == user?.email)

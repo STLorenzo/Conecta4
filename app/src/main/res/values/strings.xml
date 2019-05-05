@@ -20,7 +20,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="round_restarted">Round Restarted</string>
-    <string name="about_text">Second Assignment of the Conecta4 project of DADM.\n\nMade by: Sergio Teso Lorenzo
+    <string name="about_text">Third Assignment of the Conecta4 project of DADM.\n\nMade by: Sergio Teso Lorenzo
     </string>
     <string name="preferences">Preferences</string>
     <string name="general_settings">General Settings</string>
@@ -49,4 +49,8 @@
     <string name="error_incorrect_password">Incorrect password</string>
     <string name="error_updating_round">Error updating round</string>
     <string name="error_adding_round">Error adding round</string>
+
+    <string name="insert_email">Insert Email of the player</string>
+    <string name="error_adding_yourself">You can´t invite yourself</string>
+    <string name="error_user_not_found">User Not Found</string>
 </resources>
